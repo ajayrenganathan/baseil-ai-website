@@ -90,7 +90,7 @@ export function Sandbox() {
               </div>
             </div>
             <span className="text-[0.65rem] font-[var(--font-dm-sans)] text-[#3a3a4a] italic">
-              This is a real DataDam instance
+              This is a real dbzero instance
             </span>
           </div>
 

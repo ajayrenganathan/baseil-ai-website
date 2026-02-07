@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { DataDamLogo } from './DataDamLogo'
+import { DbzeroLogo } from './DbzeroLogo'
 import { Github, Twitter, ArrowRight, Loader2, Check } from 'lucide-react'
 
 export function Footer() {
@@ -35,7 +35,7 @@ export function Footer() {
             Request Early Access
           </h2>
           <p className="font-[var(--font-dm-sans)] text-[0.9rem] text-[#5a5a6a] mb-8">
-            Be among the first to try DataDam. We&apos;ll reach out when your spot is ready.
+            Be among the first to try dbzero. We&apos;ll reach out when your spot is ready.
           </p>
 
           {!submitted ? (
@@ -74,7 +74,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-white/[0.04] pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <DataDamLogo />
+            <DbzeroLogo />
 
             <div className="flex items-center gap-6">
               {[

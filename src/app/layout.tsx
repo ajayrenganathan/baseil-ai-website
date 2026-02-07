@@ -14,9 +14,9 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'DataDam — One calm layer. All your data.',
+  title: 'dbzero — One intelligent layer. All your data.',
   description:
-    'DataDam discovers, connects, and retrieves your data autonomously — for humans, agents, and apps.',
+    'dbzero connects to your databases, understands their structure, and figures out where your data lives from a simple question. Built for humans, agents, and apps.',
 }
 
 export default function RootLayout({

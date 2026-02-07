@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { DataDamLogo } from './DataDamLogo'
+import { DbzeroLogo } from './DbzeroLogo'
 import { Github, Star } from 'lucide-react'
 
 export function Navigation() {
@@ -26,7 +26,7 @@ export function Navigation() {
       }`}
     >
       <div className="max-w-[1200px] mx-auto px-6 h-[72px] flex items-center justify-between">
-        <DataDamLogo />
+        <DbzeroLogo />
 
         <div className="hidden md:flex items-center gap-8">
           {[
@@ -47,7 +47,7 @@ export function Navigation() {
 
         <div className="flex items-center gap-4">
           <a
-            href="https://github.com/datadam-ai/datadam"
+            href="https://github.com/dbzero-ai/dbzero"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-[0.8rem] font-[var(--font-dm-sans)] text-[#8a8a9a] hover:text-[#e8e6e3] transition-colors duration-300"

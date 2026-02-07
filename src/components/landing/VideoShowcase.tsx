@@ -45,8 +45,8 @@ export function VideoShowcase() {
             <div className="absolute inset-6 rounded-lg border border-white/[0.04] overflow-hidden">
               {/* Fake sidebar */}
               <div className="absolute left-0 top-0 bottom-0 w-[180px] bg-white/[0.02] border-r border-white/[0.04]">
-                {[...Array(7)].map((_, i) => (
-                  <div key={i} className="mx-4 my-3 h-2 rounded-full bg-white/[0.04]" style={{ width: `${60 + Math.random() * 40}%` }} />
+                {[72, 85, 64, 91, 78, 68, 88].map((w, i) => (
+                  <div key={i} className="mx-4 my-3 h-2 rounded-full bg-white/[0.04]" style={{ width: `${w}%` }} />
                 ))}
               </div>
               {/* Fake main content */}

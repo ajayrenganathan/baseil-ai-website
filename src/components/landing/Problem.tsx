@@ -134,12 +134,12 @@ export function Problem() {
                     </div>
                   ))}
 
-                  {/* DataDam in the center */}
+                  {/* dbzero in the center */}
                   <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0ee6d4]/10 to-[#3b82f6]/10 border border-[#0ee6d4]/20 flex items-center justify-center landing-dam-glow">
                       <Zap size={24} className="text-[#0ee6d4]" />
                     </div>
-                    <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[0.6rem] font-[var(--font-dm-sans)] text-[#0ee6d4]/60 whitespace-nowrap">DataDam</span>
+                    <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[0.6rem] font-[var(--font-dm-sans)] text-[#0ee6d4]/60 whitespace-nowrap">dbzero</span>
                   </div>
 
                   {/* Consumers on the right */}

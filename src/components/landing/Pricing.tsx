@@ -9,7 +9,7 @@ const TIERS = [
     price: 'Free',
     subtitle: 'Self-host forever',
     features: [
-      'Core DataDam agent',
+      'Core dbzero agent',
       'Schema auto-discovery',
       'Natural language queries',
       'Rules engine',

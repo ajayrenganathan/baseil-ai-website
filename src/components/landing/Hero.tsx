@@ -117,7 +117,7 @@ export function Hero() {
 
         {/* Supporting copy */}
         <p className="font-[var(--font-dm-sans)] text-[clamp(1rem,1.8vw,1.2rem)] leading-relaxed text-[#8a8a9a] max-w-[600px] mx-auto mb-10">
-          DataDam connects to your databases, understands their structure, and figures out where your data lives from a simple question. Built for humans, agents, and apps.
+          dbzero connects to your databases, understands their structure, and figures out where your data lives from a simple question. Built for humans, agents, and apps.
         </p>
 
         {/* CTAs */}
