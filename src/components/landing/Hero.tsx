@@ -110,9 +110,9 @@ export function Hero() {
 
         {/* Headline */}
         <h1 className="font-[var(--font-instrument-serif)] text-[clamp(2.8rem,6.5vw,5.5rem)] leading-[1.05] text-[#e8e6e3] mb-6 tracking-[-0.02em]">
-          one intelligent layer.
+          Intelligent data retrieval.
           <br />
-          <span className="landing-text-shimmer">all your data.</span>
+          <span className="landing-text-shimmer">Zero friction.</span>
         </h1>
 
         {/* Supporting copy */}
