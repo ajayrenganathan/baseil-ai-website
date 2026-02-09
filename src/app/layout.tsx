@@ -1,22 +1,23 @@
 import type { Metadata } from 'next'
-import { Instrument_Serif, DM_Sans } from 'next/font/google'
+import { Newsreader, Outfit } from 'next/font/google'
 import './globals.css'
 
-const instrumentSerif = Instrument_Serif({
-  weight: '400',
+const newsreader = Newsreader({
   subsets: ['latin'],
-  variable: '--font-instrument-serif',
+  variable: '--font-newsreader',
+  display: 'swap',
 })
 
-const dmSans = DM_Sans({
+const outfit = Outfit({
   subsets: ['latin'],
-  variable: '--font-dm-sans',
+  variable: '--font-outfit',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
-  title: 'dbzero — One intelligent layer. All your data.',
+  title: 'baseil — One intelligent layer. All your data.',
   description:
-    'dbzero connects to your databases, understands their structure, and figures out where your data lives from a simple question. Built for humans, agents, and apps.',
+    'baseil connects to your databases, understands their structure, and figures out where your data lives from a simple question. Built for humans, agents, and apps.',
 }
 
 export default function RootLayout({
@@ -26,7 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${instrumentSerif.variable} ${dmSans.variable} antialiased`}>
+      <body className={`${newsreader.variable} ${outfit.variable} antialiased`}>
         {children}
       </body>
     </html>

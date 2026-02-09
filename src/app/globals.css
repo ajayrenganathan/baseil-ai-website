@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 
 /* =============================================================
-   BASE RESET
+   BASE RESET — BASEIL DARK BOTANICAL THEME
    ============================================================= */
 
 @layer base {
@@ -13,126 +13,137 @@
   }
 
   body {
-    background: #060610;
-    color: #e8e6e3;
+    background: #0A0F0D;
+    color: #C8D8C4;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 }
 
 /* =============================================================
-   LANDING PAGE STYLES
+   BASEIL DESIGN SYSTEM — DARK MODE
    ============================================================= */
 
-/* Grain texture overlay */
-.landing-grain {
+/* Subtle noise texture */
+.baseil-grain {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 128px 128px;
 }
 
-/* Primary CTA button */
-.landing-cta-primary {
+/* Primary CTA — frosted green glass */
+.baseil-cta-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  font-family: var(--font-dm-sans);
+  font-family: var(--font-outfit);
   font-weight: 500;
-  color: #060610;
-  background: linear-gradient(135deg, #0ee6d4, #0bbfb3);
-  border-radius: 0.75rem;
-  border: 1px solid rgba(14, 230, 212, 0.3);
+  color: #0A0F0D;
+  background: linear-gradient(135deg, #52B788, #40916C);
+  border-radius: 100px;
+  border: 1px solid rgba(82, 183, 136, 0.4);
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow:
-    0 0 20px rgba(14, 230, 212, 0.15),
+    0 0 20px rgba(82, 183, 136, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.landing-cta-primary:hover {
+.baseil-cta-primary:hover {
   transform: translateY(-1px);
+  background: linear-gradient(135deg, #6FCF97, #52B788);
   box-shadow:
-    0 0 30px rgba(14, 230, 212, 0.25),
-    0 4px 20px rgba(14, 230, 212, 0.15),
+    0 0 30px rgba(82, 183, 136, 0.25),
+    0 4px 20px rgba(82, 183, 136, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  background: linear-gradient(135deg, #1afce8, #0ee6d4);
 }
 
-/* Ghost CTA button */
-.landing-cta-ghost {
+/* Ghost CTA — subtle border */
+.baseil-cta-ghost {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  font-family: var(--font-dm-sans);
+  font-family: var(--font-outfit);
   font-weight: 500;
-  color: #8a8a9a;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 0.75rem;
+  color: #C8D8C4;
+  background: rgba(82, 183, 136, 0.04);
+  border: 1px solid rgba(82, 183, 136, 0.2);
+  border-radius: 100px;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.landing-cta-ghost:hover {
-  color: #e8e6e3;
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
+.baseil-cta-ghost:hover {
+  color: #C8D8C4;
+  background: rgba(82, 183, 136, 0.08);
+  border-color: rgba(82, 183, 136, 0.3);
   transform: translateY(-1px);
 }
 
-/* Shimmer text effect for hero tagline */
-.landing-text-shimmer {
+/* Shimmer text — green wave */
+.baseil-text-shimmer {
   background: linear-gradient(
     110deg,
-    #e8e6e3 0%,
-    #e8e6e3 40%,
-    #0ee6d4 50%,
-    #e8e6e3 60%,
-    #e8e6e3 100%
+    #EDF5EB 0%,
+    #EDF5EB 40%,
+    #52B788 50%,
+    #EDF5EB 60%,
+    #EDF5EB 100%
   );
   background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: landing-shimmer 4s ease-in-out infinite;
+  animation: baseil-shimmer 5s ease-in-out infinite;
 }
 
-@keyframes landing-shimmer {
+@keyframes baseil-shimmer {
   0%, 100% { background-position: 200% center; }
   50% { background-position: 0% center; }
 }
 
-/* Slide shimmer for video thumbnail */
-.landing-shimmer-slide {
-  animation: landing-shimmer-slide 3s ease-in-out infinite;
-}
-
-@keyframes landing-shimmer-slide {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-/* dbzero center glow for problem section */
-.landing-dam-glow {
+/* Center glow — green pulse */
+.baseil-center-glow {
   box-shadow:
-    0 0 30px rgba(14, 230, 212, 0.08),
-    0 0 60px rgba(14, 230, 212, 0.04);
-  animation: landing-dam-pulse 3s ease-in-out infinite;
+    0 0 30px rgba(82, 183, 136, 0.1),
+    0 0 60px rgba(82, 183, 136, 0.05);
+  animation: baseil-pulse 3s ease-in-out infinite;
 }
 
-@keyframes landing-dam-pulse {
+@keyframes baseil-pulse {
   0%, 100% {
     box-shadow:
-      0 0 30px rgba(14, 230, 212, 0.08),
-      0 0 60px rgba(14, 230, 212, 0.04);
+      0 0 30px rgba(82, 183, 136, 0.1),
+      0 0 60px rgba(82, 183, 136, 0.05);
   }
   50% {
     box-shadow:
-      0 0 40px rgba(14, 230, 212, 0.12),
-      0 0 80px rgba(14, 230, 212, 0.06);
+      0 0 40px rgba(82, 183, 136, 0.18),
+      0 0 80px rgba(82, 183, 136, 0.08);
   }
+}
+
+/* Floating animation */
+@keyframes baseil-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-8px) rotate(2deg); }
+  66% { transform: translateY(-4px) rotate(-1deg); }
+}
+
+.baseil-float {
+  animation: baseil-float 6s ease-in-out infinite;
+}
+
+/* Slide shimmer for video */
+.baseil-shimmer-slide {
+  animation: baseil-shimmer-slide 3s ease-in-out infinite;
+}
+
+@keyframes baseil-shimmer-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 /* Smooth scroll */
@@ -140,20 +151,20 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar — dark botanical */
 ::-webkit-scrollbar {
   width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #060610;
+  background: #0A0F0D;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(82, 183, 136, 0.12);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(82, 183, 136, 0.25);
 }

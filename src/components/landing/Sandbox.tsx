@@ -58,39 +58,39 @@ export function Sandbox() {
   return (
     <section id="sandbox" ref={sectionRef} className="relative py-28 overflow-hidden">
       {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[radial-gradient(ellipse,_rgba(14,230,212,0.04)_0%,_transparent_60%)]" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[radial-gradient(ellipse,_rgba(82,183,136,0.04)_0%,_transparent_60%)]" />
 
       <div className="max-w-[900px] mx-auto px-6">
         {/* Section label */}
         <div className="text-center mb-14">
-          <span className="text-[0.7rem] font-[var(--font-dm-sans)] uppercase tracking-[0.2em] text-[#0ee6d4]/60 mb-4 block">
+          <span className="text-[0.7rem] font-[var(--font-outfit)] uppercase tracking-[0.2em] text-[#52B788]/50 mb-4 block">
             Live Demo
           </span>
-          <h2 className="font-[var(--font-instrument-serif)] text-[clamp(1.8rem,3.5vw,2.8rem)] text-[#e8e6e3] leading-tight mb-3">
+          <h2 className="font-[var(--font-newsreader)] text-[clamp(1.8rem,3.5vw,2.8rem)] text-[#C8D8C4] leading-tight mb-3">
             Try it yourself.
           </h2>
-          <p className="font-[var(--font-dm-sans)] text-[0.95rem] text-[#6a6a7a]">
+          <p className="font-[var(--font-outfit)] text-[0.95rem] text-[#5A7A58]">
             Query a live sample database in plain English. No signup required.
           </p>
         </div>
 
         {/* Console */}
         <div
-          className={`relative rounded-2xl border border-white/[0.06] bg-[#0a0a14]/80 backdrop-blur-sm overflow-hidden transition-all duration-1000 ${
+          className={`relative rounded-2xl border border-[#52B788]/8 bg-[#111916]/80 backdrop-blur-sm overflow-hidden transition-all duration-1000 ${
             visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
           {/* Console header */}
-          <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.04] bg-white/[0.01]">
+          <div className="flex items-center justify-between px-5 py-3 border-b border-[#52B788]/[0.06] bg-[#0D1410]/50">
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-[#0ee6d4]/[0.06] border border-[#0ee6d4]/10">
-                <Database size={12} className="text-[#0ee6d4]/70" />
-                <span className="text-[0.7rem] font-[var(--font-dm-sans)] text-[#0ee6d4]/70">Sample E-commerce DB</span>
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-[#52B788]/[0.06] border border-[#52B788]/10">
+                <Database size={12} className="text-[#52B788]/60" />
+                <span className="text-[0.7rem] font-[var(--font-outfit)] text-[#52B788]/70">Sample E-commerce DB</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-[#52B788] animate-pulse" />
               </div>
             </div>
-            <span className="text-[0.65rem] font-[var(--font-dm-sans)] text-[#3a3a4a] italic">
-              This is a real dbzero instance
+            <span className="text-[0.65rem] font-[var(--font-outfit)] text-[#3D5A3A] italic">
+              This is a real baseil instance
             </span>
           </div>
 
@@ -104,13 +104,13 @@ export function Sandbox() {
                   onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit() } }}
                   placeholder="Ask anything about the data..."
                   rows={2}
-                  className="w-full bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3 text-[0.9rem] font-[var(--font-dm-sans)] text-[#c8c8d8] placeholder:text-[#3a3a4a] focus:outline-none focus:border-[#0ee6d4]/20 focus:bg-white/[0.04] resize-none transition-all duration-300"
+                  className="w-full bg-[#0A0F0D]/60 border border-[#52B788]/8 rounded-xl px-4 py-3 text-[0.9rem] font-[var(--font-outfit)] text-[#C8D8C4] placeholder:text-[#3D5A3A] focus:outline-none focus:border-[#52B788]/20 focus:bg-[#0A0F0D]/80 resize-none transition-all duration-300"
                 />
               </div>
               <button
                 onClick={handleSubmit}
                 disabled={loading || !query.trim()}
-                className="self-end h-[46px] w-[46px] rounded-xl bg-[#0ee6d4]/10 border border-[#0ee6d4]/20 flex items-center justify-center text-[#0ee6d4] hover:bg-[#0ee6d4]/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
+                className="self-end h-[46px] w-[46px] rounded-xl bg-[#52B788]/10 border border-[#52B788]/15 flex items-center justify-center text-[#52B788] hover:bg-[#52B788]/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
               >
                 {loading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
               </button>
@@ -123,7 +123,7 @@ export function Sandbox() {
                   <button
                     key={i}
                     onClick={() => setQuery(q)}
-                    className="flex items-center gap-1.5 text-[0.72rem] font-[var(--font-dm-sans)] px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.04] text-[#5a5a6a] hover:text-[#8a8a9a] hover:border-white/[0.08] transition-all duration-300"
+                    className="flex items-center gap-1.5 text-[0.72rem] font-[var(--font-outfit)] px-3 py-1.5 rounded-lg bg-[#52B788]/[0.03] border border-[#52B788]/[0.06] text-[#5A7A58] hover:text-[#8FAF8A] hover:border-[#52B788]/12 transition-all duration-300"
                   >
                     <ChevronRight size={10} />
                     {q}
@@ -136,12 +136,12 @@ export function Sandbox() {
           {/* Loading state */}
           {loading && (
             <div className="px-5 pb-5">
-              <div className="flex items-center gap-3 text-[0.8rem] font-[var(--font-dm-sans)] text-[#5a5a6a]">
+              <div className="flex items-center gap-3 text-[0.8rem] font-[var(--font-outfit)] text-[#5A7A58]">
                 <div className="flex gap-1">
                   {['Analyzing', 'Selecting tools', 'Building query', 'Executing'].map((step, i) => (
                     <span
                       key={i}
-                      className="px-2 py-0.5 rounded text-[0.65rem] bg-white/[0.02] border border-white/[0.04] animate-pulse"
+                      className="px-2 py-0.5 rounded text-[0.65rem] bg-[#52B788]/[0.04] border border-[#52B788]/[0.06] animate-pulse"
                       style={{ animationDelay: `${i * 0.4}s` }}
                     >
                       {step}
@@ -154,36 +154,34 @@ export function Sandbox() {
 
           {/* Results */}
           {showResult && (
-            <div className="border-t border-white/[0.04]">
-              {/* Result tabs */}
-              <div className="flex items-center gap-0 px-5 border-b border-white/[0.04]">
+            <div className="border-t border-[#52B788]/[0.06]">
+              <div className="flex items-center gap-0 px-5 border-b border-[#52B788]/[0.06]">
                 {(['results', 'sql'] as const).map(tab => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`px-4 py-2.5 text-[0.75rem] font-[var(--font-dm-sans)] border-b-2 transition-all duration-300 ${
+                    className={`px-4 py-2.5 text-[0.75rem] font-[var(--font-outfit)] border-b-2 transition-all duration-300 ${
                       activeTab === tab
-                        ? 'border-[#0ee6d4] text-[#0ee6d4]'
-                        : 'border-transparent text-[#5a5a6a] hover:text-[#8a8a9a]'
+                        ? 'border-[#52B788] text-[#52B788]'
+                        : 'border-transparent text-[#3D5A3A] hover:text-[#5A7A58]'
                     }`}
                   >
                     {tab === 'results' ? 'Results' : 'SQL Executed'}
                   </button>
                 ))}
-                <div className="ml-auto flex items-center gap-3 text-[0.7rem] font-[var(--font-dm-sans)] text-[#3a3a4a]">
+                <div className="ml-auto flex items-center gap-3 text-[0.7rem] font-[var(--font-outfit)] text-[#3D5A3A]">
                   <span className="flex items-center gap-1"><Clock size={11} />{MOCK_RESULT.duration}</span>
                   <span className="flex items-center gap-1"><TableIcon size={11} />{MOCK_RESULT.rows_returned} rows</span>
                 </div>
               </div>
 
-              {/* Results table */}
               {activeTab === 'results' && (
                 <div className="p-5 overflow-x-auto">
                   <table className="w-full">
                     <thead>
                       <tr>
                         {MOCK_RESULT.columns.map((col, i) => (
-                          <th key={i} className="text-left text-[0.7rem] font-[var(--font-dm-sans)] font-medium text-[#5a5a6a] uppercase tracking-wider pb-3 pr-6">
+                          <th key={i} className="text-left text-[0.7rem] font-[var(--font-outfit)] font-medium text-[#5A7A58] uppercase tracking-wider pb-3 pr-6">
                             {col}
                           </th>
                         ))}
@@ -191,9 +189,9 @@ export function Sandbox() {
                     </thead>
                     <tbody>
                       {MOCK_RESULT.rows.map((row, i) => (
-                        <tr key={i} className="border-t border-white/[0.03]">
+                        <tr key={i} className="border-t border-[#52B788]/[0.04]">
                           {row.map((cell, j) => (
-                            <td key={j} className="py-2.5 pr-6 text-[0.8rem] font-[var(--font-dm-sans)] text-[#b0b0c0]">
+                            <td key={j} className="py-2.5 pr-6 text-[0.8rem] font-[var(--font-outfit)] text-[#8FAF8A]">
                               {cell}
                             </td>
                           ))}
@@ -204,10 +202,9 @@ export function Sandbox() {
                 </div>
               )}
 
-              {/* SQL view */}
               {activeTab === 'sql' && (
                 <div className="p-5">
-                  <pre className="text-[0.75rem] font-mono text-[#7a8a9a] leading-relaxed whitespace-pre-wrap">
+                  <pre className="text-[0.75rem] font-mono text-[#5A7A58] leading-relaxed whitespace-pre-wrap">
                     {MOCK_RESULT.sql}
                   </pre>
                 </div>
@@ -221,7 +218,7 @@ export function Sandbox() {
           <a
             href="#early-access"
             onClick={(e) => { e.preventDefault(); document.getElementById('early-access')?.scrollIntoView({ behavior: 'smooth' }) }}
-            className="inline-flex items-center gap-2 text-[0.8rem] font-[var(--font-dm-sans)] text-[#5a5a6a] hover:text-[#0ee6d4] transition-colors duration-300"
+            className="inline-flex items-center gap-2 text-[0.8rem] font-[var(--font-outfit)] text-[#3D5A3A] hover:text-[#52B788] transition-colors duration-300"
           >
             Want this on your own data?
             <ChevronRight size={14} />
