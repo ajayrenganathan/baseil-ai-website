@@ -113,14 +113,13 @@ export function Hero() {
 
         {/* Headline */}
         <h1 className={`font-[var(--font-newsreader)] text-[clamp(2.4rem,5.5vw,3.8rem)] leading-[1.12] text-[#EDF5EB] mb-5 transition-all duration-1000 delay-400 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          One intelligent layer.<br />
-          <span className="italic text-[#52B788]">All your data.</span>
+          One Intelligent Layer<br />
+          <span className="italic text-[#52B788]">Uniting All Your Data.</span>
         </h1>
 
         {/* Subtitle */}
-        <p className={`font-[var(--font-outfit)] text-[0.95rem] leading-relaxed text-[#8FAF8A] max-w-[400px] mx-auto mb-10 transition-all duration-700 delay-600 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-          Connect any database. Ask in plain English.
-          baseil handles the rest.
+        <p className={`font-[var(--font-outfit)] text-[0.95rem] leading-relaxed text-[#8FAF8A] max-w-[520px] mx-auto mb-10 transition-all duration-700 delay-600 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+          An autonomous agent layer that discovers your schemas, routes queries across databases, and gets smarter with every interaction.
         </p>
 
         {/* CTAs */}
