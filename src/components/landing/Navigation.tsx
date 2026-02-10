@@ -21,7 +21,7 @@ export function Navigation() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? 'bg-[#0A0F0D]/85 backdrop-blur-xl border-b border-[#52B788]/[0.06]'
+          ? 'bg-[#0A0F0D]/85 backdrop-blur-xl'
           : 'bg-transparent'
       }`}
     >
