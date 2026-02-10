@@ -25,7 +25,7 @@ export function Navigation() {
           : 'bg-transparent'
       }`}
     >
-      <div className="max-w-[1200px] mx-auto px-6 h-[72px] flex items-center justify-between">
+      <div className="max-w-[1200px] mx-auto px-6 h-[56px] flex items-center justify-between">
         <BaseilLogo />
 
         <div className="hidden md:flex items-center gap-8">
