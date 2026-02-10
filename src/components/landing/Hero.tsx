@@ -1,10 +1,23 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { ArrowDown } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { ArrowRight, Database, Clock, TableIcon } from 'lucide-react'
+
+const DEMO_RESULT = {
+  columns: ['Customer', 'Revenue', 'Orders', 'Region'],
+  rows: [
+    ['Meridian Corp', '$284,320', '142', 'NA'],
+    ['Apex Industries', '$231,500', '98', 'EU'],
+    ['NovaTech Ltd', '$198,740', '87', 'APAC'],
+    ['Stratos Group', '$176,200', '76', 'NA'],
+  ],
+}
 
 export function Hero() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => { setLoaded(true) }, [])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -13,10 +26,6 @@ export function Hero() {
     if (!ctx) return
 
     let animationId: number
-    const particles: Array<{
-      x: number; y: number; vx: number; vy: number;
-      size: number; opacity: number; type: 'dot' | 'node'
-    }> = []
 
     const resize = () => {
       canvas.width = window.innerWidth
@@ -25,16 +34,20 @@ export function Hero() {
     resize()
     window.addEventListener('resize', resize)
 
-    // Create particles — green data flow dots
-    for (let i = 0; i < 50; i++) {
+    const particles: Array<{
+      x: number; y: number; vx: number; vy: number;
+      size: number; opacity: number; type: 'dot' | 'node'
+    }> = []
+
+    for (let i = 0; i < 40; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: Math.random() * 0.2 + 0.1,
-        size: Math.random() * 2 + 0.5,
-        opacity: Math.random() * 0.4 + 0.05,
-        type: Math.random() > 0.85 ? 'node' : 'dot',
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: Math.random() * 0.15 + 0.05,
+        size: Math.random() * 1.5 + 0.5,
+        opacity: Math.random() * 0.3 + 0.03,
+        type: Math.random() > 0.88 ? 'node' : 'dot',
       })
     }
 
@@ -48,15 +61,13 @@ export function Hero() {
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1
 
         if (p.type === 'node') {
-          // Larger glowing nodes
           ctx.beginPath()
           ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2)
-          ctx.fillStyle = `rgba(82, 183, 136, ${p.opacity * 0.5})`
+          ctx.fillStyle = `rgba(82, 183, 136, ${p.opacity * 0.4})`
           ctx.fill()
-          // Glow ring
           ctx.beginPath()
           ctx.arc(p.x, p.y, p.size * 4, 0, Math.PI * 2)
-          ctx.fillStyle = `rgba(82, 183, 136, ${p.opacity * 0.1})`
+          ctx.fillStyle = `rgba(82, 183, 136, ${p.opacity * 0.08})`
           ctx.fill()
         } else {
           ctx.beginPath()
@@ -65,27 +76,6 @@ export function Hero() {
           ctx.fill()
         }
       })
-
-      // Draw circuit-like lines between nearby particles
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x
-          const dy = particles[i].y - particles[j].y
-          const dist = Math.sqrt(dx * dx + dy * dy)
-          if (dist < 140) {
-            ctx.beginPath()
-            ctx.moveTo(particles[i].x, particles[i].y)
-            // Create right-angle segments for circuit board feel
-            const midX = (particles[i].x + particles[j].x) / 2
-            ctx.lineTo(midX, particles[i].y)
-            ctx.lineTo(midX, particles[j].y)
-            ctx.lineTo(particles[j].x, particles[j].y)
-            ctx.strokeStyle = `rgba(82, 183, 136, ${0.06 * (1 - dist / 140)})`
-            ctx.lineWidth = 0.5
-            ctx.stroke()
-          }
-        }
-      }
 
       animationId = requestAnimationFrame(animate)
     }
@@ -102,84 +92,127 @@ export function Hero() {
   }
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Circuit canvas */}
+    <section className="relative min-h-screen overflow-hidden">
       <canvas ref={canvasRef} className="absolute inset-0 z-0" />
 
-      {/* Radial glows */}
       <div className="absolute inset-0 z-[1]">
-        <div className="absolute top-[20%] right-[20%] w-[600px] h-[600px] bg-[radial-gradient(ellipse,_rgba(82,183,136,0.07)_0%,_transparent_70%)]" />
-        <div className="absolute bottom-[10%] left-[30%] w-[500px] h-[400px] bg-[radial-gradient(ellipse,_rgba(64,145,108,0.05)_0%,_transparent_70%)]" />
+        <div className="absolute top-[15%] right-[15%] w-[600px] h-[600px] bg-[radial-gradient(ellipse,_rgba(82,183,136,0.05)_0%,_transparent_65%)]" />
+        <div className="absolute bottom-[20%] left-[10%] w-[400px] h-[400px] bg-[radial-gradient(ellipse,_rgba(64,145,108,0.04)_0%,_transparent_65%)]" />
       </div>
 
-      {/* Grain overlay */}
-      <div className="absolute inset-0 z-[2] opacity-[0.03] pointer-events-none baseil-grain" />
-
-      {/* Content — centered */}
-      <div className="relative z-10 max-w-[900px] mx-auto px-6 w-full text-center">
-        <div>
-          {/* Eyebrow badge */}
-          <div className="inline-flex items-center gap-2.5 mb-8 px-5 py-2 rounded-full border border-[#52B788]/15 bg-[#52B788]/[0.04]">
+      <div className="relative z-10 max-w-[800px] mx-auto px-6 w-full text-center pt-28 md:pt-32">
+        {/* Badge */}
+        <div className={`transition-all duration-700 delay-200 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <div className="inline-flex items-center gap-2.5 mb-8 px-4 py-1.5 rounded-full border border-[#52B788]/15 bg-[#52B788]/[0.04]">
             <div className="w-1.5 h-1.5 rounded-full bg-[#52B788] animate-pulse" />
-            <span className="text-[0.75rem] font-[var(--font-outfit)] text-[#52B788]/70 tracking-wide uppercase">
-              Open Source &middot; Now in Early Access
+            <span className="text-[0.72rem] font-[var(--font-outfit)] text-[#52B788]/70 tracking-wide">
+              Early Access
             </span>
           </div>
+        </div>
 
-          {/* Headline */}
-          <h1 className="font-[var(--font-newsreader)] text-[clamp(2.8rem,6vw,4.8rem)] leading-[1.08] text-[#EDF5EB] mb-6 tracking-[-0.02em]">
-            Your intelligent<br />data layer.
-          </h1>
+        {/* Headline */}
+        <h1 className={`font-[var(--font-newsreader)] text-[clamp(2.4rem,5.5vw,3.8rem)] leading-[1.12] text-[#EDF5EB] mb-5 transition-all duration-1000 delay-400 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          One intelligent layer.<br />
+          <span className="italic text-[#52B788]">All your data.</span>
+        </h1>
 
-          {/* Subheadline */}
-          <h2 className="font-[var(--font-newsreader)] text-[clamp(1.2rem,2.5vw,1.6rem)] leading-[1.3] text-[#C8D8C4] mb-6">
-            Between your <strong className="text-[#EDF5EB] font-medium">apps</strong> and your <strong className="text-[#EDF5EB] font-medium">databases</strong>.
-          </h2>
+        {/* Subtitle */}
+        <p className={`font-[var(--font-outfit)] text-[0.95rem] leading-relaxed text-[#8FAF8A] max-w-[400px] mx-auto mb-10 transition-all duration-700 delay-600 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+          Connect any database. Ask in plain English.
+          baseil handles the rest.
+        </p>
 
-          {/* Supporting copy */}
-          <p className="font-[var(--font-outfit)] text-[clamp(0.95rem,1.5vw,1.05rem)] leading-relaxed text-[#8FAF8A] max-w-[520px] mx-auto mb-4">
-            baseil is an autonomous data agent that discovers, queries, and unifies data across systems — so your applications don&apos;t have to.
-          </p>
+        {/* CTAs */}
+        <div className={`flex items-center justify-center gap-4 mb-16 transition-all duration-700 delay-[800ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+          <button
+            onClick={() => scrollTo('early-access')}
+            className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-[0.9rem] font-[var(--font-outfit)] font-medium text-[#0A0F0D] bg-gradient-to-r from-[#52B788] to-[#40916C] border border-[#52B788]/40 shadow-[0_0_24px_rgba(82,183,136,0.2)] hover:shadow-[0_0_32px_rgba(82,183,136,0.3)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+          >
+            Request Access
+            <ArrowRight size={15} />
+          </button>
+          <button
+            onClick={() => scrollTo('how-it-works')}
+            className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-[0.9rem] font-[var(--font-outfit)] font-medium text-[#C8D8C4] bg-[#52B788]/[0.06] border border-[#52B788]/20 hover:bg-[#52B788]/[0.1] hover:border-[#52B788]/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+          >
+            How it works
+          </button>
+        </div>
 
-          <p className="font-[var(--font-outfit)] text-[clamp(0.95rem,1.5vw,1.05rem)] leading-relaxed text-[#8FAF8A] max-w-[520px] mx-auto mb-10">
-            Point it at your data. Ask for what you need.<br />
-            Baseil figures out the rest.
-          </p>
+        {/* Demo card */}
+        <div className={`max-w-[600px] mx-auto transition-all duration-1000 delay-[1000ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="rounded-2xl border border-[#52B788]/10 bg-[#0A0F0D] overflow-hidden shadow-2xl shadow-black/40">
+            {/* Terminal bar */}
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#52B788]/[0.06] bg-[#0D1410]/60">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#52B788]/[0.05] border border-[#52B788]/10">
+                  <Database size={10} className="text-[#52B788]/50" />
+                  <span className="text-[0.6rem] font-[var(--font-outfit)] text-[#52B788]/60">e-commerce.db</span>
+                  <div className="w-1 h-1 rounded-full bg-[#52B788]/70" />
+                </div>
+              </div>
+              <span className="text-[0.55rem] font-[var(--font-outfit)] text-[#3D5A3A]">baseil</span>
+            </div>
 
-          {/* CTAs */}
-          <div className="flex items-center justify-center gap-4 mb-10">
-            <button
-              onClick={() => scrollTo('early-access')}
-              className="baseil-cta-primary text-[0.95rem] px-8 py-3.5"
-            >
-              Request Early Access
-            </button>
-            <button
-              onClick={() => scrollTo('how-it-works')}
-              className="baseil-cta-ghost text-[0.95rem] px-8 py-3.5"
-            >
-              Read the Architecture
-            </button>
-          </div>
+            {/* Query */}
+            <div className="px-4 py-3 border-b border-[#52B788]/[0.04]">
+              <div className="flex items-center gap-2">
+                <span className="text-[#52B788]/30 font-[var(--font-outfit)] text-sm select-none">&gt;</span>
+                <span className="text-sm font-[var(--font-outfit)] text-[#C8D8C4]">
+                  Top customers by revenue this quarter
+                </span>
+                <span className="w-[2px] h-3.5 bg-[#52B788]/50 animate-pulse ml-0.5" />
+              </div>
+            </div>
 
-          {/* Trust indicators */}
-          <div className="flex items-center justify-center gap-6 text-[0.75rem] font-[var(--font-outfit)] text-[#5A7A58]">
-            <span>Open Source</span>
-            <span className="w-px h-3 bg-[#52B788]/15" />
-            <span>Self-host or Managed</span>
-            <span className="w-px h-3 bg-[#52B788]/15" />
-            <span>Agent-native</span>
+            {/* Results */}
+            <div className="p-4">
+              <table className="w-full text-left">
+                <thead>
+                  <tr>
+                    {DEMO_RESULT.columns.map((col, i) => (
+                      <th key={i} className="text-[0.6rem] font-[var(--font-outfit)] font-normal text-[#5A7A58] uppercase tracking-wider pb-2 pr-4">
+                        {col}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {DEMO_RESULT.rows.map((row, i) => (
+                    <tr key={i} className="border-t border-[#52B788]/[0.04]">
+                      {row.map((cell, j) => (
+                        <td key={j} className={`py-1.5 pr-4 text-[0.75rem] font-[var(--font-outfit)] ${j === 0 ? 'text-[#C8D8C4]' : 'text-[#8FAF8A]'}`}>
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              <div className="flex items-center gap-4 mt-3 pt-2 border-t border-[#52B788]/[0.04]">
+                <span className="flex items-center gap-1 text-[0.58rem] font-[var(--font-outfit)] text-[#3D5A3A]">
+                  <Clock size={9} /> 340ms
+                </span>
+                <span className="flex items-center gap-1 text-[0.58rem] font-[var(--font-outfit)] text-[#3D5A3A]">
+                  <TableIcon size={9} /> 4 rows
+                </span>
+                <span className="text-[0.58rem] font-[var(--font-outfit)] text-[#3D5A3A]">PostgreSQL</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Scroll indicator */}
-      <button
-        onClick={() => scrollTo('problem')}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 text-[#3D5A3A] hover:text-[#52B788] transition-colors duration-500 animate-bounce"
-      >
-        <ArrowDown size={20} />
-      </button>
+        {/* Trust line */}
+        <div className={`flex items-center justify-center gap-6 mt-12 pb-16 text-[0.7rem] font-[var(--font-outfit)] text-[#3D5A3A] transition-all duration-700 delay-[1200ms] ${loaded ? 'opacity-100' : 'opacity-0'}`}>
+          <span>Open Source</span>
+          <span className="w-px h-3 bg-[#52B788]/15" />
+          <span>Self-host</span>
+          <span className="w-px h-3 bg-[#52B788]/15" />
+          <span>Agent-native</span>
+        </div>
+      </div>
     </section>
   )
 }
