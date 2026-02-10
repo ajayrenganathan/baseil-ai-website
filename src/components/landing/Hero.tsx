@@ -122,6 +122,16 @@ export function Hero() {
           An autonomous agent layer that discovers your schemas, routes queries across databases, and gets smarter with every interaction.
         </p>
 
+        {/* Serving line */}
+        <div className={`flex items-center justify-center gap-3 mb-10 text-[0.8rem] font-[var(--font-outfit)] text-[#5A7A58] transition-all duration-700 delay-700 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <span>For</span>
+          <span className="text-[#8FAF8A]">Humans</span>
+          <span className="text-[#52B788]/30">/</span>
+          <span className="text-[#8FAF8A]">Agents</span>
+          <span className="text-[#52B788]/30">/</span>
+          <span className="text-[#8FAF8A]">Apps</span>
+        </div>
+
         {/* CTAs */}
         <div className={`flex items-center justify-center gap-4 mb-16 transition-all duration-700 delay-[800ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
           <button
