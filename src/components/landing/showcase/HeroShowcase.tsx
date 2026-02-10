@@ -28,7 +28,7 @@ export function HeroShowcase() {
 
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // Pause when out of viewport
+  // Reset to Connect and play when scrolled into view, pause when out
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
@@ -36,17 +36,17 @@ export function HeroShowcase() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          resume()
+          jumpToScene(0)
         } else {
           pause()
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.3 }
     )
 
     observer.observe(el)
     return () => observer.disconnect()
-  }, [pause, resume])
+  }, [pause, jumpToScene])
 
   // Pause on prefers-reduced-motion
   useEffect(() => {
@@ -66,7 +66,7 @@ export function HeroShowcase() {
   return (
     <div ref={containerRef}>
       <ShowcaseShell
-        title={SCENES[currentScene].label}
+        title={SCENES[currentScene].title}
         currentScene={currentScene}
         totalProgress={totalProgress}
         isPaused={isPaused}
