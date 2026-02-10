@@ -9,7 +9,7 @@ export const CONNECTIONS = [
 // Scene 2 — Onboarding pipeline
 export const PIPELINE_STEPS = [
   { label: 'Onboarding databases', subtitle: 'Store, Projects, HR, Marketing, Analytics' },
-  { label: 'Discovering schema', subtitle: 'Found 24 tables, 156 columns across 5 databases' },
+  { label: 'Discovering databases', subtitle: 'Found 24 tables, 156 columns across 5 databases' },
   { label: 'Building context', subtitle: 'Mapping relationships & business logic' },
   { label: 'Optimizing queries', subtitle: 'Tuning for Store, Projects, HR, Marketing, Analytics' },
   { label: 'Testing & security', subtitle: 'Row-level access policies verified' },

@@ -90,8 +90,8 @@ export function Hero() {
       <div className="relative z-10 max-w-[900px] mx-auto px-6 w-full text-center pt-36 md:pt-44">
         {/* Headline */}
         <h1 className={`font-[var(--font-newsreader)] text-[clamp(2.6rem,6vw,4rem)] leading-[1.1] text-[#EDF5EB] mb-5 transition-all duration-1000 delay-300 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          One Intelligent Layer<br />
-          <span className="italic text-[#52B788]">Uniting All Your Data.</span>
+          One intelligent layer.<br />
+          <span className="italic text-[#52B788]">All your data.</span>
         </h1>
 
         {/* Subtitle */}

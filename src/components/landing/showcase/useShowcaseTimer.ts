@@ -77,6 +77,11 @@ export function useShowcaseTimer(): ShowcaseTimerState {
     sceneStartRef.current = Date.now()
     setSceneProgress(0)
     setIsTransitioning(false)
+    // Unpause so the scene plays
+    userPausedRef.current = false
+    pausedRef.current = false
+    pausedAtRef.current = null
+    setIsPaused(false)
   }, [])
 
   const pause = useCallback(() => {

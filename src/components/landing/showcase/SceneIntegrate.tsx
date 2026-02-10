@@ -26,7 +26,6 @@ export function SceneIntegrate({ progress }: SceneIntegrateProps) {
   // 0.80-1.00: connection dots animate, hold
 
   const showEndpoint = progress >= 0.0
-  const showConnections = progress >= 0.80
 
   return (
     <div className="px-7 pt-7 pb-5">
@@ -42,9 +41,7 @@ export function SceneIntegrate({ progress }: SceneIntegrateProps) {
           <Bot size={13} className="text-[#52B788]/50" />
           <span className="text-[0.72rem] font-[var(--font-outfit)] text-[#5A7A58]">Agents</span>
         </div>
-        <div className={`flex-1 h-px transition-all duration-700 ${
-          showConnections ? 'bg-[#52B788]/20' : 'bg-[#52B788]/[0.04]'
-        }`} />
+        <div className="flex-1 h-px bg-[#52B788]/[0.06]" />
         <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#52B788]/[0.06] border border-[#52B788]/15">
           <Database size={13} className="text-[#52B788]/60" />
           <span className="text-[0.72rem] font-[var(--font-outfit)] text-[#8FAF8A]">baseil</span>
@@ -88,14 +85,6 @@ export function SceneIntegrate({ progress }: SceneIntegrateProps) {
                 <span className="text-[0.72rem] font-[var(--font-outfit)] text-[#5A7A58]">
                   {method.desc}
                 </span>
-              </div>
-              {/* Connection indicator */}
-              <div className={`flex items-center gap-1.5 transition-all duration-500 ${
-                showConnections ? 'opacity-100' : 'opacity-0'
-              }`}>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#52B788]/40" />
-                <span className="w-1.5 h-1.5 rounded-full bg-[#52B788]/30" />
-                <span className="w-1.5 h-1.5 rounded-full bg-[#52B788]/20" />
               </div>
             </div>
           )
