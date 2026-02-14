@@ -29,7 +29,7 @@ export function BaseilLogo({ className = '' }: { className?: string }) {
         <circle cx="18" cy="20" r="1.8" fill="rgba(255,255,255,0.35)" />
       </svg>
       <span className="font-[var(--font-newsreader)] text-[1.5rem] font-medium tracking-tight select-none text-[#8FAF8A]">
-        baseil
+        Baseil
       </span>
     </div>
   )

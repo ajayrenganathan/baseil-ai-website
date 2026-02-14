@@ -111,9 +111,19 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Animated showcase — break out of px-6 to match /showcase page */}
+        {/* Animated showcase */}
         <div className={`-mx-6 px-0 text-left transition-all duration-1000 delay-[1000ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <HeroShowcase />
+          <div className="relative">
+            {/* Soft ambient glow */}
+            <div
+              className="absolute -inset-8 -z-10 rounded-3xl opacity-30"
+              style={{
+                background: 'radial-gradient(ellipse at 50% 50%, rgba(82,183,136,0.08) 0%, transparent 70%)',
+                animation: 'showcase-orb-1 12s ease-in-out infinite',
+              }}
+            />
+            <HeroShowcase />
+          </div>
         </div>
 
         {/* Trust line */}

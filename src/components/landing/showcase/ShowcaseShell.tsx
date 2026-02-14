@@ -54,7 +54,7 @@ export function ShowcaseShell({
   })
 
   return (
-    <div className="rounded-2xl border border-[#52B788]/10 bg-[#0A0F0D] overflow-hidden shadow-2xl shadow-black/40">
+    <div className="rounded-2xl border border-[#52B788]/[0.12] bg-[#0E1512] overflow-hidden shadow-[0_0_60px_rgba(82,183,136,0.04),0_20px_60px_rgba(0,0,0,0.5)]">
       {/* Header bar */}
       <div className="flex items-center justify-between px-6 py-3.5 border-b border-[#52B788]/[0.06] bg-[#0D1410]/60">
         <div className="flex items-center gap-3">
@@ -69,12 +69,21 @@ export function ShowcaseShell({
           >
             {isPaused ? <Play size={13} /> : <Pause size={13} />}
           </button>
-          <span className="text-[0.7rem] font-[var(--font-outfit)] text-[#3D5A3A]">baseil</span>
+          <span className="text-[0.7rem] font-[var(--font-outfit)] text-[#3D5A3A]">Baseil</span>
         </div>
       </div>
 
       {/* Content area — fixed height to prevent layout shift */}
       <div ref={contentRef} className="relative h-[500px] overflow-y-auto scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
+        {/* Dot grid */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.08]"
+          style={{
+            backgroundImage: 'radial-gradient(circle, rgba(82,183,136,0.8) 0.5px, transparent 0.5px)',
+            backgroundSize: '24px 24px',
+          }}
+        />
+        <div className="absolute inset-0 pointer-events-none opacity-[0.03] mix-blend-soft-light baseil-grain" />
         {children}
       </div>
 
