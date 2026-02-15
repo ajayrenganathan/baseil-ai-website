@@ -34,12 +34,12 @@ export function SceneChat({ progress }: SceneChatProps) {
       <div className={`mb-6 transition-all duration-500 ${
         showAgent ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
       }`}>
-        <div className="inline-flex items-center gap-3 px-4 py-2.5 rounded-lg bg-[#111916]/60 border border-[#52B788]/10">
-          <Bot size={16} className="text-[#52B788]/60" />
-          <span className="text-[0.88rem] font-[var(--font-outfit)] text-[#8FAF8A]">
+        <div className="inline-flex items-center gap-3 px-4 py-2.5 rounded-lg bg-[#52B788]/[0.06] border border-[#52B788]/10">
+          <Bot size={16} className="text-[#52B788]" />
+          <span className="text-[0.88rem] font-[var(--font-outfit)] text-[#C8D8C4]">
             {CHAT_DATA.agent.name}
           </span>
-          <span className="text-[0.75rem] font-[var(--font-outfit)] text-[#3D5A3A]">
+          <span className="text-[0.75rem] font-[var(--font-outfit)] text-[#5A7A58]">
             {CHAT_DATA.agent.tools} tool
           </span>
         </div>
@@ -48,19 +48,19 @@ export function SceneChat({ progress }: SceneChatProps) {
       {/* User message bubble */}
       {showUserMessage && (
         <div className="flex gap-3.5 mb-6">
-          <div className="w-9 h-9 rounded-full bg-[#52B788]/[0.08] flex items-center justify-center flex-shrink-0 mt-0.5">
-            <User size={16} className="text-[#52B788]/50" />
+          <div className="w-9 h-9 rounded-full bg-[#52B788]/[0.12] flex items-center justify-center flex-shrink-0 mt-0.5">
+            <User size={16} className="text-[#52B788]" />
           </div>
-          <div className="rounded-lg bg-[#111916]/80 border border-[#52B788]/[0.06] px-5 py-3 max-w-[85%]">
+          <div className="rounded-lg bg-[#52B788]/[0.08] border border-[#52B788]/[0.1] px-5 py-3 max-w-[85%]">
             {isTypingUser ? (
               <TypingText
                 text={CHAT_DATA.userMessage}
                 charDelay={35}
                 randomVariance={10}
-                className="text-[1rem] font-[var(--font-outfit)] text-[#C8D8C4]"
+                className="text-[1rem] font-[var(--font-outfit)] text-[#E0EAD8]"
               />
             ) : (
-              <span className="text-[1rem] font-[var(--font-outfit)] text-[#C8D8C4]">
+              <span className="text-[1rem] font-[var(--font-outfit)] text-[#E0EAD8]">
                 {CHAT_DATA.userMessage}
               </span>
             )}
@@ -71,7 +71,7 @@ export function SceneChat({ progress }: SceneChatProps) {
       {/* Tool call card — smooth collapse after completion */}
       {showToolCall && (
         <div className={`ml-12 transition-all duration-700 ease-in-out ${toolCallCollapsed ? 'mb-4' : 'mb-6'}`}>
-          <div className={`rounded-lg border bg-[#111916]/60 transition-all duration-700 ease-in-out overflow-hidden ${
+          <div className={`rounded-lg border bg-[#52B788]/[0.06] transition-all duration-700 ease-in-out overflow-hidden ${
             toolCallCollapsed
               ? 'border-[#52B788]/10 border-l-2 border-l-[#52B788]/30'
               : 'border-amber-500/10 border-l-2 border-l-amber-500/40'
@@ -86,12 +86,12 @@ export function SceneChat({ progress }: SceneChatProps) {
                   <span className="text-[0.82rem] font-[var(--font-outfit)] text-amber-500/70">
                     Tool call
                   </span>
-                  <span className="text-[0.78rem] font-[var(--font-outfit)] text-[#5A7A58] ml-auto">
+                  <span className="text-[0.78rem] font-[var(--font-outfit)] text-[#8FAF8A] ml-auto">
                     {CHAT_DATA.toolCall.from}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[0.88rem] font-[var(--font-outfit)] text-[#8FAF8A]">
+                  <span className="text-[0.88rem] font-[var(--font-outfit)] text-[#C8D8C4]">
                     {CHAT_DATA.toolCall.tool}
                   </span>
                 </div>
@@ -108,11 +108,11 @@ export function SceneChat({ progress }: SceneChatProps) {
               toolCallCollapsed ? 'max-h-10 opacity-100' : 'max-h-0 opacity-0'
             }`}>
               <div className="px-4 py-2.5 flex items-center gap-2">
-                <Check size={13} className="text-[#52B788]/60" />
-                <span className="text-[0.78rem] font-[var(--font-outfit)] text-[#5A7A58]">
+                <Check size={13} className="text-[#52B788]" />
+                <span className="text-[0.78rem] font-[var(--font-outfit)] text-[#8FAF8A]">
                   {CHAT_DATA.toolCall.tool}
                 </span>
-                <span className="text-[0.72rem] font-[var(--font-outfit)] text-[#3D5A3A] ml-auto">
+                <span className="text-[0.72rem] font-[var(--font-outfit)] text-[#5A7A58] ml-auto">
                   completed
                 </span>
               </div>
@@ -124,8 +124,8 @@ export function SceneChat({ progress }: SceneChatProps) {
       {/* Bot response — inline text */}
       {showBotResponse && (
         <div className="flex gap-3.5 mb-4">
-          <div className="w-9 h-9 rounded-full bg-[#52B788]/[0.08] flex items-center justify-center flex-shrink-0 mt-0.5">
-            <Bot size={16} className="text-[#52B788]/50" />
+          <div className="w-9 h-9 rounded-full bg-[#52B788]/[0.12] flex items-center justify-center flex-shrink-0 mt-0.5">
+            <Bot size={16} className="text-[#52B788]" />
           </div>
           <div className="flex-1 min-w-0">
             {isTypingBot ? (
@@ -133,10 +133,10 @@ export function SceneChat({ progress }: SceneChatProps) {
                 text={CHAT_DATA.botResponse}
                 charDelay={18}
                 randomVariance={6}
-                className="text-[1rem] font-[var(--font-outfit)] text-[#C8D8C4] whitespace-pre-wrap leading-relaxed"
+                className="text-[1rem] font-[var(--font-outfit)] text-[#E0EAD8] whitespace-pre-wrap leading-relaxed"
               />
             ) : (
-              <span className="text-[1rem] font-[var(--font-outfit)] text-[#C8D8C4] whitespace-pre-wrap leading-relaxed">
+              <span className="text-[1rem] font-[var(--font-outfit)] text-[#E0EAD8] whitespace-pre-wrap leading-relaxed">
                 {CHAT_DATA.botResponse}
               </span>
             )}
@@ -145,13 +145,13 @@ export function SceneChat({ progress }: SceneChatProps) {
       )}
 
       {/* Metrics footer */}
-      <div className={`flex items-center gap-4 mt-5 pt-3.5 border-t border-[#52B788]/[0.04] transition-all duration-500 ${
+      <div className={`flex items-center gap-4 mt-5 pt-3.5 border-t border-[#52B788]/[0.06] transition-all duration-500 ${
         showMetrics ? 'opacity-100' : 'opacity-0'
       }`}>
-        <span className="flex items-center gap-1.5 text-[0.75rem] font-[var(--font-outfit)] text-[#3D5A3A]">
+        <span className="flex items-center gap-1.5 text-[0.75rem] font-[var(--font-outfit)] text-[#5A7A58]">
           <Clock size={12} /> {CHAT_DATA.metrics.duration}
         </span>
-        <span className="text-[0.75rem] font-[var(--font-outfit)] text-[#3D5A3A]">
+        <span className="text-[0.75rem] font-[var(--font-outfit)] text-[#5A7A58]">
           via {CHAT_DATA.metrics.via}
         </span>
       </div>

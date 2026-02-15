@@ -72,15 +72,15 @@ export function SceneQuery({ progress }: SceneQueryProps) {
 
         {/* Routing card */}
         {showRouting && (
-          <div className={`mb-5 rounded-lg bg-[#111916]/60 border border-[#52B788]/10 border-l-2 border-l-[#52B788]/40 px-5 py-3 transition-all duration-500 ${
+          <div className={`mb-5 rounded-lg bg-[#52B788]/[0.06] border border-[#52B788]/15 border-l-2 border-l-[#52B788]/60 px-5 py-3 transition-all duration-500 ${
             showRouting ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3'
           }`}>
             <div className="flex items-center gap-2.5">
-              <Sparkles size={14} className="text-[#52B788]/60" />
-              <span className="text-[0.8rem] font-[var(--font-outfit)] text-[#8FAF8A]">
-                Matched: <span className="text-[#52B788]">{QUERY_DATA.routing.database}</span>
+              <Sparkles size={14} className="text-[#52B788]" />
+              <span className="text-[0.8rem] font-[var(--font-outfit)] text-[#C8D8C4]">
+                Matched: <span className="text-[#6FCF97] font-medium">{QUERY_DATA.routing.database}</span>
               </span>
-              <span className="text-[0.75rem] font-[var(--font-outfit)] text-[#5A7A58] ml-auto">
+              <span className="text-[0.75rem] font-[var(--font-outfit)] text-[#6FCF97] ml-auto">
                 Confidence: {QUERY_DATA.routing.confidence}%
               </span>
             </div>
@@ -96,7 +96,7 @@ export function SceneQuery({ progress }: SceneQueryProps) {
                   {QUERY_DATA.columns.map((col, i) => (
                     <th
                       key={i}
-                      className="text-[0.75rem] font-[var(--font-outfit)] font-normal text-[#5A7A58] uppercase tracking-wider pb-2.5 pr-4"
+                      className="text-[0.75rem] font-[var(--font-outfit)] font-normal text-[#52B788]/70 uppercase tracking-wider pb-2.5 pr-4"
                     >
                       {col}
                     </th>
@@ -107,7 +107,7 @@ export function SceneQuery({ progress }: SceneQueryProps) {
                 {QUERY_DATA.rows.map((row, i) => (
                   <tr
                     key={i}
-                    className={`border-t border-[#52B788]/[0.04] transition-all duration-400 ${
+                    className={`border-t border-[#52B788]/[0.06] transition-all duration-400 hover:bg-[#52B788]/[0.03] ${
                       i < visibleRows ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
                     }`}
                   >
@@ -115,7 +115,7 @@ export function SceneQuery({ progress }: SceneQueryProps) {
                       <td
                         key={j}
                         className={`py-2.5 pr-4 text-[0.9rem] font-[var(--font-outfit)] ${
-                          j === 0 ? 'text-[#C8D8C4]' : 'text-[#8FAF8A]'
+                          j === 0 ? 'text-[#E0EAD8] font-medium' : 'text-[#C8D8C4]'
                         }`}
                       >
                         {cell}
@@ -130,13 +130,13 @@ export function SceneQuery({ progress }: SceneQueryProps) {
             <div className={`flex items-center gap-4 mt-4 pt-3 border-t border-[#52B788]/[0.04] transition-all duration-500 ${
               showMetrics ? 'opacity-100' : 'opacity-0'
             }`}>
-              <span className="flex items-center gap-1.5 text-[0.7rem] font-[var(--font-outfit)] text-[#3D5A3A]">
+              <span className="flex items-center gap-1.5 text-[0.7rem] font-[var(--font-outfit)] text-[#5A7A58]">
                 <Clock size={11} /> {QUERY_DATA.metrics.duration}
               </span>
-              <span className="flex items-center gap-1.5 text-[0.7rem] font-[var(--font-outfit)] text-[#3D5A3A]">
+              <span className="flex items-center gap-1.5 text-[0.7rem] font-[var(--font-outfit)] text-[#5A7A58]">
                 <TableIcon size={11} /> {QUERY_DATA.metrics.rows} rows
               </span>
-              <span className="text-[0.7rem] font-[var(--font-outfit)] text-[#3D5A3A]">
+              <span className="text-[0.7rem] font-[var(--font-outfit)] text-[#5A7A58]">
                 {QUERY_DATA.metrics.source}
               </span>
 

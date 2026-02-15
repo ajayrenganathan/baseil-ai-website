@@ -28,6 +28,8 @@ ORDER BY "Revenue" DESC LIMIT 10;`,
   rows_returned: 5,
 }
 
+const LOADING_STEPS = ['Analyzing', 'Selecting tools', 'Building query', 'Executing']
+
 export function Sandbox() {
   const [query, setQuery] = useState('')
   const [loading, setLoading] = useState(false)
@@ -35,6 +37,9 @@ export function Sandbox() {
   const [activeTab, setActiveTab] = useState<'results' | 'sql'>('results')
   const sectionRef = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
+  const [inputFocused, setInputFocused] = useState(false)
+  const [consoleGlow, setConsoleGlow] = useState(false)
+  const [activeLoadingStep, setActiveLoadingStep] = useState(-1)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -44,6 +49,34 @@ export function Sandbox() {
     if (sectionRef.current) observer.observe(sectionRef.current)
     return () => observer.disconnect()
   }, [])
+
+  // Sequential loading step animation
+  useEffect(() => {
+    if (!loading) {
+      setActiveLoadingStep(-1)
+      return
+    }
+    let step = 0
+    setActiveLoadingStep(0)
+    const interval = setInterval(() => {
+      step++
+      if (step < LOADING_STEPS.length) {
+        setActiveLoadingStep(step)
+      } else {
+        clearInterval(interval)
+      }
+    }, 400)
+    return () => clearInterval(interval)
+  }, [loading])
+
+  // Console glow when result appears
+  useEffect(() => {
+    if (showResult) {
+      setConsoleGlow(true)
+      const timer = setTimeout(() => setConsoleGlow(false), 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [showResult])
 
   const handleSubmit = () => {
     if (!query.trim()) return
@@ -79,6 +112,12 @@ export function Sandbox() {
           className={`relative rounded-2xl border border-[#52B788]/8 bg-[#111916]/80 backdrop-blur-sm overflow-hidden transition-all duration-1000 ${
             visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
+          style={{
+            boxShadow: consoleGlow
+              ? '0 0 40px rgba(82,183,136,0.15), 0 0 80px rgba(82,183,136,0.06)'
+              : '0 0 0px rgba(82,183,136,0)',
+            transition: 'box-shadow 1s ease-out, opacity 1s, transform 1s',
+          }}
         >
           {/* Console header */}
           <div className="flex items-center justify-between px-5 py-3 border-b border-[#52B788]/[0.06] bg-[#0D1410]/50">
@@ -102,9 +141,16 @@ export function Sandbox() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit() } }}
+                  onFocus={() => setInputFocused(true)}
+                  onBlur={() => setInputFocused(false)}
                   placeholder="Ask anything about the data..."
                   rows={2}
-                  className="w-full bg-[#0A0F0D]/60 border border-[#52B788]/8 rounded-xl px-4 py-3 text-[0.9rem] font-[var(--font-outfit)] text-[#C8D8C4] placeholder:text-[#3D5A3A] focus:outline-none focus:border-[#52B788]/20 focus:bg-[#0A0F0D]/80 resize-none transition-all duration-300"
+                  className="w-full bg-[#0A0F0D]/60 border border-[#52B788]/8 rounded-xl px-4 py-3 text-[0.9rem] font-[var(--font-outfit)] text-[#C8D8C4] placeholder:text-[#3D5A3A] focus:outline-none focus:border-[#52B788]/25 focus:bg-[#0A0F0D]/80 resize-none transition-all duration-300"
+                  style={{
+                    boxShadow: inputFocused
+                      ? '0 0 20px rgba(82,183,136,0.1), 0 0 40px rgba(82,183,136,0.04), inset 0 0 15px rgba(82,183,136,0.02)'
+                      : '0 0 0px rgba(82,183,136,0)',
+                  }}
                 />
               </div>
               <button
@@ -123,7 +169,20 @@ export function Sandbox() {
                   <button
                     key={i}
                     onClick={() => setQuery(q)}
-                    className="flex items-center gap-1.5 text-[0.72rem] font-[var(--font-outfit)] px-3 py-1.5 rounded-lg bg-[#52B788]/[0.03] border border-[#52B788]/[0.06] text-[#5A7A58] hover:text-[#8FAF8A] hover:border-[#52B788]/12 transition-all duration-300"
+                    className="flex items-center gap-1.5 text-[0.72rem] font-[var(--font-outfit)] px-3 py-1.5 rounded-lg bg-[#52B788]/[0.03] border border-[#52B788]/[0.06] text-[#5A7A58] hover:text-[#8FAF8A] hover:border-[#52B788]/15 hover:bg-[#52B788]/[0.06] transition-all duration-300"
+                    style={{
+                      transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget
+                      el.style.transform = 'scale(1.02)'
+                      el.style.boxShadow = '0 0 12px rgba(82,183,136,0.08)'
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget
+                      el.style.transform = 'scale(1)'
+                      el.style.boxShadow = '0 0 0px rgba(82,183,136,0)'
+                    }}
                   >
                     <ChevronRight size={10} />
                     {q}
@@ -138,11 +197,19 @@ export function Sandbox() {
             <div className="px-5 pb-5">
               <div className="flex items-center gap-3 text-[0.8rem] font-[var(--font-outfit)] text-[#5A7A58]">
                 <div className="flex gap-1">
-                  {['Analyzing', 'Selecting tools', 'Building query', 'Executing'].map((step, i) => (
+                  {LOADING_STEPS.map((step, i) => (
                     <span
                       key={i}
-                      className="px-2 py-0.5 rounded text-[0.65rem] bg-[#52B788]/[0.04] border border-[#52B788]/[0.06] animate-pulse"
-                      style={{ animationDelay: `${i * 0.4}s` }}
+                      className="px-2 py-0.5 rounded text-[0.65rem] border transition-all duration-500"
+                      style={{
+                        opacity: i <= activeLoadingStep ? 1 : 0.3,
+                        transform: i <= activeLoadingStep ? 'translateY(0)' : 'translateY(8px)',
+                        backgroundColor: i <= activeLoadingStep ? 'rgba(82,183,136,0.1)' : 'rgba(82,183,136,0.02)',
+                        borderColor: i <= activeLoadingStep ? 'rgba(82,183,136,0.2)' : 'rgba(82,183,136,0.06)',
+                        color: i <= activeLoadingStep ? '#52B788' : '#5A7A58',
+                        boxShadow: i === activeLoadingStep ? '0 0 10px rgba(82,183,136,0.12)' : 'none',
+                        transitionDelay: `${i * 0.05}s`,
+                      }}
                     >
                       {step}
                     </span>
@@ -189,7 +256,10 @@ export function Sandbox() {
                     </thead>
                     <tbody>
                       {MOCK_RESULT.rows.map((row, i) => (
-                        <tr key={i} className="border-t border-[#52B788]/[0.04]">
+                        <tr
+                          key={i}
+                          className="border-t border-[#52B788]/[0.04] transition-colors duration-200 hover:bg-[#52B788]/[0.04] cursor-default"
+                        >
                           {row.map((cell, j) => (
                             <td key={j} className="py-2.5 pr-6 text-[0.8rem] font-[var(--font-outfit)] text-[#8FAF8A]">
                               {cell}

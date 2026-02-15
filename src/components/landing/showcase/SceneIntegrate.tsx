@@ -33,18 +33,18 @@ export function SceneIntegrate({ progress }: SceneIntegrateProps) {
       <div className={`flex items-center gap-3.5 mb-5 transition-all duration-500 ${
         showEndpoint ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
       }`}>
-        <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#111916]/60 border border-[#52B788]/[0.06]">
-          <User size={13} className="text-[#52B788]/50" />
-          <span className="text-[0.72rem] font-[var(--font-outfit)] text-[#5A7A58]">Users</span>
+        <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#52B788]/[0.06] border border-[#52B788]/[0.1]">
+          <User size={13} className="text-[#52B788]" />
+          <span className="text-[0.72rem] font-[var(--font-outfit)] text-[#8FAF8A]">Users</span>
         </div>
-        <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#111916]/60 border border-[#52B788]/[0.06]">
-          <Bot size={13} className="text-[#52B788]/50" />
-          <span className="text-[0.72rem] font-[var(--font-outfit)] text-[#5A7A58]">Agents</span>
+        <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#52B788]/[0.06] border border-[#52B788]/[0.1]">
+          <Bot size={13} className="text-[#52B788]" />
+          <span className="text-[0.72rem] font-[var(--font-outfit)] text-[#8FAF8A]">Agents</span>
         </div>
-        <div className="flex-1 h-px bg-[#52B788]/[0.06]" />
-        <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#52B788]/[0.06] border border-[#52B788]/15">
-          <Database size={13} className="text-[#52B788]/60" />
-          <span className="text-[0.72rem] font-[var(--font-outfit)] text-[#8FAF8A]">baseil</span>
+        <div className="flex-1 h-px bg-[#52B788]/[0.1]" />
+        <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#52B788]/[0.1] border border-[#52B788]/20">
+          <Database size={13} className="text-[#52B788]" />
+          <span className="text-[0.72rem] font-[var(--font-outfit)] text-[#C8D8C4]">baseil</span>
         </div>
       </div>
 
@@ -52,7 +52,7 @@ export function SceneIntegrate({ progress }: SceneIntegrateProps) {
       <div className={`mb-4 text-center transition-all duration-500 ${
         showEndpoint ? 'opacity-100' : 'opacity-0'
       }`}>
-        <span className="text-[0.7rem] font-[var(--font-outfit)] text-[#3D5A3A]">
+        <span className="text-[0.7rem] font-[var(--font-outfit)] text-[#5A7A58]">
           {INTEGRATE_DATA.endpoint}
         </span>
       </div>
@@ -66,23 +66,23 @@ export function SceneIntegrate({ progress }: SceneIntegrateProps) {
           return (
             <div
               key={method.name}
-              className={`flex items-center gap-3.5 px-4 py-3 rounded-lg bg-[#111916]/80 border border-[#52B788]/[0.06] transition-all duration-500 ${
+              className={`flex items-center gap-3.5 px-4 py-3 rounded-lg bg-[#52B788]/[0.08] border border-[#52B788]/[0.1] transition-all duration-500 ${
                 visible
                   ? 'opacity-100 translate-x-0'
                   : 'opacity-0 -translate-x-4'
               }`}
             >
-              <div className="w-8 h-8 rounded-md bg-[#52B788]/[0.06] flex items-center justify-center flex-shrink-0">
-                <Icon size={16} className="text-[#52B788]/50" />
+              <div className="w-8 h-8 rounded-md bg-[#52B788]/[0.1] flex items-center justify-center flex-shrink-0">
+                <Icon size={16} className="text-[#52B788]" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-[0.88rem] font-[var(--font-outfit)] text-[#C8D8C4]">
+                  <span className="text-[0.88rem] font-[var(--font-outfit)] text-[#E0EAD8]">
                     {method.name}
                   </span>
-                  <span className="w-2 h-2 rounded-full bg-[#52B788]/60 flex-shrink-0" />
+                  <span className="w-2 h-2 rounded-full bg-[#52B788] flex-shrink-0" />
                 </div>
-                <span className="text-[0.72rem] font-[var(--font-outfit)] text-[#5A7A58]">
+                <span className="text-[0.72rem] font-[var(--font-outfit)] text-[#8FAF8A]">
                   {method.desc}
                 </span>
               </div>

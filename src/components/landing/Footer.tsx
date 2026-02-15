@@ -8,6 +8,7 @@ export function Footer() {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [inputFocused, setInputFocused] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -24,7 +25,27 @@ export function Footer() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[1px] bg-gradient-to-r from-transparent via-[#52B788]/10 to-transparent" />
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[radial-gradient(ellipse,_rgba(82,183,136,0.04)_0%,_transparent_60%)]" />
 
-      <div className="max-w-[700px] mx-auto px-6">
+      {/* Aurora glow blobs */}
+      <div
+        className="absolute top-16 left-1/4 w-[500px] h-[300px] rounded-full pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse, rgba(82, 183, 136, 0.06) 0%, transparent 70%)',
+          filter: 'blur(80px)',
+          animation: 'aurora-drift-1 20s ease-in-out infinite',
+          opacity: 0.05,
+        }}
+      />
+      <div
+        className="absolute bottom-20 right-1/4 w-[400px] h-[250px] rounded-full pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse, rgba(111, 207, 151, 0.06) 0%, transparent 70%)',
+          filter: 'blur(70px)',
+          animation: 'aurora-drift-2 25s ease-in-out infinite',
+          opacity: 0.04,
+        }}
+      />
+
+      <div className="relative z-10 max-w-[700px] mx-auto px-6">
         <div className="text-center mb-20">
           <h2 className="font-[var(--font-newsreader)] text-[clamp(1.8rem,3.5vw,2.8rem)] text-[#C8D8C4] leading-tight mb-3">
             Request Early Access
@@ -39,14 +60,21 @@ export function Footer() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onFocus={() => setInputFocused(true)}
+                onBlur={() => setInputFocused(false)}
                 placeholder="you@company.com"
                 required
                 className="flex-1 bg-[#111916]/60 border border-[#52B788]/10 rounded-full px-5 py-3 text-[0.85rem] font-[var(--font-outfit)] text-[#C8D8C4] placeholder:text-[#3D5A3A] focus:outline-none focus:border-[#52B788]/25 focus:bg-[#111916]/80 transition-all duration-300"
+                style={{
+                  boxShadow: inputFocused
+                    ? '0 0 20px rgba(82, 183, 136, 0.15), 0 0 40px rgba(82, 183, 136, 0.05), inset 0 0 10px rgba(82, 183, 136, 0.03)'
+                    : 'none',
+                }}
               />
               <button
                 type="submit"
                 disabled={loading}
-                className="baseil-cta-primary px-6 py-3 text-[0.85rem] flex items-center gap-2"
+                className="baseil-cta-primary px-6 py-3 text-[0.85rem] flex items-center gap-2 transition-transform duration-300 hover:scale-105 active:scale-95"
               >
                 {loading ? (
                   <Loader2 size={16} className="animate-spin" />
@@ -80,7 +108,7 @@ export function Footer() {
                 <a
                   key={i}
                   href={link.href}
-                  className="flex items-center gap-1.5 text-[0.75rem] font-[var(--font-outfit)] text-[#3D5A3A] hover:text-[#8FAF8A] transition-colors duration-300"
+                  className="flex items-center gap-1.5 text-[0.75rem] font-[var(--font-outfit)] text-[#3D5A3A] hover:text-[#52B788] transition-all duration-300 hover:scale-105"
                 >
                   {link.icon && <link.icon size={13} />}
                   {link.label}
@@ -90,7 +118,7 @@ export function Footer() {
           </div>
 
           <div className="text-center mt-10">
-            <p className="font-[var(--font-newsreader)] text-[1.1rem] text-[#3D5A3A]/60 italic">
+            <p className="baseil-text-shimmer font-[var(--font-newsreader)] text-[1.1rem] italic">
               one intelligent layer. all your data.
             </p>
           </div>

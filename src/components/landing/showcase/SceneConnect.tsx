@@ -32,25 +32,25 @@ export function SceneConnect({ progress }: SceneConnectProps) {
           return (
             <div
               key={conn.name}
-              className={`rounded-lg border bg-[#111916]/60 p-6 flex flex-col items-center gap-3 transition-all duration-700 ${
+              className={`rounded-lg border bg-[#52B788]/[0.06] p-6 flex flex-col items-center gap-3 transition-all duration-700 ${
                 visible
                   ? 'opacity-100 translate-y-0 border-[#52B788]/10'
                   : 'opacity-0 translate-y-6 border-transparent'
               } ${isNewlyAdded ? 'shadow-[0_0_20px_rgba(82,183,136,0.1)]' : ''}`}
             >
               <div className={`w-14 h-14 rounded-lg flex items-center justify-center transition-colors duration-500 ${
-                visible ? 'bg-[#52B788]/[0.08]' : 'bg-[#52B788]/[0.02]'
+                visible ? 'bg-[#52B788]/[0.12]' : 'bg-[#52B788]/[0.04]'
               }`}>
-                <Database size={24} className="text-[#52B788]/60" />
+                <Database size={24} className="text-[#52B788]" />
               </div>
-              <span className="text-[0.92rem] font-[var(--font-outfit)] text-[#C8D8C4] text-center">
+              <span className="text-[0.92rem] font-[var(--font-outfit)] text-[#E0EAD8] text-center">
                 {conn.name}
               </span>
               <div className="flex items-center gap-1.5">
                 <div className={`w-2 h-2 rounded-full transition-colors duration-500 ${
-                  visible ? 'bg-[#52B788]' : 'bg-[#5A7A58]/30'
+                  visible ? 'bg-[#52B788]' : 'bg-[#8FAF8A]/30'
                 } ${isNewlyAdded ? 'animate-pulse' : ''}`} />
-                <span className="text-[0.75rem] font-[var(--font-outfit)] text-[#5A7A58]">
+                <span className="text-[0.75rem] font-[var(--font-outfit)] text-[#8FAF8A]">
                   {conn.status}
                 </span>
               </div>
@@ -63,7 +63,7 @@ export function SceneConnect({ progress }: SceneConnectProps) {
       <div className={`text-center mt-8 transition-all duration-700 ${
         showCounter ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
       }`}>
-        <span className="text-[0.88rem] font-[var(--font-outfit)] text-[#5A7A58]">
+        <span className="text-[0.88rem] font-[var(--font-outfit)] text-[#8FAF8A]">
           4 databases connected
         </span>
       </div>

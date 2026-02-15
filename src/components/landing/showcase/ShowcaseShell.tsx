@@ -54,9 +54,9 @@ export function ShowcaseShell({
   })
 
   return (
-    <div className="rounded-2xl border border-[#52B788]/[0.12] bg-[#0E1512] overflow-hidden shadow-[0_0_60px_rgba(82,183,136,0.04),0_20px_60px_rgba(0,0,0,0.5)]">
+    <div className="rounded-2xl border border-[#52B788]/20 bg-[#0E1512] overflow-hidden shadow-[0_0_80px_rgba(82,183,136,0.08),0_20px_60px_rgba(0,0,0,0.5)]">
       {/* Header bar */}
-      <div className="flex items-center justify-between px-6 py-3.5 border-b border-[#52B788]/[0.06] bg-[#0D1410]/60">
+      <div className="flex items-center justify-between px-6 py-3.5 border-b border-[#52B788]/[0.1] bg-[#0D1410]/60">
         <div className="flex items-center gap-3">
           <span className="text-[0.8rem] font-[var(--font-outfit)] text-[#8FAF8A] transition-all duration-300">
             {title}

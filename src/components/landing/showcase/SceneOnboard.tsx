@@ -53,7 +53,7 @@ export function SceneOnboard({ progress }: SceneOnboardProps) {
                   </div>
                 ) : (
                   <div className="w-8 h-8 rounded-full border border-[#52B788]/10 flex items-center justify-center">
-                    <Circle size={12} className="text-[#3D5A3A]" />
+                    <Circle size={12} className="text-[#5A7A58]" />
                   </div>
                 )}
               </div>
@@ -62,7 +62,7 @@ export function SceneOnboard({ progress }: SceneOnboardProps) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3">
                   <span className={`text-[0.95rem] font-[var(--font-outfit)] transition-colors duration-300 ${
-                    state === 'pending' ? 'text-[#3D5A3A]' : 'text-[#C8D8C4]'
+                    state === 'pending' ? 'text-[#5A7A58]' : 'text-[#E0EAD8]'
                   }`}>
                     {step.label}
                   </span>
@@ -73,7 +73,7 @@ export function SceneOnboard({ progress }: SceneOnboardProps) {
                     />
                   </div>
                 </div>
-                <p className={`text-[0.78rem] font-[var(--font-outfit)] text-[#5A7A58] mt-1.5 transition-opacity duration-300 ${
+                <p className={`text-[0.78rem] font-[var(--font-outfit)] text-[#8FAF8A] mt-1.5 transition-opacity duration-300 ${
                   (state === 'complete' || (state === 'active' && stepProgress > 0.5)) ? 'opacity-100' : 'opacity-0'
                 }`}>
                   {step.subtitle}
@@ -88,7 +88,7 @@ export function SceneOnboard({ progress }: SceneOnboardProps) {
       <div className={`text-center mt-8 transition-all duration-500 ${
         allComplete ? 'opacity-100' : 'opacity-70'
       }`}>
-        <span className="text-[0.88rem] font-[var(--font-outfit)] text-[#5A7A58]">
+        <span className="text-[0.88rem] font-[var(--font-outfit)] text-[#8FAF8A]">
           {allComplete
             ? 'Onboarding complete — 5 tools deployed'
             : `${completedCount} of ${PIPELINE_STEPS.length} steps complete`
