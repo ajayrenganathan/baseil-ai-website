@@ -1,22 +1,32 @@
 'use client'
 
-import { ClerkProvider, SignIn, useAuth } from '@clerk/nextjs'
+import { ClerkProvider, useAuth } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
 
 const CLERK_KEY = 'pk_live_Y2xlcmsuYmFzZWlsLmFpJA'
 
-type AuthStatus = 'sign-in' | 'exchanging' | 'done' | 'error'
+type PageStatus = 'loading' | 'exchanging' | 'done' | 'error'
 
 function DesktopAuthInner() {
   const { isSignedIn, isLoaded, getToken } = useAuth()
-  const [status, setStatus] = useState<AuthStatus>('sign-in')
+  const [status, setStatus] = useState<PageStatus>('loading')
   const [error, setError] = useState<string | null>(null)
   const [redirectUrl, setRedirectUrl] = useState<string>('')
 
   useEffect(() => {
-    if (!isLoaded || !isSignedIn) return
+    if (!isLoaded) return
 
-    const redirect = async () => {
+    if (!isSignedIn) {
+      // Redirect to Clerk Account Portal for sign-in.
+      // After sign-in, Clerk redirects back here with an active session cookie
+      // on .baseil.ai — ClerkProvider picks it up client-side.
+      const returnUrl = window.location.origin + '/auth/desktop'
+      window.location.href = `https://accounts.baseil.ai/sign-in?redirect_url=${encodeURIComponent(returnUrl)}`
+      return
+    }
+
+    // Signed in — get Clerk JWT and redirect to Electron
+    const exchangeToken = async () => {
       setStatus('exchanging')
       try {
         const clerkJwt = await getToken()
@@ -26,11 +36,8 @@ function DesktopAuthInner() {
           return
         }
 
-        // Build the full redirect URL and store it for the fallback link
         const url = `baseil://auth/callback?clerk_jwt=${encodeURIComponent(clerkJwt)}`
         setRedirectUrl(url)
-
-        // Redirect back to Electron via custom protocol
         window.location.href = url
         setStatus('done')
       } catch (e) {
@@ -39,7 +46,7 @@ function DesktopAuthInner() {
       }
     }
 
-    redirect()
+    exchangeToken()
   }, [isLoaded, isSignedIn, getToken])
 
   // Done — redirecting to Electron
@@ -89,7 +96,7 @@ function DesktopAuthInner() {
         <div className="text-center max-w-md">
           <p className="text-red-400 text-sm mb-4">{error}</p>
           <button
-            onClick={() => setStatus('sign-in')}
+            onClick={() => window.location.reload()}
             className="px-6 py-2 rounded-xl text-sm font-medium text-white"
             style={{ background: 'linear-gradient(to right, #52B788, #40916C)' }}
           >
@@ -100,73 +107,20 @@ function DesktopAuthInner() {
     )
   }
 
-  // Sign-in form
+  // Loading / checking auth state
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-6">
-      <div className="mb-8 text-center">
-        <h1 className="text-2xl font-medium text-[#C8D8C4] mb-1"
-          style={{ fontFamily: "var(--font-newsreader), 'Newsreader', serif" }}>
-          Sign in to Baseil
-        </h1>
-        <p className="text-[#556253] text-sm">
-          for the desktop app
-        </p>
+      <div className="animate-pulse mb-4">
+        <div className="w-10 h-10 rounded-full bg-[#52B788]/20" />
       </div>
-
-      <SignIn
-        routing="hash"
-        forceRedirectUrl="/auth/desktop"
-        appearance={{
-          layout: {
-            socialButtonsVariant: 'blockButton' as const,
-            socialButtonsPlacement: 'top' as const,
-          },
-          variables: {
-            colorPrimary: '#52B788',
-            colorDanger: '#ef4444',
-            colorBackground: '#151d19',
-            colorInputBackground: '#0d1310',
-            colorInputText: '#C8D8C4',
-            colorText: '#C8D8C4',
-            colorTextSecondary: '#556253',
-            borderRadius: '0.75rem',
-            fontFamily: "'Outfit', sans-serif",
-            fontSize: '0.9rem',
-          },
-          elements: {
-            rootBox: 'w-full max-w-[440px]',
-            card: 'border border-[#2a3830] rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.35)]',
-            cardBox: 'shadow-none',
-            headerTitle: 'text-[#C8D8C4] text-lg',
-            headerSubtitle: 'text-[#556253] text-sm',
-            socialButtonsBlockButton: 'border border-[#2a3830] bg-[#111916] rounded-xl hover:border-[#52B788]/40 hover:bg-[#52B788]/[0.06] transition-all duration-200 py-2.5',
-            socialButtonsBlockButtonText: 'text-[#C8D8C4] font-medium text-sm',
-            dividerLine: 'bg-[#2a3830]',
-            dividerText: 'text-[#556253] text-xs',
-            formFieldLabel: 'text-[#7a9476] text-xs font-medium',
-            formFieldInput: 'bg-[#0d1310] border-[#2a3830] text-[#C8D8C4] rounded-xl focus:border-[#52B788]/50 placeholder:text-[#3a4a3a] py-2.5',
-            formButtonPrimary: 'rounded-xl py-2.5 font-semibold text-sm bg-gradient-to-r from-[#52B788] to-[#40916C] hover:from-[#5ec592] hover:to-[#4a9e78] shadow-[0_2px_12px_rgba(82,183,136,0.25)] border border-[#52B788]/20 transition-all',
-            footerActionLink: 'text-[#52B788] hover:text-[#6FCF97] font-medium',
-            footerAction: 'text-[#556253]',
-            footer: 'opacity-40 hover:opacity-70 transition-opacity',
-          },
-        }}
-      />
-
-      <p className="mt-6 text-[#556253] text-xs text-center max-w-sm">
-        After signing in, you&apos;ll be redirected back to the Baseil desktop app automatically.
-      </p>
+      <p className="text-[#556253] text-sm">Loading...</p>
     </div>
   )
 }
 
 export default function DesktopAuthPage() {
   return (
-    <ClerkProvider
-      publishableKey={CLERK_KEY}
-      signInForceRedirectUrl="/auth/desktop"
-      signUpForceRedirectUrl="/auth/desktop"
-    >
+    <ClerkProvider publishableKey={CLERK_KEY}>
       <DesktopAuthInner />
     </ClerkProvider>
   )
