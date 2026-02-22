@@ -3,6 +3,15 @@ import type { NextConfig } from 'next'
 const nextConfig: NextConfig = {
   async headers() {
     return [
+      // CORS for Clerk proxy — desktop app (app:// origin) needs this
+      {
+        source: '/__clerk/:path*',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET, POST, PUT, DELETE, PATCH, OPTIONS' },
+          { key: 'Access-Control-Allow-Headers', value: '*' },
+        ],
+      },
       {
         source: '/:path*',
         headers: [
