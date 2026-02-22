@@ -74,7 +74,7 @@ export function HeroShowcase() {
         onTogglePause={togglePause}
       >
         <div
-          className="transition-opacity duration-[600ms] cursor-pointer"
+          className="transition-opacity duration-[400ms] cursor-pointer"
           style={{ opacity: isTransitioning ? 0 : 1 }}
           onClick={togglePause}
         >

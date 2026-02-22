@@ -35,13 +35,18 @@ export function useShowcaseTimer(): ShowcaseTimerState {
     setIsTransitioning(true)
 
     setTimeout(() => {
+      // Swap scene while content is invisible
       const next = (currentSceneRef.current + 1) % SCENES.length
       currentSceneRef.current = next
       setCurrentScene(next)
       sceneStartRef.current = Date.now()
-      isTransitioningRef.current = false
-      setIsTransitioning(false)
       setSceneProgress(0)
+
+      // Wait one frame for the new scene to render, then fade in
+      requestAnimationFrame(() => {
+        isTransitioningRef.current = false
+        setIsTransitioning(false)
+      })
     }, TRANSITION_MS)
   }, [])
 

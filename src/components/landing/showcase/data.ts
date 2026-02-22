@@ -78,12 +78,12 @@ export const INTEGRATE_DATA = {
 
 // Scene timing config
 export const SCENES = [
-  { id: 'connect', duration: 5000, label: 'Connect', title: 'Connect your databases' },
-  { id: 'onboard', duration: 6000, label: 'Onboard', title: 'Automatic schema discovery' },
-  { id: 'query', duration: 10000, label: 'Query', title: 'Query in natural language' },
-  { id: 'cross-query', duration: 12000, label: 'Federated Query', title: 'Federated cross-database query' },
-  { id: 'chat', duration: 10000, label: 'Chat', title: 'Agent-native conversation' },
-  { id: 'integrate', duration: 8000, label: 'Integrate', title: 'Multiple ways to integrate' },
+  { id: 'connect', duration: 4000, label: 'Connect', title: 'Connect your databases' },
+  { id: 'onboard', duration: 5000, label: 'Onboard', title: 'Automatic schema discovery' },
+  { id: 'query', duration: 7000, label: 'Query', title: 'Query in natural language' },
+  { id: 'cross-query', duration: 8000, label: 'Federated Query', title: 'Federated cross-database query' },
+  { id: 'chat', duration: 7000, label: 'Chat', title: 'Agent-native conversation' },
+  { id: 'integrate', duration: 5000, label: 'Integrate', title: 'Multiple ways to integrate' },
 ] as const
 
 export const TRANSITION_MS = 600
