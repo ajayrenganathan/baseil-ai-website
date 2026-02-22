@@ -209,9 +209,9 @@ export function Pricing() {
           <span className="text-[0.7rem] font-[var(--font-outfit)] uppercase tracking-[0.2em] text-[#52B788]/50 mb-4 block">
             Pricing
           </span>
-          <h2 className="font-[var(--font-newsreader)] text-[clamp(1.8rem,3.5vw,2.8rem)] text-[#C8D8C4] leading-tight mb-3">
+          <h1 className="font-[var(--font-newsreader)] text-[clamp(1.8rem,3.5vw,2.8rem)] text-[#C8D8C4] leading-tight mb-3">
             One agent. Three ways to run it.
-          </h2>
+          </h1>
           <p className="font-[var(--font-outfit)] text-[0.9rem] text-[#5A7A58]">
             Self-host for free, or let us manage it for your team.
           </p>

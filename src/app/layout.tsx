@@ -17,11 +17,11 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   metadataBase: new URL('https://baseil.ai'),
   title: {
-    default: 'Baseil',
+    default: 'Baseil — Get All Your Data Talking',
     template: '%s | Baseil',
   },
   description:
-    'Baseil is an open-source data agent that connects to your databases, maps every schema, and serves structured answers to humans and AI agents. Turn any database into MCP tools with zero configuration.',
+    'One data agent. Every database. Ask in plain English, get answers instantly. Baseil maps your schemas, connects your data, and serves it to humans and AI agents.',
   keywords: [
     'data agent',
     'data retrieval',
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     'cross database joins',
     'schema discovery',
     'unified data layer',
-    'open source data agent',
+    'baseil data agent',
     'baseil',
     'database AI agent',
     'data retrieval AI',
@@ -47,15 +47,15 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     siteName: 'Baseil',
-    title: 'Baseil',
+    title: 'Baseil — Get All Your Data Talking',
     description:
-      'An open-source data agent for data retrieval, schema discovery, and database-to-MCP conversion. Data intelligence for humans and AI agents.',
+      'One data agent. Every database. Ask in plain English, get answers instantly. Baseil maps your schemas, connects your data, and serves it to humans and AI agents.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Baseil',
+    title: 'Baseil — Get All Your Data Talking',
     description:
-      'An open-source data agent for data retrieval, schema discovery, and database-to-MCP conversion. Data intelligence for humans and AI agents.',
+      'One data agent. Every database. Ask in plain English, get answers instantly. Baseil maps your schemas, connects your data, and serves it to humans and AI agents.',
   },
   icons: {
     icon: '/robot/robot-leaf.png',
@@ -84,8 +84,10 @@ export default function RootLayout({
               applicationCategory: 'DeveloperApplication',
               operatingSystem: 'Cross-platform',
               description:
-                'An open-source data agent that connects to your databases, discovers schemas, and provides data retrieval for humans and AI agents. Converts any database to MCP tools for data intelligence.',
+                'One data agent. Every database. Ask in plain English, get answers instantly. Baseil maps your schemas, connects your data, and serves it to humans and AI agents.',
               url: 'https://baseil.ai',
+              logo: 'https://baseil.ai/robot/robot-leaf.png',
+              image: 'https://baseil.ai/opengraph-image',
               offers: {
                 '@type': 'Offer',
                 price: '0',
