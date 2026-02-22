@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { Check, ArrowRight } from 'lucide-react'
+import { trackEvent } from '@/lib/analytics'
 
 const TIERS = [
   // {
@@ -193,7 +194,12 @@ export function Pricing() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true) },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true)
+          trackEvent('section_view', { section_name: 'pricing' })
+        }
+      },
       { threshold: 0.2 }
     )
     if (sectionRef.current) observer.observe(sectionRef.current)

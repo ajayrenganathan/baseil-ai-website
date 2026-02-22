@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { Plug, Radar, Globe, MessageSquareHeart, Pin } from 'lucide-react'
+import { trackEvent } from '@/lib/analytics'
 
 const STEPS = [
   {
@@ -254,7 +255,12 @@ export function HowItWorks() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true) },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true)
+          trackEvent('section_view', { section_name: 'how_it_works' })
+        }
+      },
       { threshold: 0.2 }
     )
     if (sectionRef.current) observer.observe(sectionRef.current)

@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { BaseilLogo } from './BaseilLogo'
 import { Github, ArrowRight, Loader2, Check } from 'lucide-react'
+import { trackEvent } from '@/lib/analytics'
 
 export function Footer() {
   const [email, setEmail] = useState('')
@@ -17,7 +18,12 @@ export function Footer() {
     const el = taglineRef.current
     if (!el) return
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setTaglineVisible(true) },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTaglineVisible(true)
+          trackEvent('section_view', { section_name: 'footer' })
+        }
+      },
       { threshold: 0 }
     )
     observer.observe(el)

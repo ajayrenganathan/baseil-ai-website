@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { Database, Clock, Loader2, ChevronRight, TableIcon, Sparkles } from 'lucide-react'
+import { trackEvent } from '@/lib/analytics'
 
 const DATABASES = [
   {
@@ -157,7 +158,12 @@ export function Sandbox() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true) },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true)
+          trackEvent('section_view', { section_name: 'sandbox' })
+        }
+      },
       { threshold: 0.2 }
     )
     if (sectionRef.current) observer.observe(sectionRef.current)

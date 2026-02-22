@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback, type MouseEvent } from 'react'
+import { trackEvent } from '@/lib/analytics'
 
 /* ─────────────────────────────────────────────────────────────
    CONSTANTS
@@ -472,6 +473,7 @@ export function Problem() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true)
+          trackEvent('section_view', { section_name: 'problem' })
           resume()
         } else {
           pause()
