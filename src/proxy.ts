@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 /**
- * Clerk Frontend API proxy middleware.
+ * Clerk Frontend API proxy.
  *
  * Desktop (Electron) app runs on app:// origin which Clerk production
- * rejects. This middleware rewrites /__clerk/* requests to Clerk's
+ * rejects. This proxy rewrites /__clerk/* requests to Clerk's
  * Frontend API at the edge, adding required proxy headers + CORS.
  *
  * Required env var on Vercel: CLERK_SECRET_KEY
@@ -19,7 +19,7 @@ const CORS_HEADERS: Record<string, string> = {
   'Access-Control-Allow-Headers': '*',
 }
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   // Only handle /__clerk paths
   if (!req.nextUrl.pathname.startsWith('/__clerk')) {
     return NextResponse.next()
@@ -41,7 +41,7 @@ export function middleware(req: NextRequest) {
   requestHeaders.set('Clerk-Secret-Key', process.env.CLERK_SECRET_KEY || '')
   requestHeaders.set(
     'X-Forwarded-For',
-    req.headers.get('x-forwarded-for') || req.ip || '127.0.0.1'
+    req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || '127.0.0.1'
   )
 
   // Rewrite to Clerk FAPI with proxy headers, add CORS to response
