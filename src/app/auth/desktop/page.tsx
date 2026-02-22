@@ -1,6 +1,6 @@
 'use client'
 
-import { ClerkProvider, SignIn, useAuth, useUser } from '@clerk/nextjs'
+import { ClerkProvider, SignIn, useAuth } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
 
 const CLERK_KEY = 'pk_live_Y2xlcmsuYmFzZWlsLmFpJA'
@@ -9,7 +9,6 @@ type AuthStatus = 'sign-in' | 'exchanging' | 'done' | 'error'
 
 function DesktopAuthInner() {
   const { isSignedIn, isLoaded, getToken } = useAuth()
-  const { user } = useUser()
   const [status, setStatus] = useState<AuthStatus>('sign-in')
   const [error, setError] = useState<string | null>(null)
   const [redirectUrl, setRedirectUrl] = useState<string>('')
