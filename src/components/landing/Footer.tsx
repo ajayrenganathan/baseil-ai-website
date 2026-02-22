@@ -145,14 +145,25 @@ export function Footer() {
 
             <div className="flex items-center gap-6">
               {[
-                { label: 'Docs', href: '/docs' },
-                { label: 'Contact', href: '/contact' },
-                { label: 'GitHub', href: '#', icon: Github },
+                { label: 'Docs', href: '/docs', external: false },
+                { label: 'Contact', href: '/contact', external: false },
+                { label: 'GitHub', href: '#', icon: Github, external: true },
               ].map((link, i) => (
                 <a
                   key={i}
                   href={link.href}
                   className="flex items-center gap-1.5 text-[0.75rem] font-[var(--font-outfit)] text-[#3D5A3A] hover:text-[#52B788] transition-all duration-300 hover:scale-105"
+                  {...(link.external
+                    ? {
+                        target: '_blank',
+                        rel: 'noopener noreferrer',
+                        onClick: () =>
+                          trackEvent('outbound_click', {
+                            url: link.href,
+                            link_text: link.label.toLowerCase(),
+                          }),
+                      }
+                    : {})}
                 >
                   {link.icon && <link.icon size={13} />}
                   {link.label}
