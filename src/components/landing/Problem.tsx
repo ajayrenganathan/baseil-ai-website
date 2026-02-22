@@ -1,78 +1,513 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback, type MouseEvent } from 'react'
-import { Database, Bot, AlertTriangle, Leaf } from 'lucide-react'
 
-/** Compute tilt angles from mouse position relative to element center */
-function getTilt(e: MouseEvent, el: HTMLElement, maxDeg = 6) {
+/* ─────────────────────────────────────────────────────────────
+   CONSTANTS
+   ───────────────────────────────────────────────────────────── */
+
+const SLIDES = [
+  {
+    id: 'problem',
+    label: 'The Problem',
+    duration: 3500,
+    accent: '#C9672E',
+    description:
+      "Today\u2019s agents wear too many hats. Understanding users, hunting across databases, formulating queries, formatting responses. Every new data source increases hallucinations.",
+  },
+  {
+    id: 'solution',
+    label: 'The Solution',
+    duration: 3500,
+    accent: '#52B788',
+    description:
+      'Intelligence at the data layer itself. One calm layer that deciphers what data you need and where it lives.',
+  },
+  {
+    id: 'swarm',
+    label: 'The Swarm',
+    duration: 3500,
+    accent: '#6FCF97',
+    description:
+      'Deploy as a swarm. Multiple Baseil agents form a mesh. Each owning its own databases, sharing knowledge across your infrastructure.',
+  },
+] as const
+
+const TRANSITION_MS = 600
+
+/* ─────────────────────────────────────────────────────────────
+   TILT UTILITY
+   ───────────────────────────────────────────────────────────── */
+
+function getTilt(e: MouseEvent, el: HTMLElement, maxDeg = 2) {
   const rect = el.getBoundingClientRect()
   const cx = rect.left + rect.width / 2
   const cy = rect.top + rect.height / 2
-  // normalise to -1…1
   const nx = (e.clientX - cx) / (rect.width / 2)
   const ny = (e.clientY - cy) / (rect.height / 2)
   return {
-    rotateX: -(ny * maxDeg),   // tilt up/down
-    rotateY: nx * maxDeg,      // tilt left/right
+    rotateX: -(ny * maxDeg),
+    rotateY: nx * maxDeg,
     glowX: ((e.clientX - rect.left) / rect.width) * 100,
     glowY: ((e.clientY - rect.top) / rect.height) * 100,
   }
 }
 
+/* ─────────────────────────────────────────────────────────────
+   TIMER HOOK — requestAnimationFrame-based auto-advance
+   ───────────────────────────────────────────────────────────── */
+
+function useProblemTimer() {
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+
+  const elapsed = useRef(0)
+  const lastTime = useRef(0)
+  const paused = useRef(false)
+  const rafId = useRef(0)
+
+  const advanceSlide = useCallback(() => {
+    setIsTransitioning(true)
+    setTimeout(() => {
+      setCurrentSlide((prev) => (prev + 1) % SLIDES.length)
+      setIsTransitioning(false)
+    }, TRANSITION_MS)
+    elapsed.current = 0
+  }, [])
+
+  const jumpToSlide = useCallback((i: number) => {
+    setIsTransitioning(false)
+    setCurrentSlide(i)
+    elapsed.current = 0
+  }, [])
+
+  const pause = useCallback(() => {
+    paused.current = true
+  }, [])
+
+  const resume = useCallback(() => {
+    paused.current = false
+    lastTime.current = 0 // reset so next frame doesn't count paused time
+  }, [])
+
+  useEffect(() => {
+    const tick = (now: number) => {
+      if (lastTime.current && !paused.current) {
+        elapsed.current += now - lastTime.current
+        if (elapsed.current >= SLIDES[0].duration) {
+          advanceSlide()
+        }
+      }
+      lastTime.current = now
+      rafId.current = requestAnimationFrame(tick)
+    }
+    rafId.current = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafId.current)
+  }, [advanceSlide])
+
+  return { currentSlide, isTransitioning, jumpToSlide, pause, resume }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SVG ICON HELPERS — pure parametric SVG
+   ───────────────────────────────────────────────────────────── */
+
+function IconAPI({ cx, cy, color }: { cx: number; cy: number; color: string }) {
+  return (
+    <g>
+      {/* broadcast arcs */}
+      <path d={`M${cx - 6},${cy - 2} A8,8 0 0,1 ${cx + 6},${cy - 2}`} fill="none" stroke={color} strokeWidth="1" opacity="0.6" />
+      <path d={`M${cx - 4},${cy + 1} A5,5 0 0,1 ${cx + 4},${cy + 1}`} fill="none" stroke={color} strokeWidth="1" opacity="0.5" />
+      <circle cx={cx} cy={cy + 4} r="2" fill={color} opacity="0.6" />
+    </g>
+  )
+}
+
+function IconSearch({ cx, cy, color }: { cx: number; cy: number; color: string }) {
+  return (
+    <g>
+      <circle cx={cx - 1} cy={cy - 1} r="5" fill="none" stroke={color} strokeWidth="1" opacity="0.6" />
+      <line x1={cx + 3} y1={cy + 3} x2={cx + 6} y2={cy + 6} stroke={color} strokeWidth="1.5" opacity="0.6" />
+    </g>
+  )
+}
+
+function IconDB({ cx, cy, color }: { cx: number; cy: number; color: string }) {
+  return (
+    <g>
+      <ellipse cx={cx} cy={cy - 4} rx="7" ry="3" stroke={color} strokeWidth="1" opacity="0.5" fill="none" />
+      <line x1={cx - 7} y1={cy - 4} x2={cx - 7} y2={cy + 4} stroke={color} strokeWidth="1" opacity="0.5" />
+      <line x1={cx + 7} y1={cy - 4} x2={cx + 7} y2={cy + 4} stroke={color} strokeWidth="1" opacity="0.5" />
+      <ellipse cx={cx} cy={cy + 4} rx="7" ry="3" stroke={color} strokeWidth="1" opacity="0.5" fill="none" />
+    </g>
+  )
+}
+
+function IconLeaf({ cx, cy, color }: { cx: number; cy: number; color: string }) {
+  return (
+    <g>
+      <path
+        d={`M${cx},${cy - 6} Q${cx + 8},${cy - 4} ${cx + 6},${cy + 4} Q${cx},${cy + 2} ${cx - 6},${cy + 4} Q${cx - 8},${cy - 4} ${cx},${cy - 6} Z`}
+        fill="none"
+        stroke={color}
+        strokeWidth="1"
+        opacity="0.6"
+      />
+      <line x1={cx} y1={cy - 4} x2={cx} y2={cy + 3} stroke={color} strokeWidth="0.8" opacity="0.5" />
+    </g>
+  )
+}
+
+function SourceIcon({ type, cx, cy, color }: { type: string; cx: number; cy: number; color: string }) {
+  switch (type) {
+    case 'api':
+      return <IconAPI cx={cx} cy={cy} color={color} />
+    case 'search':
+      return <IconSearch cx={cx} cy={cy} color={color} />
+    case 'leaf':
+      return <IconLeaf cx={cx} cy={cy} color={color} />
+    default:
+      return <IconDB cx={cx} cy={cy} color={color} />
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SLIDE 1 — THE PROBLEM (chaos)
+   ───────────────────────────────────────────────────────────── */
+
+function SlideProblem() {
+  const sources = [
+    { label: 'APIs', type: 'api', x: 55, y: 35 },
+    { label: 'Elasticsearch', type: 'search', x: 545, y: 28 },
+    { label: 'PostgreSQL', type: 'db', x: 35, y: 180 },
+    { label: 'MongoDB', type: 'leaf', x: 555, y: 175 },
+    { label: 'Redis', type: 'db', x: 155, y: 18 },
+    { label: 'MySQL', type: 'db', x: 445, y: 15 },
+    { label: 'S3', type: 'api', x: 140, y: 190 },
+    { label: 'Kafka', type: 'api', x: 460, y: 188 },
+  ]
+
+  return (
+    <svg className="w-full" viewBox="0 0 600 220" fill="none">
+      {/* Tangled dashed lines — every source to center */}
+      {sources.map((s, i) => (
+        <path
+          key={`line-${i}`}
+          d={`M ${s.x} ${s.y} Q ${300 + (s.x > 300 ? -40 : 40)} ${110 + (s.y > 110 ? -30 : 30)} 300 110`}
+          fill="none"
+          stroke="rgba(201, 103, 46, 0.13)"
+          strokeWidth="1"
+          strokeDasharray="4 6"
+        />
+      ))}
+      {/* Extra cross-tangles for chaotic feel */}
+      <path d="M 55 35 Q 200 180 460 188" fill="none" stroke="rgba(201,103,46,0.07)" strokeWidth="0.8" strokeDasharray="3 8" />
+      <path d="M 545 28 Q 400 190 140 190" fill="none" stroke="rgba(201,103,46,0.07)" strokeWidth="0.8" strokeDasharray="3 8" />
+      <path d="M 155 18 Q 300 200 555 175" fill="none" stroke="rgba(201,103,46,0.06)" strokeWidth="0.8" strokeDasharray="3 8" />
+
+      {/* Source nodes */}
+      {sources.map((s, i) => (
+        <g key={i}>
+          <rect x={s.x - 16} y={s.y - 16} width="32" height="32" rx="7" fill="#0A0F0D" stroke="rgba(201,103,46,0.2)" strokeWidth="1" />
+          <SourceIcon type={s.type} cx={s.x} cy={s.y} color="#C9672E" />
+          <text
+            x={s.x}
+            y={s.y + 26}
+            textAnchor="middle"
+            fontSize="9"
+            fill="#5A7A58"
+            fontFamily="var(--font-outfit)"
+          >
+            {s.label}
+          </text>
+        </g>
+      ))}
+
+      {/* Central overwhelmed bot */}
+      <g>
+        <rect x="272" y="82" width="56" height="56" rx="14" fill="#0A0F0D" stroke="rgba(245,158,11,0.25)" strokeWidth="1.5" />
+        {/* Simple bot face */}
+        <rect x="288" y="100" width="5" height="5" rx="1" fill="#F59E0B" opacity="0.7" />
+        <rect x="307" y="100" width="5" height="5" rx="1" fill="#F59E0B" opacity="0.7" />
+        <rect x="290" y="114" width="20" height="2" rx="1" fill="#F59E0B" opacity="0.4" />
+        {/* Pulsing alert triangle */}
+        <polygon points="322,78 330,92 314,92" fill="none" stroke="#F59E0B" strokeWidth="1.5">
+          <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite" />
+        </polygon>
+        <text x="322" y="89" textAnchor="middle" fontSize="9" fill="#F59E0B" fontWeight="bold">!</text>
+      </g>
+    </svg>
+  )
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SLIDE 2 — THE SOLUTION (hub-and-spoke)
+   ───────────────────────────────────────────────────────────── */
+
+function SlideSolution() {
+  const sourceYs = [35, 85, 140, 195]
+  const sources = [
+    { label: 'APIs', type: 'api' },
+    { label: 'Elasticsearch', type: 'search' },
+    { label: 'PostgreSQL', type: 'db' },
+    { label: 'MongoDB', type: 'leaf' },
+  ]
+
+  return (
+    <svg className="w-full" viewBox="0 0 600 220" fill="none">
+      <defs>
+        <filter id="sol-glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      {/* Lines: Sources → Baseil */}
+      {sourceYs.map((y, i) => (
+        <g key={`left-${i}`}>
+          <line x1="135" y1={y} x2="265" y2="110" stroke="rgba(82,183,136,0.06)" strokeWidth="4" filter="url(#sol-glow)" />
+          <line x1="135" y1={y} x2="265" y2="110" stroke="rgba(82,183,136,0.18)" strokeWidth="1.2" />
+          <circle r="2.5" fill="#52B788" opacity="0.6">
+            <animateMotion dur={`${2.2 + i * 0.4}s`} repeatCount="indefinite" path={`M135,${y} L265,110`} />
+          </circle>
+        </g>
+      ))}
+
+      {/* Line: Agent → Baseil */}
+      <g>
+        <line x1="465" y1="65" x2="345" y2="100" stroke="rgba(82,183,136,0.06)" strokeWidth="4" filter="url(#sol-glow)" />
+        <line x1="465" y1="65" x2="345" y2="100" stroke="rgba(82,183,136,0.18)" strokeWidth="1.2" />
+        <circle r="2.5" fill="#6FCF97" opacity="0.6">
+          <animateMotion dur="2.4s" repeatCount="indefinite" path="M465,65 L345,100" />
+        </circle>
+        {/* Return particle */}
+        <circle r="2" fill="#52B788" opacity="0.4">
+          <animateMotion dur="2.8s" repeatCount="indefinite" path="M345,100 L465,65" />
+        </circle>
+      </g>
+
+      {/* Line: Human → Baseil (query) + Baseil → Human (response) */}
+      <g>
+        <line x1="465" y1="160" x2="345" y2="120" stroke="rgba(82,183,136,0.06)" strokeWidth="4" filter="url(#sol-glow)" />
+        <line x1="465" y1="160" x2="345" y2="120" stroke="rgba(82,183,136,0.14)" strokeWidth="1.2" />
+        <circle r="2.5" fill="#6FCF97" opacity="0.5">
+          <animateMotion dur="2.6s" repeatCount="indefinite" path="M465,160 L345,120" />
+        </circle>
+        <circle r="2" fill="#52B788" opacity="0.4">
+          <animateMotion dur="3s" repeatCount="indefinite" path="M345,120 L465,160" />
+        </circle>
+      </g>
+
+      {/* Source nodes (left) */}
+      {sources.map((s, i) => {
+        const y = sourceYs[i]
+        return (
+          <g key={`src-${i}`}>
+            <rect x="60" y={y - 18} width="36" height="36" rx="8" fill="#0A0F0D" stroke="rgba(82,183,136,0.15)" strokeWidth="1" />
+            <SourceIcon type={s.type} cx={78} cy={y} color="#52B788" />
+            <text x="104" y={y + 4} textAnchor="start" fontSize="10" fill="#5A7A58" fontFamily="var(--font-outfit)">{s.label}</text>
+          </g>
+        )
+      })}
+
+      {/* Baseil center */}
+      <g>
+        <circle cx="300" cy="110" r="42" fill="none" stroke="rgba(82,183,136,0.06)" strokeWidth="1">
+          <animate attributeName="r" values="42;46;42" dur="4s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="1;0.3;1" dur="4s" repeatCount="indefinite" />
+        </circle>
+        <rect x="268" y="78" width="64" height="64" rx="16" fill="#0A0F0D" stroke="rgba(82,183,136,0.2)" strokeWidth="1.5" />
+        <image href="/robot/robot-leaf.png" x="280" y="88" width="40" height="44" />
+        <text x="300" y="160" textAnchor="middle" fontSize="11" fill="#52B788" fontFamily="var(--font-outfit)" opacity="0.6">baseil</text>
+      </g>
+
+      {/* Agent node (top-right) */}
+      <g>
+        <rect x="490" y="47" width="40" height="40" rx="10" fill="#0A0F0D" stroke="rgba(82,183,136,0.2)" strokeWidth="1" />
+        {/* Bot icon — square eyes + antenna */}
+        <line x1="510" y1="50" x2="510" y2="55" stroke="#52B788" strokeWidth="1" opacity="0.5" />
+        <circle cx="510" cy="49" r="2" fill="#52B788" opacity="0.5" />
+        <rect x="502" y="60" width="5" height="4" rx="1" fill="#52B788" opacity="0.5" />
+        <rect x="513" y="60" width="5" height="4" rx="1" fill="#52B788" opacity="0.5" />
+        <rect x="504" y="69" width="12" height="2" rx="1" fill="#52B788" opacity="0.3" />
+        <text x="510" y="100" textAnchor="middle" fontSize="10" fill="#5A7A58" fontFamily="var(--font-outfit)">Agent</text>
+      </g>
+
+      {/* Human node (bottom-right) */}
+      <g>
+        <rect x="490" y="140" width="40" height="40" rx="10" fill="#0A0F0D" stroke="rgba(82,183,136,0.15)" strokeWidth="1" />
+        {/* Person icon — head + shoulders */}
+        <circle cx="510" cy="152" r="5" fill="none" stroke="#6FCF97" strokeWidth="1" opacity="0.6" />
+        <path d="M500,170 Q500,162 510,162 Q520,162 520,170" fill="none" stroke="#6FCF97" strokeWidth="1" opacity="0.5" />
+        <text x="510" y="194" textAnchor="middle" fontSize="10" fill="#5A7A58" fontFamily="var(--font-outfit)">Human</text>
+      </g>
+    </svg>
+  )
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SLIDE 3 — THE SWARM (mesh topology)
+   ───────────────────────────────────────────────────────────── */
+
+function SlideSwarm() {
+  const leftDbs = [
+    { label: 'PostgreSQL', type: 'db', y: 40 },
+    { label: 'MongoDB', type: 'leaf', y: 110 },
+    { label: 'Redis', type: 'db', y: 180 },
+  ]
+
+  const rightDbs = [
+    { label: 'MySQL', type: 'db', y: 40 },
+    { label: 'APIs', type: 'api', y: 110 },
+    { label: 'Elasticsearch', type: 'search', y: 180 },
+  ]
+
+  return (
+    <svg className="w-full" viewBox="0 0 600 220" fill="none">
+      <defs>
+        <filter id="swarm-glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      {/* Left DB → Baseil-1 lines */}
+      {leftDbs.map((db, i) => (
+        <g key={`ldb-${i}`}>
+          <line x1="60" y1={db.y} x2="168" y2="110" stroke="rgba(82,183,136,0.14)" strokeWidth="1" />
+          <circle r="2" fill="#52B788" opacity="0.5">
+            <animateMotion dur={`${2.5 + i * 0.3}s`} repeatCount="indefinite" path={`M60,${db.y} L168,110`} />
+          </circle>
+        </g>
+      ))}
+
+      {/* Right DB → Baseil-2 lines */}
+      {rightDbs.map((db, i) => (
+        <g key={`rdb-${i}`}>
+          <line x1="540" y1={db.y} x2="432" y2="110" stroke="rgba(82,183,136,0.14)" strokeWidth="1" />
+          <circle r="2" fill="#6FCF97" opacity="0.5">
+            <animateMotion dur={`${2.5 + i * 0.3}s`} repeatCount="indefinite" path={`M540,${db.y} L432,110`} />
+          </circle>
+        </g>
+      ))}
+
+      {/* Mesh line: Baseil-1 ↔ Baseil-2 */}
+      <line x1="220" y1="110" x2="380" y2="110" stroke="rgba(111,207,151,0.2)" strokeWidth="1.5" strokeDasharray="6 4" />
+      {/* Bidirectional particles */}
+      <circle r="3" fill="#6FCF97" opacity="0.7">
+        <animateMotion dur="3s" repeatCount="indefinite" path="M220,110 L380,110" />
+      </circle>
+      <circle r="3" fill="#52B788" opacity="0.7">
+        <animateMotion dur="3.4s" repeatCount="indefinite" path="M380,110 L220,110" />
+      </circle>
+
+      {/* Left DB nodes */}
+      {leftDbs.map((db, i) => (
+        <g key={`lnode-${i}`}>
+          <rect x={22} y={db.y - 16} width="32" height="32" rx="7" fill="#0A0F0D" stroke="rgba(82,183,136,0.15)" strokeWidth="1" />
+          <SourceIcon type={db.type} cx={38} cy={db.y} color="#52B788" />
+          <text x={38} y={db.y + 26} textAnchor="middle" fontSize="9" fill="#5A7A58" fontFamily="var(--font-outfit)">{db.label}</text>
+        </g>
+      ))}
+
+      {/* Right DB nodes */}
+      {rightDbs.map((db, i) => (
+        <g key={`rnode-${i}`}>
+          <rect x={546} y={db.y - 16} width="32" height="32" rx="7" fill="#0A0F0D" stroke="rgba(82,183,136,0.15)" strokeWidth="1" />
+          <SourceIcon type={db.type} cx={562} cy={db.y} color="#6FCF97" />
+          <text x={562} y={db.y + 26} textAnchor="middle" fontSize="9" fill="#5A7A58" fontFamily="var(--font-outfit)">{db.label}</text>
+        </g>
+      ))}
+
+      {/* Baseil-1 (left) */}
+      <g>
+        <circle cx="195" cy="110" r="35" fill="none" stroke="rgba(82,183,136,0.06)" strokeWidth="1">
+          <animate attributeName="r" values="35;38;35" dur="4s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="1;0.3;1" dur="4s" repeatCount="indefinite" />
+        </circle>
+        <rect x="168" y="83" width="54" height="54" rx="14" fill="#0A0F0D" stroke="rgba(82,183,136,0.2)" strokeWidth="1.5" />
+        <image href="/robot/robot-leaf.png" x="177" y="90" width="36" height="40" />
+        <text x="195" y="152" textAnchor="middle" fontSize="10" fill="#52B788" fontFamily="var(--font-outfit)" opacity="0.6">baseil-1</text>
+      </g>
+
+      {/* Baseil-2 (right) */}
+      <g>
+        <circle cx="405" cy="110" r="35" fill="none" stroke="rgba(111,207,151,0.06)" strokeWidth="1">
+          <animate attributeName="r" values="35;38;35" dur="4s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="1;0.3;1" dur="4s" repeatCount="indefinite" />
+        </circle>
+        <rect x="378" y="83" width="54" height="54" rx="14" fill="#0A0F0D" stroke="rgba(111,207,151,0.2)" strokeWidth="1.5" />
+        <image href="/robot/robot-leaf.png" x="387" y="90" width="36" height="40" />
+        <text x="405" y="152" textAnchor="middle" fontSize="10" fill="#6FCF97" fontFamily="var(--font-outfit)" opacity="0.6">baseil-2</text>
+      </g>
+    </svg>
+  )
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MAIN COMPONENT
+   ───────────────────────────────────────────────────────────── */
+
 export function Problem() {
   const sectionRef = useRef<HTMLDivElement>(null)
-  const beforeCardRef = useRef<HTMLDivElement>(null)
-  const afterCardRef = useRef<HTMLDivElement>(null)
+  const cardRef = useRef<HTMLDivElement>(null)
 
   const [visible, setVisible] = useState(false)
-  const [resolved, setResolved] = useState(false)
+  const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 })
+  const [glow, setGlow] = useState({ x: 50, y: 50 })
 
-  // 3D tilt state for before/after cards
-  const [beforeTilt, setBeforeTilt] = useState({ rotateX: 0, rotateY: 0 })
-  const [afterTilt, setAfterTilt] = useState({ rotateX: 0, rotateY: 0 })
-  const [beforeGlow, setBeforeGlow] = useState({ x: 50, y: 50 })
-  const [afterGlow, setAfterGlow] = useState({ x: 50, y: 50 })
+  const { currentSlide, isTransitioning, jumpToSlide, pause, resume } = useProblemTimer()
 
-  // Intersection observer — trigger entrance + resolve
+  const slide = SLIDES[currentSlide]
+
+  // Intersection observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true)
-          setTimeout(() => setResolved(true), 2400)
+          resume()
+        } else {
+          pause()
         }
       },
       { threshold: 0.3 }
     )
     if (sectionRef.current) observer.observe(sectionRef.current)
     return () => observer.disconnect()
+  }, [pause, resume])
+
+  // Reset to slide 0 on re-entry
+  useEffect(() => {
+    if (visible) jumpToSlide(0)
+    // only on mount-like re-visibility — intentionally not tracking jumpToSlide
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // ---- Mouse handlers for 3D tilt + inner glow ----
-
-  const handleBeforeMove = useCallback((e: MouseEvent<HTMLDivElement>) => {
-    if (!beforeCardRef.current) return
-    const t = getTilt(e, beforeCardRef.current)
-    setBeforeTilt({ rotateX: t.rotateX, rotateY: t.rotateY })
-    setBeforeGlow({ x: t.glowX, y: t.glowY })
+  const handleMouseMove = useCallback((e: MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return
+    const t = getTilt(e, cardRef.current, 0.8)
+    setTilt({ rotateX: t.rotateX, rotateY: t.rotateY })
+    setGlow({ x: t.glowX, y: t.glowY })
   }, [])
 
-  const handleBeforeLeave = useCallback(() => {
-    setBeforeTilt({ rotateX: 0, rotateY: 0 })
-    setBeforeGlow({ x: 50, y: 50 })
-  }, [])
+  const handleMouseLeave = useCallback(() => {
+    setTilt({ rotateX: 0, rotateY: 0 })
+    setGlow({ x: 50, y: 50 })
+    resume()
+  }, [resume])
 
-  const handleAfterMove = useCallback((e: MouseEvent<HTMLDivElement>) => {
-    if (!afterCardRef.current) return
-    const t = getTilt(e, afterCardRef.current)
-    setAfterTilt({ rotateX: t.rotateX, rotateY: t.rotateY })
-    setAfterGlow({ x: t.glowX, y: t.glowY })
-  }, [])
+  const handleMouseEnter = useCallback(() => {
+    pause()
+  }, [pause])
 
-  const handleAfterLeave = useCallback(() => {
-    setAfterTilt({ rotateX: 0, rotateY: 0 })
-    setAfterGlow({ x: 50, y: 50 })
-  }, [])
+  const slideComponents = [<SlideProblem key="s0" />, <SlideSolution key="s1" />, <SlideSwarm key="s2" />]
 
   return (
     <section id="problem" ref={sectionRef} className="relative py-32 overflow-hidden">
@@ -83,221 +518,95 @@ export function Problem() {
         {/* Section label */}
         <div className="text-center mb-16">
           <span className="text-[0.7rem] font-[var(--font-outfit)] uppercase tracking-[0.2em] text-[#52B788]/50 mb-4 block">
-            The Problem
+            // The Problem
           </span>
           <h2 className="font-[var(--font-newsreader)] text-[clamp(2rem,4vw,3.2rem)] text-[#C8D8C4] leading-tight">
-            The bottleneck is already here.
+            Your AI agents need a data intelligence layer.
           </h2>
         </div>
 
-        {/* Before / After visual */}
+        {/* Carousel card */}
         <div className="relative max-w-[800px] mx-auto" style={{ perspective: '800px' }}>
-          {/* ============================================================
-              BEFORE state — chaos
-              ============================================================ */}
           <div
-            className={`transition-all duration-1000 origin-center ${
-              resolved
-                ? 'opacity-0 scale-90 rotate-[-2deg] absolute inset-0 pointer-events-none'
-                : 'opacity-100 scale-100 rotate-0'
-            }`}
+            ref={cardRef}
+            onMouseMove={handleMouseMove}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            className="relative bg-[#111916]/80 border rounded-2xl p-10 overflow-hidden tilt-card hover-inner-glow"
+            style={{
+              transform: `perspective(800px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)`,
+              borderColor: `${slide.accent}15`,
+              transition: 'border-color 0.6s ease',
+              '--glow-x': `${glow.x}%`,
+              '--glow-y': `${glow.y}%`,
+            } as React.CSSProperties}
           >
-            <div
-              ref={beforeCardRef}
-              onMouseMove={handleBeforeMove}
-              onMouseLeave={handleBeforeLeave}
-              className="relative bg-[#111916]/80 border border-[#C9672E]/10 rounded-2xl p-10 overflow-hidden tilt-card hover-inner-glow"
-              style={{
-                transform: `perspective(800px) rotateX(${beforeTilt.rotateX}deg) rotateY(${beforeTilt.rotateY}deg)`,
-                '--glow-x': `${beforeGlow.x}%`,
-                '--glow-y': `${beforeGlow.y}%`,
-              } as React.CSSProperties}
-            >
-              <div className="absolute inset-0 baseil-grain opacity-[0.02]" />
+            <div className="absolute inset-0 baseil-grain opacity-[0.02]" />
 
-              <div className="flex flex-col items-center gap-8">
-                <p className="font-[var(--font-outfit)] text-[1rem] text-[#5A7A58] text-center max-w-[500px] leading-relaxed">
-                  Today&apos;s agents wear too many hats. Understanding users, hunting across databases, formulating queries, formatting responses. Every new data source increases hallucinations.
-                </p>
+            <div className="flex flex-col items-center gap-8">
+              {/* Description text — crossfade */}
+              <div className="relative w-full max-w-[500px] min-h-[60px]">
+                {SLIDES.map((s, i) => (
+                  <p
+                    key={s.id}
+                    className="font-[var(--font-outfit)] text-[1rem] text-center leading-relaxed absolute inset-0"
+                    style={{
+                      color: i === 0 ? '#5A7A58' : '#8FAF8A',
+                      opacity: currentSlide === i && !isTransitioning ? 1 : 0,
+                      transition: `opacity ${TRANSITION_MS}ms ease`,
+                      pointerEvents: currentSlide === i ? 'auto' : 'none',
+                    }}
+                  >
+                    {s.description}
+                  </p>
+                ))}
+              </div>
 
-                <div className="relative w-full max-w-[600px] h-[200px]">
-                  {/* Database icons scattered */}
-                  {[
-                    { icon: Database, label: 'PostgreSQL', x: '5%', y: '20%', delay: '0s' },
-                    { icon: Database, label: 'MySQL', x: '85%', y: '10%', delay: '0.2s' },
-                    { icon: Database, label: 'MongoDB', x: '0%', y: '75%', delay: '0.4s' },
-                    { icon: Database, label: 'APIs', x: '90%', y: '70%', delay: '0.6s' },
-                  ].map((db, i) => (
-                    <div
-                      key={i}
-                      className={`absolute transition-all duration-700 ${visible ? 'opacity-100' : 'opacity-0 translate-y-4'}`}
-                      style={{ left: db.x, top: db.y, transitionDelay: db.delay }}
-                    >
-                      <div className="flex flex-col items-center gap-1 group/db">
-                        <div className="w-10 h-10 rounded-lg bg-[#0A0F0D] border border-[#C9672E]/20 flex items-center justify-center transition-shadow duration-300 group-hover/db:shadow-[0_0_12px_rgba(201,103,46,0.3)]">
-                          <db.icon size={18} className="text-[#C9672E]/60 transition-colors duration-300 group-hover/db:text-[#C9672E]/90" />
-                        </div>
-                        <span className="text-[0.65rem] font-[var(--font-outfit)] text-[#3D5A3A]">{db.label}</span>
-                      </div>
-                    </div>
-                  ))}
-
-                  {/* Central overwhelmed agent */}
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <div className={`w-14 h-14 rounded-xl bg-[#0A0F0D] border border-amber-600/25 flex items-center justify-center transition-shadow duration-300 hover:shadow-[0_0_24px_rgba(245,158,11,0.35)] ${visible ? 'animate-pulse' : ''}`}>
-                      <Bot size={24} className="text-amber-500/70" />
-                    </div>
-                    <div className="absolute -top-2 -right-2">
-                      <AlertTriangle size={14} className="text-amber-500 animate-pulse" />
-                    </div>
+              {/* SVG diagram — crossfade */}
+              <div className="relative w-full max-w-[600px] h-[220px]">
+                {slideComponents.map((comp, i) => (
+                  <div
+                    key={i}
+                    className="absolute inset-0"
+                    style={{
+                      opacity: currentSlide === i && !isTransitioning ? 1 : 0,
+                      transition: `opacity ${TRANSITION_MS}ms ease`,
+                      pointerEvents: currentSlide === i ? 'auto' : 'none',
+                    }}
+                  >
+                    {comp}
                   </div>
-
-                  {/* Tangled lines */}
-                  <svg className="absolute inset-0 w-full h-full" viewBox="0 0 600 200">
-                    {[
-                      'M 50 50 Q 150 90 300 100',
-                      'M 540 30 Q 400 80 300 100',
-                      'M 30 160 Q 180 120 300 100',
-                      'M 560 150 Q 420 130 300 100',
-                    ].map((d, i) => (
-                      <path
-                        key={i}
-                        d={d}
-                        fill="none"
-                        stroke="rgba(201, 103, 46, 0.15)"
-                        strokeWidth="1"
-                        strokeDasharray="4 6"
-                        className={`transition-all duration-1000 ${visible ? 'opacity-100' : 'opacity-0'}`}
-                        style={{ transitionDelay: `${i * 0.15}s` }}
-                      />
-                    ))}
-                  </svg>
-                </div>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* ============================================================
-              AFTER state — calm
-              ============================================================ */}
-          <div
-            className={`transition-all duration-1000 delay-200 origin-center ${
-              resolved
-                ? 'opacity-100 scale-100 rotate-0'
-                : 'opacity-0 scale-105 rotate-[1deg] absolute inset-0 pointer-events-none'
-            }`}
-          >
-            <div
-              ref={afterCardRef}
-              onMouseMove={handleAfterMove}
-              onMouseLeave={handleAfterLeave}
-              className="relative bg-[#111916]/80 border border-[#52B788]/10 rounded-2xl p-10 overflow-hidden tilt-card hover-inner-glow"
-              style={{
-                transform: `perspective(800px) rotateX(${afterTilt.rotateX}deg) rotateY(${afterTilt.rotateY}deg)`,
-                '--glow-x': `${afterGlow.x}%`,
-                '--glow-y': `${afterGlow.y}%`,
-              } as React.CSSProperties}
-            >
-              <div className="absolute inset-0 baseil-grain opacity-[0.02]" />
-
-              <div className="flex flex-col items-center gap-8">
-                <p className="font-[var(--font-outfit)] text-[1rem] text-[#8FAF8A] text-center max-w-[500px] leading-relaxed">
-                  Intelligence at the data layer itself. One calm layer that deciphers what data you need and where it lives.
-                </p>
-
-                <div className="relative w-full max-w-[600px] h-[200px]">
-                  {/* Databases on the left */}
-                  {[
-                    { label: 'PostgreSQL', y: '15%' },
-                    { label: 'MySQL', y: '42%' },
-                    { label: 'MongoDB', y: '69%' },
-                  ].map((db, i) => (
-                    <div key={i} className="absolute left-[5%] flex items-center gap-2 group/db" style={{ top: db.y }}>
-                      <div className="w-9 h-9 rounded-lg bg-[#0A0F0D] border border-[#52B788]/15 flex items-center justify-center transition-shadow duration-300 group-hover/db:shadow-[0_0_14px_rgba(82,183,136,0.3)]">
-                        <Database size={16} className="text-[#52B788]/60 transition-colors duration-300 group-hover/db:text-[#52B788]" />
-                      </div>
-                      <span className="text-[0.65rem] font-[var(--font-outfit)] text-[#5A7A58]">{db.label}</span>
-                    </div>
-                  ))}
-
-                  {/* baseil in the center */}
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group/baseil">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#52B788]/10 to-[#40916C]/10 border border-[#52B788]/20 flex items-center justify-center baseil-center-glow transition-shadow duration-500 group-hover/baseil:shadow-[0_0_50px_rgba(82,183,136,0.3),0_0_100px_rgba(82,183,136,0.12)]">
-                      <Leaf size={24} className="text-[#52B788] transition-transform duration-500 group-hover/baseil:scale-110" />
-                    </div>
-                    <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[0.6rem] font-[var(--font-outfit)] text-[#52B788]/50 whitespace-nowrap">baseil</span>
-                  </div>
-
-                  {/* Consumers on the right */}
-                  {[
-                    { label: 'Humans', y: '15%' },
-                    { label: 'Agents', y: '42%' },
-                    { label: 'Apps', y: '69%' },
-                  ].map((c, i) => (
-                    <div key={i} className="absolute right-[5%] flex items-center gap-2 flex-row-reverse group/consumer" style={{ top: c.y }}>
-                      <div className="w-9 h-9 rounded-lg bg-[#0A0F0D] border border-[#52B788]/15 flex items-center justify-center transition-shadow duration-300 group-hover/consumer:shadow-[0_0_14px_rgba(82,183,136,0.3)]">
-                        <Bot size={16} className="text-[#52B788]/60 transition-colors duration-300 group-hover/consumer:text-[#52B788]" />
-                      </div>
-                      <span className="text-[0.65rem] font-[var(--font-outfit)] text-[#5A7A58]">{c.label}</span>
-                    </div>
-                  ))}
-
-                  {/* Clean flow lines — thicker with glow */}
-                  <svg className="absolute inset-0 w-full h-full" viewBox="0 0 600 200">
-                    <defs>
-                      <filter id="line-glow" x="-20%" y="-20%" width="140%" height="140%">
-                        <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
-                        <feMerge>
-                          <feMergeNode in="blur" />
-                          <feMergeNode in="SourceGraphic" />
-                        </feMerge>
-                      </filter>
-                    </defs>
-
-                    {/* Glow underlayer lines (thicker, blurred) */}
-                    {[40, 92, 144].map((y, i) => (
-                      <line key={`lg${i}`} x1="100" y1={y} x2="270" y2="100" stroke="rgba(82,183,136,0.08)" strokeWidth="4" filter="url(#line-glow)" />
-                    ))}
-                    {[40, 92, 144].map((y, i) => (
-                      <line key={`rg${i}`} x1="330" y1="100" x2="500" y2={y} stroke="rgba(82,183,136,0.06)" strokeWidth="4" filter="url(#line-glow)" />
-                    ))}
-
-                    {/* Crisp main lines */}
-                    {[40, 92, 144].map((y, i) => (
-                      <line key={`l${i}`} x1="100" y1={y} x2="270" y2="100" stroke="rgba(82,183,136,0.2)" strokeWidth="1.5" />
-                    ))}
-                    {[40, 92, 144].map((y, i) => (
-                      <line key={`r${i}`} x1="330" y1="100" x2="500" y2={y} stroke="rgba(82,183,136,0.16)" strokeWidth="1.5" />
-                    ))}
-
-                    {/* Animated data dots — left to center */}
-                    {[0, 1, 2].map(i => (
-                      <circle key={`dl${i}`} r="2.5" fill="#52B788" opacity="0.6">
-                        <animateMotion dur={`${2 + i * 0.3}s`} repeatCount="indefinite">
-                          <mpath href={`#baseil-flow-left-${i}`} />
-                        </animateMotion>
-                      </circle>
-                    ))}
-                    {/* Animated data dots — center to right */}
-                    {[0, 1, 2].map(i => (
-                      <circle key={`dr${i}`} r="2.5" fill="#6FCF97" opacity="0.5">
-                        <animateMotion dur={`${2 + i * 0.3}s`} repeatCount="indefinite">
-                          <mpath href={`#baseil-flow-right-${i}`} />
-                        </animateMotion>
-                      </circle>
-                    ))}
-
-                    {/* Hidden motion paths */}
-                    {[40, 92, 144].map((y, i) => (
-                      <path key={`pl${i}`} id={`baseil-flow-left-${i}`} d={`M100 ${y} L270 100`} fill="none" />
-                    ))}
-                    {[40, 92, 144].map((y, i) => (
-                      <path key={`pr${i}`} id={`baseil-flow-right-${i}`} d={`M330 100 L500 ${y}`} fill="none" />
-                    ))}
-                  </svg>
-                </div>
-              </div>
-            </div>
+          {/* Dot indicators */}
+          <div className="flex items-center justify-center gap-6 mt-6">
+            {SLIDES.map((s, i) => (
+              <button
+                key={s.id}
+                onClick={() => jumpToSlide(i)}
+                className="flex items-center gap-2 group cursor-pointer"
+              >
+                <span
+                  className="block w-2 h-2 rounded-full transition-all duration-300"
+                  style={{
+                    backgroundColor: currentSlide === i ? s.accent : 'rgba(90,122,88,0.3)',
+                    boxShadow: currentSlide === i ? `0 0 8px ${s.accent}60` : 'none',
+                    transform: currentSlide === i ? 'scale(1.3)' : 'scale(1)',
+                  }}
+                />
+                <span
+                  className="text-[0.65rem] font-[var(--font-outfit)] uppercase tracking-[0.15em] transition-colors duration-300"
+                  style={{
+                    color: currentSlide === i ? s.accent : '#3D5A3A',
+                  }}
+                >
+                  {s.label}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
       </div>

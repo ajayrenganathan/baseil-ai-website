@@ -212,6 +212,102 @@
   50% { opacity: 1; r: 7; }
 }
 
+/* Cloud drift — whole cloud floats gently */
+@keyframes cloud-drift {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  25% { transform: translateX(6px) translateY(-2px); }
+  50% { transform: translateX(-4px) translateY(1px); }
+  75% { transform: translateX(5px) translateY(-1px); }
+}
+
+.cloud-drift {
+  animation: cloud-drift 18s ease-in-out infinite;
+}
+
+/* Cloud glow breathing */
+@keyframes cloud-glow-breathe {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); }
+}
+
+.cloud-glow-breathe {
+  animation: cloud-glow-breathe 6s ease-in-out infinite;
+}
+
+/* Individual puff animations — center puffs move subtly, edges move more */
+/* Base layer — gentle sway */
+@keyframes puff-move-1 {
+  0%, 100% { transform: translateX(0) translateY(0) scale(1); }
+  50% { transform: translateX(4px) translateY(2px) scale(1.03); }
+}
+/* Left puff */
+@keyframes puff-move-2 {
+  0%, 100% { transform: translateX(0) translateY(0) scale(1); }
+  30% { transform: translateX(-8px) translateY(-4px) scale(1.07); }
+  60% { transform: translateX(4px) translateY(2px) scale(0.96); }
+}
+/* Center-left — tallest, moderate move */
+@keyframes puff-move-3 {
+  0%, 100% { transform: translateX(0) translateY(0) scale(1); }
+  35% { transform: translateX(5px) translateY(-5px) scale(1.06); }
+  70% { transform: translateX(-3px) translateY(3px) scale(0.97); }
+}
+/* Center-right */
+@keyframes puff-move-4 {
+  0%, 100% { transform: translateX(0) translateY(0) scale(1); }
+  40% { transform: translateX(-4px) translateY(-3px) scale(1.05); }
+  75% { transform: translateX(6px) translateY(2px) scale(0.96); }
+}
+/* Right puff */
+@keyframes puff-move-5 {
+  0%, 100% { transform: translateX(0) translateY(0) scale(1); }
+  30% { transform: translateX(7px) translateY(-4px) scale(1.06); }
+  65% { transform: translateX(-3px) translateY(3px) scale(0.97); }
+}
+/* Center fill + highlight */
+@keyframes puff-move-6 {
+  0%, 100% { transform: translateX(0) translateY(0) scale(1); }
+  40% { transform: translateX(-3px) translateY(-4px) scale(1.05); }
+  70% { transform: translateX(2px) translateY(2px) scale(0.97); }
+}
+/* Far-left wisp — big movement */
+@keyframes puff-move-7 {
+  0%, 100% { transform: translateX(0) translateY(0) scale(1); }
+  25% { transform: translateX(-12px) translateY(-5px) scale(1.1); }
+  50% { transform: translateX(-6px) translateY(3px) scale(0.92); }
+  75% { transform: translateX(-14px) translateY(-2px) scale(1.06); }
+}
+/* Far-right wisp — big movement */
+@keyframes puff-move-8 {
+  0%, 100% { transform: translateX(0) translateY(0) scale(1); }
+  25% { transform: translateX(12px) translateY(-4px) scale(1.08); }
+  50% { transform: translateX(5px) translateY(3px) scale(0.93); }
+  75% { transform: translateX(14px) translateY(-3px) scale(1.07); }
+}
+/* Top-left wisp */
+@keyframes puff-move-9 {
+  0%, 100% { transform: translateX(0) translateY(0) scale(1); }
+  35% { transform: translateX(-8px) translateY(-7px) scale(1.12); }
+  70% { transform: translateX(4px) translateY(3px) scale(0.9); }
+}
+/* Top-right wisp */
+@keyframes puff-move-10 {
+  0%, 100% { transform: translateX(0) translateY(0) scale(1); }
+  35% { transform: translateX(9px) translateY(-8px) scale(1.1); }
+  70% { transform: translateX(-3px) translateY(4px) scale(0.92); }
+}
+
+.cloud-puff-1  { animation: puff-move-1  16s ease-in-out infinite; }
+.cloud-puff-2  { animation: puff-move-2  11s ease-in-out infinite; }
+.cloud-puff-3  { animation: puff-move-3  13s ease-in-out infinite; }
+.cloud-puff-4  { animation: puff-move-4  12s ease-in-out infinite 1s; }
+.cloud-puff-5  { animation: puff-move-5  14s ease-in-out infinite 0.5s; }
+.cloud-puff-6  { animation: puff-move-6  10s ease-in-out infinite 2s; }
+.cloud-puff-7  { animation: puff-move-7  9s  ease-in-out infinite; }
+.cloud-puff-8  { animation: puff-move-8  10s ease-in-out infinite 0.5s; }
+.cloud-puff-9  { animation: puff-move-9  8s  ease-in-out infinite 1.5s; }
+.cloud-puff-10 { animation: puff-move-10 9s  ease-in-out infinite 1s; }
+
 /* Rotating border for showcase */
 @keyframes border-rotate {
   from { transform: rotate(0deg); }
@@ -227,6 +323,16 @@
 /* =============================================================
    INTERACTIVE EFFECTS — AURORA / TILT / GLOW
    ============================================================= */
+
+/* Footer tagline zoom-in */
+@keyframes tagline-zoom {
+  0% { opacity: 0; transform: scale(1.5); }
+  60% { opacity: 1; transform: scale(0.98); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.animate-tagline-zoom {
+  animation: tagline-zoom 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards, baseil-shimmer 5s ease-in-out infinite;
+}
 
 /* Aurora mesh background blobs */
 @keyframes aurora-drift-1 {
@@ -381,7 +487,8 @@
   box-shadow: 0 0 6px rgba(82, 183, 136, 0.3);
 }
 
-.nav-link-underline:hover::after {
+.nav-link-underline:hover::after,
+.nav-link-underline.nav-link-active::after {
   width: 100%;
 }
 

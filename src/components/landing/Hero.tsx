@@ -139,10 +139,9 @@ export function Hero() {
 
         {/* Description */}
         <p className={`font-[var(--font-outfit)] text-[0.9rem] leading-relaxed text-[#8FAF8A] max-w-[520px] mx-auto mb-5 transition-all duration-700 delay-[800ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-          Baseil is a <span className="text-[#6FCF97]" style={{ textShadow: '0 0 12px rgba(82,183,136,0.15)' }}>data retrieval AI</span> that crawls into your databases, maps every schema,
-          and serves up answers on a silver platter — no config, no connectors, no drama.
-          The result? <span className="text-[#6FCF97]" style={{ textShadow: '0 0 12px rgba(82,183,136,0.15)' }}>A unified data intelligence layer</span> where humans and AI agents simply
-          ask questions in plain English and get answers from any database instantly.
+          Baseil is an <span className="text-[#6FCF97]" style={{ textShadow: '0 0 12px rgba(82,183,136,0.15)' }}>AI data agent</span> that crawls into your databases, maps every schema, and serves up answers. No config, no connectors, no drama.
+          <br className="hidden sm:block" />
+          <span className="text-[#6FCF97]" style={{ textShadow: '0 0 12px rgba(82,183,136,0.15)' }}>One intelligent layer</span> where humans and AI agents ask in plain English and get answers instantly.
         </p>
 
         {/* Audience chips */}
@@ -169,7 +168,7 @@ export function Hero() {
             onClick={(e) => { e.preventDefault(); document.getElementById('early-access')?.scrollIntoView({ behavior: 'smooth' }) }}
             className="baseil-cta-primary text-[0.85rem] px-6 py-2.5 flex items-center gap-2"
           >
-            Request Early Access
+            Join the Waitlist
             <ArrowRight size={15} />
           </a>
           <a

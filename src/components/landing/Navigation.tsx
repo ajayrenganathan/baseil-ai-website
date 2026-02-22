@@ -1,13 +1,25 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 import { BaseilLogo } from './BaseilLogo'
-import { Github, Star } from 'lucide-react'
+
+const SECTIONS = [
+  { label: 'Home', id: 'top' },
+  { label: 'How it Works', id: 'how-it-works' },
+  { label: 'Capabilities', id: 'capabilities' },
+  { label: 'Demo', id: 'sandbox' },
+]
 
 export function Navigation() {
+  const pathname = usePathname()
+  const isHome = pathname === '/'
   const [scrolled, setScrolled] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
+  const [activeSection, setActiveSection] = useState('top')
 
+  // Scroll tracking
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 40)
@@ -19,9 +31,51 @@ export function Navigation() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
-  }
+  // Scroll spy — track which section is in view
+  useEffect(() => {
+    if (!isHome) return
+
+    const sectionIds = SECTIONS.map(s => s.id).filter(id => id !== 'top')
+    const observers: IntersectionObserver[] = []
+
+    const handleIntersect = (id: string) => (entries: IntersectionObserverEntry[]) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setActiveSection(id)
+        }
+      })
+    }
+
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id)
+      if (el) {
+        const observer = new IntersectionObserver(handleIntersect(id), {
+          rootMargin: '-40% 0px -55% 0px',
+        })
+        observer.observe(el)
+        observers.push(observer)
+      }
+    })
+
+    // Track "top" — if scrolled to near top, mark Home as active
+    const topCheck = () => {
+      if (window.scrollY < 200) setActiveSection('top')
+    }
+    window.addEventListener('scroll', topCheck, { passive: true })
+
+    return () => {
+      observers.forEach(o => o.disconnect())
+      window.removeEventListener('scroll', topCheck)
+    }
+  }, [isHome])
+
+  const scrollTo = useCallback((id: string) => {
+    if (id === 'top') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [])
 
   return (
     <>
@@ -39,44 +93,75 @@ export function Navigation() {
         }`}
       >
         <div className="max-w-[1200px] mx-auto px-6 h-[56px] flex items-center justify-between">
-          <div className="group cursor-pointer">
+          <Link href="/" className="group cursor-pointer">
             <BaseilLogo />
-          </div>
+          </Link>
 
-          <div className="hidden md:flex items-center gap-8">
-            {[
-              { label: 'Problem', id: 'problem' },
-              { label: 'Demo', id: 'sandbox' },
-              { label: 'How it works', id: 'how-it-works' },
-              { label: 'Open Source', id: 'pricing' },
-            ].map(item => (
-              <button
-                key={item.id}
-                onClick={() => scrollTo(item.id)}
-                className="nav-link-underline text-[0.85rem] font-[var(--font-outfit)] text-[#5A7A58] hover:text-[#C8D8C4] transition-colors duration-300"
-              >
-                {item.label}
-              </button>
+          <div className="hidden md:flex items-center gap-7">
+            {/* Landing page sections */}
+            {SECTIONS.map(item => (
+              isHome ? (
+                <button
+                  key={item.id}
+                  onClick={() => scrollTo(item.id)}
+                  className={`nav-link-underline text-[0.82rem] font-[var(--font-outfit)] transition-colors duration-300 ${
+                    activeSection === item.id
+                      ? 'text-[#C8D8C4] nav-link-active'
+                      : 'text-[#5A7A58] hover:text-[#C8D8C4]'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ) : (
+                <Link
+                  key={item.id}
+                  href={`/#${item.id === 'top' ? '' : item.id}`}
+                  className="nav-link-underline text-[0.82rem] font-[var(--font-outfit)] text-[#5A7A58] hover:text-[#C8D8C4] transition-colors duration-300"
+                >
+                  {item.label}
+                </Link>
+              )
             ))}
+
+            {/* Pricing page link */}
+            <Link
+              href="/pricing"
+              className={`nav-link-underline text-[0.82rem] font-[var(--font-outfit)] transition-colors duration-300 ${
+                pathname === '/pricing'
+                  ? 'text-[#C8D8C4] nav-link-active'
+                  : 'text-[#5A7A58] hover:text-[#C8D8C4]'
+              }`}
+            >
+              Pricing
+            </Link>
+
+            {/* Blog page link — hidden for now, needs work */}
+
+            {/* Platform page link */}
+            <Link
+              href="/platform"
+              className={`nav-link-underline text-[0.82rem] font-[var(--font-outfit)] transition-colors duration-300 ${
+                pathname === '/platform'
+                  ? 'text-[#C8D8C4] nav-link-active'
+                  : 'text-[#5A7A58] hover:text-[#C8D8C4]'
+              }`}
+            >
+              Platform
+            </Link>
           </div>
 
           <div className="flex items-center gap-4">
             <a
-              href="https://github.com/baseil-ai/baseil"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="nav-link-underline flex items-center gap-2 text-[0.8rem] font-[var(--font-outfit)] text-[#5A7A58] hover:text-[#C8D8C4] transition-colors duration-300"
-            >
-              <Github size={16} />
-              <Star size={12} className="text-[#52B788]/60" />
-              <span>Star</span>
-            </a>
-            <a
-              href="#early-access"
-              onClick={(e) => { e.preventDefault(); scrollTo('early-access') }}
+              href={isHome ? '#early-access' : '/#early-access'}
+              onClick={(e) => {
+                if (isHome) {
+                  e.preventDefault()
+                  scrollTo('early-access')
+                }
+              }}
               className="baseil-cta-primary text-[0.8rem] px-5 py-2"
             >
-              Request Early Access
+              Join Waitlist
             </a>
           </div>
         </div>

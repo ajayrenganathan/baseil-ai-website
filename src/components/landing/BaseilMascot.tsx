@@ -13,7 +13,7 @@ export function BaseilMascot({ className = '' }: { className?: string }) {
           height={150}
           priority
           className="select-none pointer-events-none"
-          style={{ objectFit: 'contain' }}
+          style={{ objectFit: 'contain', height: 'auto' }}
         />
       </div>
     </div>

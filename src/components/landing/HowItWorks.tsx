@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState, useEffect, useCallback } from 'react'
-import { Plug, Radar, Globe, MessageSquareHeart } from 'lucide-react'
+import { Plug, Radar, Globe, MessageSquareHeart, Pin } from 'lucide-react'
 
 const STEPS = [
   {
@@ -271,7 +271,7 @@ export function HowItWorks() {
             // How it works
           </span>
           <h2 className="font-[var(--font-newsreader)] text-[clamp(1.8rem,3.5vw,2.8rem)] text-[#C8D8C4] leading-tight">
-            Three steps. Zero headaches.
+            Three steps. Zero friction.
           </h2>
         </div>
 
@@ -282,18 +282,25 @@ export function HowItWorks() {
           ))}
         </div>
 
-        {/* Feedback loop */}
-        <div className={`mt-12 transition-all duration-700 delay-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-          <div className="group relative rounded-2xl border border-[#52B788]/[0.08] bg-[#111916]/40 p-7 hover:border-[#52B788]/15 hover:bg-[#111916]/70 transition-all duration-500 flex items-start gap-5 max-w-[700px] mx-auto">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 bg-[#52B788]/[0.08] border border-[#52B788]/[0.12] group-hover:scale-110 transition-transform duration-500">
+        {/* Feedback + Pinning */}
+        <div className={`mt-12 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-[700px] mx-auto transition-all duration-700 delay-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+          <div className="group relative rounded-2xl border border-[#52B788]/[0.08] bg-[#111916]/40 p-6 hover:border-[#52B788]/15 hover:bg-[#111916]/70 transition-all duration-500">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 bg-[#52B788]/[0.08] border border-[#52B788]/[0.12] group-hover:scale-110 transition-transform duration-500">
               <MessageSquareHeart size={18} className="text-[#52B788] opacity-80 group-hover:opacity-100 transition-opacity" />
             </div>
-            <div>
-              <h4 className="font-[var(--font-newsreader)] text-[1.1rem] text-[#C8D8C4] mb-1">Teach it with feedback</h4>
-              <p className="font-[var(--font-outfit)] text-[0.8rem] text-[#8FAF8A] leading-relaxed">
-                Thumbs up, thumbs down, or add rules. Baseil speeds up queries and customises responses based on your feedback — learning how your team actually talks about your data.
-              </p>
+            <h4 className="font-[var(--font-newsreader)] text-[1.1rem] text-[#C8D8C4] mb-1">Teach it with feedback</h4>
+            <p className="font-[var(--font-outfit)] text-[0.8rem] text-[#8FAF8A] leading-relaxed">
+              Thumbs up, thumbs down, or add rules. Baseil learns how your team talks about data and gets sharper with every interaction.
+            </p>
+          </div>
+          <div className="group relative rounded-2xl border border-[#52B788]/[0.08] bg-[#111916]/40 p-6 hover:border-[#52B788]/15 hover:bg-[#111916]/70 transition-all duration-500">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 bg-[#52B788]/[0.08] border border-[#52B788]/[0.12] group-hover:scale-110 transition-transform duration-500">
+              <Pin size={18} className="text-[#52B788] opacity-80 group-hover:opacity-100 transition-opacity" />
             </div>
+            <h4 className="font-[var(--font-newsreader)] text-[1.1rem] text-[#C8D8C4] mb-1">Pin retrieval workflows</h4>
+            <p className="font-[var(--font-outfit)] text-[0.8rem] text-[#8FAF8A] leading-relaxed">
+              Pin frequently used queries and retrieval workflows. Make your data fetches deterministic and save on tokens.
+            </p>
           </div>
         </div>
 

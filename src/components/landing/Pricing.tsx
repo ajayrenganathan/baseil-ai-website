@@ -1,38 +1,62 @@
 'use client'
 
 import { useRef, useState, useEffect, useCallback } from 'react'
-import { Check, Github, ArrowRight } from 'lucide-react'
+import { Check, ArrowRight } from 'lucide-react'
 
 const TIERS = [
+  // {
+  //   name: 'Basic',
+  //   price: 'Free',
+  //   subtitle: 'Get started locally',
+  //   features: [
+  //     'Core baseil agent',
+  //     'Schema auto-discovery',
+  //     'Natural language queries',
+  //     'Rules engine',
+  //     'Limited connections',
+  //   ],
+  //   cta: { label: 'Get Started', icon: ArrowRight, href: '#' },
+  //   highlight: false,
+  // },
   {
-    name: 'Community',
+    name: 'Pro',
     price: 'Free',
-    subtitle: 'Self-host forever',
+    subtitle: 'Free during beta',
     features: [
-      'Core baseil agent',
-      'Schema auto-discovery',
-      'Natural language queries',
-      'Rules engine',
-      'Limited connections',
-      'Single instance',
+      'Everything in Basic',
+      'Unlimited connections',
+      'API & MCP generation',
+      'Priority support',
     ],
-    cta: { label: 'View on GitHub', icon: Github, href: '#' },
+    cta: { label: 'Join the Waitlist', icon: ArrowRight, href: '#early-access' },
+    highlight: true,
+  },
+  {
+    name: 'Teams',
+    price: 'Waitlist',
+    subtitle: 'Build your intelligence layer together',
+    features: [
+      'Everything in Pro',
+      'Cloud sync',
+      'Team collaboration',
+      'Shared dashboards',
+    ],
+    cta: { label: 'Coming Soon', icon: ArrowRight, href: '#early-access' },
     highlight: false,
   },
   {
-    name: 'Pro',
-    price: 'Early Access',
-    subtitle: 'Managed or self-hosted',
+    name: 'Enterprise',
+    price: 'Waitlist',
+    subtitle: 'Full control at scale',
     features: [
-      'Everything in Community',
-      'Unlimited connections',
+      'Everything in Teams',
       'Swarm / mesh deployment',
-      'API & MCP generation',
-      'Priority support',
-      'Advanced analytics',
+      'Root server',
+      'Self-hosted deployment',
+      'Custom SLAs',
     ],
-    cta: { label: 'Request Access', icon: ArrowRight, href: '#early-access' },
-    highlight: true,
+    cta: { label: 'Contact Us', icon: ArrowRight, href: '#early-access' },
+    highlight: false,
   },
 ]
 
@@ -58,7 +82,7 @@ function PricingCard({
     const centerY = rect.top + rect.height / 2
     const mouseX = e.clientX - centerX
     const mouseY = e.clientY - centerY
-    const maxTilt = 6
+    const maxTilt = 2
     const rotateY = (mouseX / (rect.width / 2)) * maxTilt
     const rotateX = -(mouseY / (rect.height / 2)) * maxTilt
     setTilt({ x: rotateY, y: rotateX })
@@ -79,7 +103,7 @@ function PricingCard({
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`relative rounded-2xl border p-7 transition-all duration-700 ${
+      className={`relative flex flex-col rounded-2xl border p-7 transition-all duration-700 ${
         tier.highlight
           ? 'gradient-border-card border-[#52B788]/15 bg-gradient-to-b from-[#52B788]/[0.04] to-[#111916]/60'
           : 'border-[#52B788]/[0.06] bg-[#111916]/40'
@@ -109,12 +133,23 @@ function PricingCard({
       )}
 
       <div className="relative z-10 mb-6">
-        <h3 className="font-[var(--font-outfit)] text-[0.85rem] font-medium text-[#5A7A58] mb-1">{tier.name}</h3>
-        <div className="font-[var(--font-newsreader)] text-[2rem] text-[#C8D8C4]">{tier.price}</div>
+        <h3 className="font-[var(--font-newsreader)] text-[1.4rem] text-[#C8D8C4] mb-2">{tier.name}</h3>
+        {tier.price === 'Free' ? (
+          <div className="flex items-baseline gap-2 mb-1">
+            <span className="font-[var(--font-newsreader)] text-[2rem] text-[#C8D8C4] leading-none">Free</span>
+          </div>
+        ) : (
+          <div className="mb-1">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#52B788]/15 bg-[#52B788]/[0.06] text-[0.75rem] font-[var(--font-outfit)] text-[#52B788]/70">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#52B788]/50 animate-pulse" />
+              Waitlist
+            </span>
+          </div>
+        )}
         <span className="font-[var(--font-outfit)] text-[0.75rem] text-[#3D5A3A]">{tier.subtitle}</span>
       </div>
 
-      <ul className="relative z-10 space-y-3 mb-8">
+      <ul className="relative z-10 space-y-3 mb-8 flex-1">
         {tier.features.map((feature, j) => (
           <li
             key={j}
@@ -169,20 +204,20 @@ export function Pricing() {
     <section id="pricing" ref={sectionRef} className="relative py-28 overflow-hidden">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[1px] bg-gradient-to-r from-transparent via-[#52B788]/10 to-transparent" />
 
-      <div className="max-w-[800px] mx-auto px-6">
+      <div className="max-w-[1200px] mx-auto px-6">
         <div className="text-center mb-16">
           <span className="text-[0.7rem] font-[var(--font-outfit)] uppercase tracking-[0.2em] text-[#52B788]/50 mb-4 block">
-            Open Source
+            Pricing
           </span>
           <h2 className="font-[var(--font-newsreader)] text-[clamp(1.8rem,3.5vw,2.8rem)] text-[#C8D8C4] leading-tight mb-3">
-            Free to start. Open to inspect.
+            One agent. Three ways to run it.
           </h2>
           <p className="font-[var(--font-outfit)] text-[0.9rem] text-[#5A7A58]">
-            See the code, run it yourself, no vendor lock-in.
+            Self-host for free, or let us manage it for your team.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {TIERS.map((tier, i) => (
             <PricingCard key={i} tier={tier} index={i} visible={visible} />
           ))}
