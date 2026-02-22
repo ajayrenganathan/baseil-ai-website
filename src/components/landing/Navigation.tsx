@@ -148,6 +148,18 @@ export function Navigation() {
             >
               Platform
             </Link>
+
+            {/* Contact page link */}
+            <Link
+              href="/contact"
+              className={`nav-link-underline text-[0.82rem] font-[var(--font-outfit)] transition-colors duration-300 ${
+                pathname === '/contact'
+                  ? 'text-[#C8D8C4] nav-link-active'
+                  : 'text-[#5A7A58] hover:text-[#C8D8C4]'
+              }`}
+            >
+              Contact
+            </Link>
           </div>
 
           <div className="flex items-center gap-4">

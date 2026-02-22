@@ -14,7 +14,7 @@ export default function ContactPage() {
   const copyEmail = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    navigator.clipboard.writeText('support@baseil.com')
+    navigator.clipboard.writeText('support@baseil.ai')
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
@@ -59,7 +59,7 @@ export default function ContactPage() {
           {/* Email card */}
           <div className={`transition-all duration-700 delay-200 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             <a
-              href="mailto:support@baseil.com"
+              href="mailto:support@baseil.ai"
               className="group flex items-center gap-5 rounded-2xl border border-[#52B788]/[0.08] bg-[#111916]/60 p-6 hover:border-[#52B788]/20 hover:bg-[#111916]/80 transition-all duration-300"
             >
               <div className="w-12 h-12 rounded-xl bg-[#52B788]/[0.08] border border-[#52B788]/15 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -68,7 +68,7 @@ export default function ContactPage() {
               <div className="flex-1">
                 <p className="font-[var(--font-outfit)] text-[0.75rem] text-[#5A7A58] mb-1">Email us at</p>
                 <p className="font-[var(--font-newsreader)] text-[1.2rem] text-[#C8D8C4] group-hover:text-[#52B788] transition-colors duration-300">
-                  support@baseil.com
+                  support@baseil.ai
                 </p>
               </div>
               <button
