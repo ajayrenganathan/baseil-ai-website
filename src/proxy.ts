@@ -14,9 +14,10 @@ const CLERK_FAPI = 'https://frontend-api.clerk.dev'
 const PROXY_URL = 'https://baseil.ai/__clerk/'
 
 const CORS_HEADERS: Record<string, string> = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': 'app://-',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
   'Access-Control-Allow-Headers': '*',
+  'Access-Control-Allow-Credentials': 'true',
 }
 
 export function proxy(req: NextRequest) {
@@ -39,6 +40,10 @@ export function proxy(req: NextRequest) {
   const requestHeaders = new Headers(req.headers)
   requestHeaders.set('Clerk-Proxy-Url', PROXY_URL)
   requestHeaders.set('Clerk-Secret-Key', process.env.CLERK_SECRET_KEY || '')
+
+  // Replace Electron's app:// origin with baseil.ai so Clerk accepts the request
+  requestHeaders.set('Origin', 'https://baseil.ai')
+  requestHeaders.set('Referer', 'https://baseil.ai/')
   requestHeaders.set(
     'X-Forwarded-For',
     req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || '127.0.0.1'
