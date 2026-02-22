@@ -115,6 +115,7 @@ function DesktopAuthInner() {
 
       <SignIn
         routing="hash"
+        forceRedirectUrl="/auth/desktop"
         appearance={{
           layout: {
             socialButtonsVariant: 'blockButton' as const,
