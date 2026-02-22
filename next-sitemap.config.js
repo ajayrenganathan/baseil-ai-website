@@ -7,6 +7,8 @@ module.exports = {
   exclude: [
     '/showcase',
     '/robot',
+    '/problem',
+    '/docs',
     '/icon*',
     '/apple-icon*',
     '/manifest*',
