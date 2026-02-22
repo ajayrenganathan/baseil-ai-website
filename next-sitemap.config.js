@@ -5,6 +5,7 @@ module.exports = {
   generateIndexSitemap: false,
 
   exclude: [
+    '/auth*',
     '/showcase',
     '/robot',
     '/problem',
@@ -21,6 +22,7 @@ module.exports = {
       {
         userAgent: '*',
         allow: '/',
+        disallow: ['/auth/'],
       },
     ],
     additionalSitemaps: [],
