@@ -162,7 +162,11 @@ function DesktopAuthInner() {
 
 export default function DesktopAuthPage() {
   return (
-    <ClerkProvider publishableKey={CLERK_KEY}>
+    <ClerkProvider
+      publishableKey={CLERK_KEY}
+      signInForceRedirectUrl="/auth/desktop"
+      signUpForceRedirectUrl="/auth/desktop"
+    >
       <DesktopAuthInner />
     </ClerkProvider>
   )
