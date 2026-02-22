@@ -252,13 +252,17 @@ function ConnectingDots() {
 export function HowItWorks() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
+  const hasTrackedRef = useRef(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true)
-          trackEvent('section_view', { section_name: 'how_it_works' })
+          if (!hasTrackedRef.current) {
+            trackEvent('section_view', { section_name: 'how_it_works' })
+            hasTrackedRef.current = true
+          }
         }
       },
       { threshold: 0.2 }

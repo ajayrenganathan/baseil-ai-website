@@ -205,13 +205,17 @@ function PricingCard({
 export function Pricing() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
+  const hasTrackedRef = useRef(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true)
-          trackEvent('section_view', { section_name: 'pricing' })
+          if (!hasTrackedRef.current) {
+            trackEvent('section_view', { section_name: 'pricing' })
+            hasTrackedRef.current = true
+          }
         }
       },
       { threshold: 0.2 }

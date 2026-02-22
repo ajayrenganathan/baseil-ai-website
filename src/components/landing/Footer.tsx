@@ -13,6 +13,7 @@ export function Footer() {
   const [inputFocused, setInputFocused] = useState(false)
   const taglineRef = useRef<HTMLDivElement>(null)
   const [taglineVisible, setTaglineVisible] = useState(false)
+  const hasTrackedRef = useRef(false)
 
   useEffect(() => {
     const el = taglineRef.current
@@ -21,7 +22,10 @@ export function Footer() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setTaglineVisible(true)
-          trackEvent('section_view', { section_name: 'footer' })
+          if (!hasTrackedRef.current) {
+            trackEvent('section_view', { section_name: 'footer' })
+            hasTrackedRef.current = true
+          }
         }
       },
       { threshold: 0 }
@@ -32,8 +36,8 @@ export function Footer() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    trackEvent('cta_click', { button_label: 'join_waitlist', section: 'footer' })
     if (!email.trim()) return
+    trackEvent('cta_click', { button_label: 'join_waitlist', section: 'footer' })
     setLoading(true)
     setError('')
 

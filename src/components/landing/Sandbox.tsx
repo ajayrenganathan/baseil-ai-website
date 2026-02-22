@@ -152,6 +152,7 @@ export function Sandbox() {
   const [visible, setVisible] = useState(false)
   const [consoleGlow, setConsoleGlow] = useState(false)
   const [activeLoadingStep, setActiveLoadingStep] = useState(-1)
+  const hasTrackedRef = useRef(false)
 
   const steps = aiMode ? AI_LOADING_STEPS : LOADING_STEPS
   const resultDb = aiMode ? DATABASES[resolvedDb] || DATABASES[0] : DATABASES[activeDb]
@@ -161,7 +162,10 @@ export function Sandbox() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true)
-          trackEvent('section_view', { section_name: 'sandbox' })
+          if (!hasTrackedRef.current) {
+            trackEvent('section_view', { section_name: 'sandbox' })
+            hasTrackedRef.current = true
+          }
         }
       },
       { threshold: 0.2 }

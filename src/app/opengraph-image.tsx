@@ -78,7 +78,7 @@ export default async function Image() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: '40%',
+            width: '36%',
             height: '100%',
             position: 'relative',
           }}
@@ -87,8 +87,8 @@ export default async function Image() {
           <div
             style={{
               position: 'absolute',
-              width: 260,
-              height: 260,
+              width: 300,
+              height: 300,
               borderRadius: '50%',
               border: '1px solid rgba(82,183,136,0.1)',
               display: 'flex',
@@ -97,8 +97,8 @@ export default async function Image() {
           <div
             style={{
               position: 'absolute',
-              width: 340,
-              height: 340,
+              width: 400,
+              height: 400,
               borderRadius: '50%',
               border: '1px solid rgba(82,183,136,0.05)',
               display: 'flex',
@@ -107,8 +107,8 @@ export default async function Image() {
           <img
             src="https://baseil.ai/robot/robot-leaf.png"
             alt=""
-            width={180}
-            height={210}
+            width={220}
+            height={256}
             style={{ objectFit: 'contain', position: 'relative' }}
           />
         </div>
@@ -117,9 +117,9 @@ export default async function Image() {
         <div
           style={{
             position: 'absolute',
-            left: '40%',
-            top: '15%',
-            bottom: '15%',
+            left: '36%',
+            top: '12%',
+            bottom: '12%',
             width: 1,
             background:
               'linear-gradient(180deg, transparent, rgba(82,183,136,0.2), transparent)',
@@ -133,20 +133,20 @@ export default async function Image() {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            width: '60%',
+            width: '64%',
             height: '100%',
-            paddingLeft: 60,
-            paddingRight: 80,
+            paddingLeft: 50,
+            paddingRight: 50,
           }}
         >
           {/* Section label */}
           <div
             style={{
-              fontSize: 13,
+              fontSize: 15,
               letterSpacing: '0.2em',
               color: '#52B788',
               opacity: 0.5,
-              marginBottom: 20,
+              marginBottom: 18,
               display: 'flex',
             }}
           >
@@ -156,12 +156,12 @@ export default async function Image() {
           {/* Title */}
           <div
             style={{
-              fontSize: 80,
+              fontSize: 96,
               fontWeight: 600,
               letterSpacing: '-0.03em',
               lineHeight: 1,
               color: '#C8D8C4',
-              marginBottom: 12,
+              marginBottom: 14,
               display: 'flex',
             }}
           >
@@ -171,11 +171,11 @@ export default async function Image() {
           {/* Tagline */}
           <div
             style={{
-              fontSize: 22,
+              fontSize: 26,
               letterSpacing: '0.12em',
               textTransform: 'uppercase' as const,
               color: '#52B788',
-              marginBottom: 28,
+              marginBottom: 24,
               display: 'flex',
             }}
           >
@@ -185,10 +185,10 @@ export default async function Image() {
           {/* Description */}
           <div
             style={{
-              fontSize: 17,
+              fontSize: 20,
               color: '#8FAF8A',
               lineHeight: 1.6,
-              maxWidth: 480,
+              maxWidth: 540,
               display: 'flex',
             }}
           >
@@ -199,17 +199,17 @@ export default async function Image() {
           <div
             style={{
               display: 'flex',
-              gap: 10,
-              marginTop: 28,
+              gap: 12,
+              marginTop: 26,
             }}
           >
             {['Schema Discovery', 'MCP Tools', 'AI Native'].map((tag) => (
               <div
                 key={tag}
                 style={{
-                  fontSize: 12,
+                  fontSize: 13,
                   color: '#52B788',
-                  padding: '6px 14px',
+                  padding: '7px 16px',
                   borderRadius: 20,
                   border: '1px solid rgba(82,183,136,0.15)',
                   background: 'rgba(82,183,136,0.05)',

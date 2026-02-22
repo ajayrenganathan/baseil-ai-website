@@ -458,6 +458,7 @@ function SlideSwarm() {
 export function Problem() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const cardRef = useRef<HTMLDivElement>(null)
+  const hasTrackedRef = useRef(false)
 
   const [visible, setVisible] = useState(false)
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 })
@@ -473,7 +474,10 @@ export function Problem() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true)
-          trackEvent('section_view', { section_name: 'problem' })
+          if (!hasTrackedRef.current) {
+            trackEvent('section_view', { section_name: 'problem' })
+            hasTrackedRef.current = true
+          }
           resume()
         } else {
           pause()
