@@ -2,11 +2,13 @@
 
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import rehypeSanitize from 'rehype-sanitize'
 
 export function MarkdownRenderer({ content }: { content: string }) {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
+      rehypePlugins={[rehypeSanitize]}
       components={{
         h1: ({ children }) => (
           <h1 className="font-[var(--font-newsreader)] text-[2rem] text-[#C8D8C4] mt-12 mb-4 leading-tight">
@@ -102,16 +104,19 @@ export function MarkdownRenderer({ content }: { content: string }) {
             {children}
           </td>
         ),
-        img: ({ src, alt }) => (
-          <span className="block my-6">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={src}
-              alt={alt || ''}
-              className="rounded-xl border border-[#52B788]/[0.08] max-w-full"
-            />
-          </span>
-        ),
+        img: ({ src, alt }) => {
+          if (!src || typeof src !== 'string' || !/^(https?:\/\/|\/|\.\/)/.test(src)) return null
+          return (
+            <span className="block my-6">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={src}
+                alt={alt || ''}
+                className="rounded-xl border border-[#52B788]/[0.08] max-w-full"
+              />
+            </span>
+          )
+        },
       }}
     >
       {content}

@@ -43,6 +43,9 @@ export function getAllPosts(): BlogPost[] {
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {
+  // Validate slug to prevent path traversal
+  if (!/^[a-zA-Z0-9_-]+$/.test(slug)) return null
+
   const filePath = path.join(BLOG_DIR, `${slug}.md`)
   if (!fs.existsSync(filePath)) return null
 
