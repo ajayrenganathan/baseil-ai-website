@@ -569,11 +569,11 @@ export function Problem() {
               </div>
 
               {/* SVG diagram — crossfade */}
-              <div className="relative w-full max-w-[600px] h-[180px] md:h-[220px]">
+              <div className="relative w-full max-w-none md:max-w-[600px] h-[200px] md:h-[220px]">
                 {slideComponents.map((comp, i) => (
                   <div
                     key={i}
-                    className="absolute inset-0"
+                    className="absolute inset-0 -mx-2 md:mx-0"
                     style={{
                       opacity: currentSlide === i && !isTransitioning ? 1 : 0,
                       transition: `opacity ${TRANSITION_MS}ms ease`,
