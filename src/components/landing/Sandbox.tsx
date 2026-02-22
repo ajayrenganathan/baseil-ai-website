@@ -200,6 +200,7 @@ export function Sandbox() {
   }, [showResult])
 
   const runQuery = (q: string) => {
+    trackEvent('sandbox_interact', { action: 'run_query' })
     setQuery(q)
     setLoading(true)
     setShowResult(false)
@@ -225,12 +226,14 @@ export function Sandbox() {
   }
 
   const switchDb = (index: number) => {
+    trackEvent('sandbox_interact', { action: 'switch_database', database: DATABASES[index].id })
     setActiveDb(index)
     setAiMode(false)
     reset()
   }
 
   const switchToAi = () => {
+    trackEvent('sandbox_interact', { action: 'toggle_ai_mode' })
     setAiMode(true)
     reset()
   }
@@ -339,7 +342,7 @@ export function Sandbox() {
                   {currentQueries.map((q, i) => (
                     <button
                       key={`${aiMode}-${i}`}
-                      onClick={() => runQuery(q)}
+                      onClick={() => { trackEvent('sandbox_interact', { action: 'select_query' }); runQuery(q) }}
                       className="flex items-center gap-1.5 text-[0.78rem] font-[var(--font-outfit)] px-4 py-2 rounded-lg bg-[#52B788]/[0.04] border border-[#52B788]/[0.08] text-[#8FAF8A] hover:text-[#C8D8C4] hover:border-[#52B788]/20 hover:bg-[#52B788]/[0.08] transition-all duration-300 cursor-pointer"
                     >
                       <ChevronRight size={12} className="text-[#52B788]/50" />
