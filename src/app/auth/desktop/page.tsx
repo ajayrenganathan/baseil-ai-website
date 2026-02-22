@@ -1,6 +1,6 @@
 'use client'
 
-import { ClerkProvider, SignIn, useAuth } from '@clerk/nextjs'
+import { ClerkProvider, SignIn, useAuth, useClerk } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
 
 const CLERK_KEY = 'pk_live_Y2xlcmsuYmFzZWlsLmFpJA'
@@ -9,12 +9,26 @@ type AuthStatus = 'sign-in' | 'exchanging' | 'done' | 'error'
 
 function DesktopAuthInner() {
   const { isSignedIn, isLoaded, getToken } = useAuth()
+  const { signOut } = useClerk()
   const [status, setStatus] = useState<AuthStatus>('sign-in')
   const [error, setError] = useState<string | null>(null)
   const [redirectUrl, setRedirectUrl] = useState<string>('')
 
+  // Handle ?signout query param
+  useEffect(() => {
+    if (!isLoaded) return
+    const params = new URLSearchParams(window.location.search)
+    if (params.has('signout') && isSignedIn) {
+      signOut().then(() => {
+        window.location.href = '/auth/desktop'
+      })
+    }
+  }, [isLoaded, isSignedIn, signOut])
+
   useEffect(() => {
     if (!isLoaded || !isSignedIn) return
+    // Skip if signing out
+    if (new URLSearchParams(window.location.search).has('signout')) return
 
     const redirect = async () => {
       setStatus('exchanging')
@@ -65,6 +79,12 @@ function DesktopAuthInner() {
               click here
             </a>
           </p>
+          <button
+            onClick={() => signOut().then(() => { window.location.href = '/auth/desktop' })}
+            className="mt-6 text-[#556253] text-xs hover:text-[#C8D8C4] transition-colors"
+          >
+            Sign out and use a different account
+          </button>
         </div>
       </div>
     )
@@ -156,6 +176,15 @@ function DesktopAuthInner() {
       <p className="mt-6 text-[#556253] text-xs text-center max-w-sm">
         After signing in, you&apos;ll be redirected back to the Baseil desktop app automatically.
       </p>
+
+      {isSignedIn && (
+        <button
+          onClick={() => signOut().then(() => { window.location.href = '/auth/desktop' })}
+          className="mt-4 text-[#556253] text-xs hover:text-[#C8D8C4] transition-colors"
+        >
+          Sign out
+        </button>
+      )}
     </div>
   )
 }
