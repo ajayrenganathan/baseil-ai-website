@@ -538,7 +538,7 @@ export function Problem() {
             onMouseMove={handleMouseMove}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className="relative bg-[#111916]/80 border rounded-2xl p-10 overflow-hidden tilt-card hover-inner-glow"
+            className="relative bg-[#111916]/80 border rounded-2xl p-6 md:p-10 overflow-hidden tilt-card hover-inner-glow"
             style={{
               transform: `perspective(800px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)`,
               borderColor: `${slide.accent}15`,
@@ -549,13 +549,13 @@ export function Problem() {
           >
             <div className="absolute inset-0 baseil-grain opacity-[0.02]" />
 
-            <div className="flex flex-col items-center gap-8">
-              {/* Description text — crossfade */}
-              <div className="relative w-full max-w-[500px] min-h-[60px]">
+            <div className="flex flex-col items-center gap-5 md:gap-8">
+              {/* Description text — crossfade using grid stacking for auto height */}
+              <div className="grid w-full max-w-[500px]">
                 {SLIDES.map((s, i) => (
                   <p
                     key={s.id}
-                    className="font-[var(--font-outfit)] text-[1rem] text-center leading-relaxed absolute inset-0"
+                    className="font-[var(--font-outfit)] text-[0.9rem] md:text-[1rem] text-center leading-relaxed [grid-area:1/1]"
                     style={{
                       color: i === 0 ? '#5A7A58' : '#8FAF8A',
                       opacity: currentSlide === i && !isTransitioning ? 1 : 0,
@@ -569,7 +569,7 @@ export function Problem() {
               </div>
 
               {/* SVG diagram — crossfade */}
-              <div className="relative w-full max-w-[600px] h-[220px]">
+              <div className="relative w-full max-w-[600px] h-[180px] md:h-[220px]">
                 {slideComponents.map((comp, i) => (
                   <div
                     key={i}
