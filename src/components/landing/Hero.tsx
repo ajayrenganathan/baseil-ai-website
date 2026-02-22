@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { User, Bot, ArrowRight } from 'lucide-react'
 import { HeroShowcase } from './showcase/HeroShowcase'
 import { BaseilMascot } from './BaseilMascot'
+import { trackEvent } from '@/lib/analytics'
 
 const FLOATING_SHAPES = [
   { size: 6, x: '12%', y: '20%', animation: 'shape-float-1', duration: '18s', delay: '0s', type: 'diamond' },
@@ -165,7 +166,7 @@ export function Hero() {
         <div className={`flex items-center justify-center gap-3 mb-10 transition-all duration-700 delay-[1100ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <a
             href="#early-access"
-            onClick={(e) => { e.preventDefault(); document.getElementById('early-access')?.scrollIntoView({ behavior: 'smooth' }) }}
+            onClick={(e) => { e.preventDefault(); trackEvent('cta_click', { button_label: 'join_waitlist', section: 'hero' }); document.getElementById('early-access')?.scrollIntoView({ behavior: 'smooth' }) }}
             className="baseil-cta-primary text-[0.85rem] px-6 py-2.5 flex items-center gap-2"
           >
             Join the Waitlist
@@ -173,7 +174,7 @@ export function Hero() {
           </a>
           <a
             href="#sandbox"
-            onClick={(e) => { e.preventDefault(); document.getElementById('sandbox')?.scrollIntoView({ behavior: 'smooth' }) }}
+            onClick={(e) => { e.preventDefault(); trackEvent('cta_click', { button_label: 'try_demo', section: 'hero' }); document.getElementById('sandbox')?.scrollIntoView({ behavior: 'smooth' }) }}
             className="baseil-cta-ghost text-[0.85rem] px-6 py-2.5"
           >
             Try the Demo

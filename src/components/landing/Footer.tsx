@@ -32,6 +32,7 @@ export function Footer() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    trackEvent('cta_click', { button_label: 'join_waitlist', section: 'footer' })
     if (!email.trim()) return
     setLoading(true)
     setError('')

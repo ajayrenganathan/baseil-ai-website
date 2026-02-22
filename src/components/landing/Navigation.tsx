@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { BaseilLogo } from './BaseilLogo'
+import { trackEvent } from '@/lib/analytics'
 
 const SECTIONS = [
   { label: 'Home', id: 'top' },
@@ -166,6 +167,7 @@ export function Navigation() {
             <a
               href={isHome ? '#early-access' : '/#early-access'}
               onClick={(e) => {
+                trackEvent('cta_click', { button_label: 'join_waitlist', section: 'navigation' })
                 if (isHome) {
                   e.preventDefault()
                   scrollTo('early-access')

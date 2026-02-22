@@ -170,6 +170,20 @@ function PricingCard({
       <a
         href={tier.cta.href}
         onClick={(e) => {
+          const labelMap: Record<string, string> = {
+            'Join the Waitlist': 'join_waitlist',
+            'Contact Us': 'contact_us',
+            'Coming Soon': 'coming_soon',
+          }
+          const sectionMap: Record<string, string> = {
+            'Pro': 'pricing_pro',
+            'Teams': 'pricing_teams',
+            'Enterprise': 'pricing_enterprise',
+          }
+          trackEvent('cta_click', {
+            button_label: labelMap[tier.cta.label] || tier.cta.label.toLowerCase().replace(/\s+/g, '_'),
+            section: sectionMap[tier.name] || `pricing_${tier.name.toLowerCase()}`,
+          })
           if (tier.cta.href === '#early-access') {
             e.preventDefault()
             document.getElementById('early-access')?.scrollIntoView({ behavior: 'smooth' })

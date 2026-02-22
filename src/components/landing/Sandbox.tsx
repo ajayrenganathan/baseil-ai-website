@@ -458,7 +458,7 @@ export function Sandbox() {
         <div className="text-center mt-8">
           <a
             href="#early-access"
-            onClick={(e) => { e.preventDefault(); document.getElementById('early-access')?.scrollIntoView({ behavior: 'smooth' }) }}
+            onClick={(e) => { e.preventDefault(); trackEvent('cta_click', { button_label: 'want_on_your_data', section: 'sandbox' }); document.getElementById('early-access')?.scrollIntoView({ behavior: 'smooth' }) }}
             className="inline-flex items-center gap-2 text-[0.8rem] font-[var(--font-outfit)] text-[#3D5A3A] hover:text-[#52B788] transition-colors duration-300"
           >
             Want this on your own data?
