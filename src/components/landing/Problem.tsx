@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback, type MouseEvent } from 'react'
+import { trackEvent } from '@/lib/analytics'
 
 /* ─────────────────────────────────────────────────────────────
    CONSTANTS
@@ -457,6 +458,7 @@ function SlideSwarm() {
 export function Problem() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const cardRef = useRef<HTMLDivElement>(null)
+  const hasTrackedRef = useRef(false)
 
   const [visible, setVisible] = useState(false)
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 })
@@ -472,6 +474,10 @@ export function Problem() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true)
+          if (!hasTrackedRef.current) {
+            trackEvent('section_view', { section_name: 'problem' })
+            hasTrackedRef.current = true
+          }
           resume()
         } else {
           pause()

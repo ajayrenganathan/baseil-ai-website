@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { Database, Clock, Loader2, ChevronRight, TableIcon, Sparkles } from 'lucide-react'
+import { trackEvent } from '@/lib/analytics'
 
 const DATABASES = [
   {
@@ -151,13 +152,22 @@ export function Sandbox() {
   const [visible, setVisible] = useState(false)
   const [consoleGlow, setConsoleGlow] = useState(false)
   const [activeLoadingStep, setActiveLoadingStep] = useState(-1)
+  const hasTrackedRef = useRef(false)
 
   const steps = aiMode ? AI_LOADING_STEPS : LOADING_STEPS
   const resultDb = aiMode ? DATABASES[resolvedDb] || DATABASES[0] : DATABASES[activeDb]
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true) },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true)
+          if (!hasTrackedRef.current) {
+            trackEvent('section_view', { section_name: 'sandbox' })
+            hasTrackedRef.current = true
+          }
+        }
+      },
       { threshold: 0.2 }
     )
     if (sectionRef.current) observer.observe(sectionRef.current)
@@ -194,6 +204,7 @@ export function Sandbox() {
   }, [showResult])
 
   const runQuery = (q: string) => {
+    trackEvent('sandbox_interact', { action: 'run_query' })
     setQuery(q)
     setLoading(true)
     setShowResult(false)
@@ -219,12 +230,14 @@ export function Sandbox() {
   }
 
   const switchDb = (index: number) => {
+    trackEvent('sandbox_interact', { action: 'switch_database', database: DATABASES[index].id })
     setActiveDb(index)
     setAiMode(false)
     reset()
   }
 
   const switchToAi = () => {
+    trackEvent('sandbox_interact', { action: 'toggle_ai_mode' })
     setAiMode(true)
     reset()
   }
@@ -333,7 +346,7 @@ export function Sandbox() {
                   {currentQueries.map((q, i) => (
                     <button
                       key={`${aiMode}-${i}`}
-                      onClick={() => runQuery(q)}
+                      onClick={() => { trackEvent('sandbox_interact', { action: 'select_query' }); runQuery(q) }}
                       className="flex items-center gap-1.5 text-[0.78rem] font-[var(--font-outfit)] px-4 py-2 rounded-lg bg-[#52B788]/[0.04] border border-[#52B788]/[0.08] text-[#8FAF8A] hover:text-[#C8D8C4] hover:border-[#52B788]/20 hover:bg-[#52B788]/[0.08] transition-all duration-300 cursor-pointer"
                     >
                       <ChevronRight size={12} className="text-[#52B788]/50" />
@@ -452,7 +465,7 @@ export function Sandbox() {
         <div className="text-center mt-8">
           <a
             href="#early-access"
-            onClick={(e) => { e.preventDefault(); document.getElementById('early-access')?.scrollIntoView({ behavior: 'smooth' }) }}
+            onClick={(e) => { e.preventDefault(); trackEvent('cta_click', { button_label: 'want_on_your_data', section: 'sandbox' }); document.getElementById('early-access')?.scrollIntoView({ behavior: 'smooth' }) }}
             className="inline-flex items-center gap-2 text-[0.8rem] font-[var(--font-outfit)] text-[#3D5A3A] hover:text-[#52B788] transition-colors duration-300"
           >
             Want this on your own data?

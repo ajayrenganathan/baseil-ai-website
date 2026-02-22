@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { Plug, Radar, Globe, MessageSquareHeart, Pin } from 'lucide-react'
+import { trackEvent } from '@/lib/analytics'
 
 const STEPS = [
   {
@@ -251,10 +252,19 @@ function ConnectingDots() {
 export function HowItWorks() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
+  const hasTrackedRef = useRef(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true) },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true)
+          if (!hasTrackedRef.current) {
+            trackEvent('section_view', { section_name: 'how_it_works' })
+            hasTrackedRef.current = true
+          }
+        }
+      },
       { threshold: 0.2 }
     )
     if (sectionRef.current) observer.observe(sectionRef.current)

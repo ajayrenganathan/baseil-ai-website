@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { BaseilLogo } from './BaseilLogo'
+import { trackEvent } from '@/lib/analytics'
 
 const SECTIONS = [
   { label: 'Home', id: 'top' },
@@ -18,6 +19,7 @@ export function Navigation() {
   const [scrolled, setScrolled] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
   const [activeSection, setActiveSection] = useState('top')
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   // Scroll tracking
   useEffect(() => {
@@ -69,6 +71,16 @@ export function Navigation() {
     }
   }, [isHome])
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [mobileOpen])
+
   const scrollTo = useCallback((id: string) => {
     if (id === 'top') {
       window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -76,6 +88,15 @@ export function Navigation() {
       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
     }
   }, [])
+
+  const handleMobileNav = (id: string) => {
+    setMobileOpen(false)
+    scrollTo(id)
+  }
+
+  const handleMobileLink = () => {
+    setMobileOpen(false)
+  }
 
   return (
     <>
@@ -97,6 +118,7 @@ export function Navigation() {
             <BaseilLogo />
           </Link>
 
+          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-7">
             {/* Landing page sections */}
             {SECTIONS.map(item => (
@@ -166,6 +188,7 @@ export function Navigation() {
             <a
               href={isHome ? '#early-access' : '/#early-access'}
               onClick={(e) => {
+                trackEvent('cta_click', { button_label: 'join_waitlist', section: 'navigation' })
                 if (isHome) {
                   e.preventDefault()
                   scrollTo('early-access')
@@ -175,9 +198,121 @@ export function Navigation() {
             >
               Join Waitlist
             </a>
+
+            {/* Hamburger button — mobile only */}
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="md:hidden flex flex-col justify-center items-center w-8 h-8 gap-[5px] group"
+              aria-label="Toggle menu"
+            >
+              <span
+                className={`block w-5 h-[1.5px] bg-[#8FAF8A] transition-all duration-300 origin-center ${
+                  mobileOpen ? 'rotate-45 translate-y-[6.5px]' : ''
+                }`}
+              />
+              <span
+                className={`block w-5 h-[1.5px] bg-[#8FAF8A] transition-all duration-300 ${
+                  mobileOpen ? 'opacity-0 scale-x-0' : ''
+                }`}
+              />
+              <span
+                className={`block w-5 h-[1.5px] bg-[#8FAF8A] transition-all duration-300 origin-center ${
+                  mobileOpen ? '-rotate-45 -translate-y-[6.5px]' : ''
+                }`}
+              />
+            </button>
           </div>
         </div>
       </nav>
+
+      {/* Mobile menu overlay */}
+      <div
+        className={`fixed inset-0 z-40 bg-[#0A0F0D]/95 backdrop-blur-xl md:hidden transition-all duration-300 ${
+          mobileOpen
+            ? 'opacity-100 pointer-events-auto'
+            : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        <div className={`flex flex-col items-center justify-center h-full gap-6 transition-all duration-500 ${
+          mobileOpen ? 'translate-y-0 opacity-100' : '-translate-y-6 opacity-0'
+        }`}>
+          {/* Section links */}
+          {SECTIONS.map((item, i) => (
+            isHome ? (
+              <button
+                key={item.id}
+                onClick={() => handleMobileNav(item.id)}
+                className={`text-[1.1rem] font-[var(--font-outfit)] transition-all duration-300 ${
+                  activeSection === item.id
+                    ? 'text-[#C8D8C4]'
+                    : 'text-[#5A7A58]'
+                }`}
+                style={{ transitionDelay: `${i * 50}ms` }}
+              >
+                {item.label}
+              </button>
+            ) : (
+              <Link
+                key={item.id}
+                href={`/#${item.id === 'top' ? '' : item.id}`}
+                onClick={handleMobileLink}
+                className="text-[1.1rem] font-[var(--font-outfit)] text-[#5A7A58] hover:text-[#C8D8C4] transition-colors duration-300"
+                style={{ transitionDelay: `${i * 50}ms` }}
+              >
+                {item.label}
+              </Link>
+            )
+          ))}
+
+          {/* Divider */}
+          <div className="w-12 h-[1px] bg-[#52B788]/15 my-1" />
+
+          {/* Page links */}
+          <Link
+            href="/pricing"
+            onClick={handleMobileLink}
+            className={`text-[1.1rem] font-[var(--font-outfit)] transition-colors duration-300 ${
+              pathname === '/pricing' ? 'text-[#C8D8C4]' : 'text-[#5A7A58]'
+            }`}
+          >
+            Pricing
+          </Link>
+          <Link
+            href="/platform"
+            onClick={handleMobileLink}
+            className={`text-[1.1rem] font-[var(--font-outfit)] transition-colors duration-300 ${
+              pathname === '/platform' ? 'text-[#C8D8C4]' : 'text-[#5A7A58]'
+            }`}
+          >
+            Platform
+          </Link>
+          <Link
+            href="/contact"
+            onClick={handleMobileLink}
+            className={`text-[1.1rem] font-[var(--font-outfit)] transition-colors duration-300 ${
+              pathname === '/contact' ? 'text-[#C8D8C4]' : 'text-[#5A7A58]'
+            }`}
+          >
+            Contact
+          </Link>
+
+          {/* CTA */}
+          <a
+            href={isHome ? '#early-access' : '/#early-access'}
+            onClick={(e) => {
+              trackEvent('cta_click', { button_label: 'join_waitlist', section: 'mobile_navigation' })
+              setMobileOpen(false)
+              if (isHome) {
+                e.preventDefault()
+                scrollTo('early-access')
+              }
+            }}
+            className="baseil-cta-primary text-[0.9rem] px-7 py-2.5 mt-2"
+          >
+            Join Waitlist
+          </a>
+        </div>
+      </div>
     </>
   )
 }

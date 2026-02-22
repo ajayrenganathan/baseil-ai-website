@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { BaseilLogo } from './BaseilLogo'
 import { Github, ArrowRight, Loader2, Check } from 'lucide-react'
+import { trackEvent } from '@/lib/analytics'
 
 export function Footer() {
   const [email, setEmail] = useState('')
@@ -12,12 +13,21 @@ export function Footer() {
   const [inputFocused, setInputFocused] = useState(false)
   const taglineRef = useRef<HTMLDivElement>(null)
   const [taglineVisible, setTaglineVisible] = useState(false)
+  const hasTrackedRef = useRef(false)
 
   useEffect(() => {
     const el = taglineRef.current
     if (!el) return
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setTaglineVisible(true) },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTaglineVisible(true)
+          if (!hasTrackedRef.current) {
+            trackEvent('section_view', { section_name: 'footer' })
+            hasTrackedRef.current = true
+          }
+        }
+      },
       { threshold: 0 }
     )
     observer.observe(el)
@@ -27,6 +37,7 @@ export function Footer() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email.trim()) return
+    trackEvent('cta_click', { button_label: 'join_waitlist', section: 'footer' })
     setLoading(true)
     setError('')
 
@@ -138,14 +149,25 @@ export function Footer() {
 
             <div className="flex items-center gap-6">
               {[
-                { label: 'Docs', href: '/docs' },
-                { label: 'Contact', href: '/contact' },
-                { label: 'GitHub', href: '#', icon: Github },
+                { label: 'Docs', href: '/docs', external: false },
+                { label: 'Contact', href: '/contact', external: false },
+                { label: 'GitHub', href: '#', icon: Github, external: true },
               ].map((link, i) => (
                 <a
                   key={i}
                   href={link.href}
                   className="flex items-center gap-1.5 text-[0.75rem] font-[var(--font-outfit)] text-[#3D5A3A] hover:text-[#52B788] transition-all duration-300 hover:scale-105"
+                  {...(link.external
+                    ? {
+                        target: '_blank',
+                        rel: 'noopener noreferrer',
+                        onClick: () =>
+                          trackEvent('outbound_click', {
+                            url: link.href,
+                            link_text: link.label.toLowerCase(),
+                          }),
+                      }
+                    : {})}
                 >
                   {link.icon && <link.icon size={13} />}
                   {link.label}

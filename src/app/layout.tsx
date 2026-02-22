@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Newsreader, Outfit } from 'next/font/google'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import './globals.css'
 
 const newsreader = Newsreader({
@@ -104,6 +105,9 @@ export default function RootLayout({
           }}
         />
       </head>
+      {process.env.NEXT_PUBLIC_GA_ID && (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+      )}
       <body className={`${newsreader.variable} ${outfit.variable} antialiased`}>
         {children}
       </body>

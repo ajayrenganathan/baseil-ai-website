@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react'
 import { MessageSquare, Compass, GitMerge, Wrench, Sparkles } from 'lucide-react'
+import { trackEvent } from '@/lib/analytics'
 
 const FEATURES = [
   {
@@ -39,10 +40,19 @@ const FEATURES = [
 export function Capabilities() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
+  const hasTrackedRef = useRef(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true) },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true)
+          if (!hasTrackedRef.current) {
+            trackEvent('section_view', { section_name: 'capabilities' })
+            hasTrackedRef.current = true
+          }
+        }
+      },
       { threshold: 0.1 }
     )
     if (sectionRef.current) observer.observe(sectionRef.current)
