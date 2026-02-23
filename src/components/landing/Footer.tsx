@@ -5,15 +5,44 @@ import { BaseilLogo } from './BaseilLogo'
 import { Github, ArrowRight, Loader2, Check } from 'lucide-react'
 import { trackEvent } from '@/lib/analytics'
 
+const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScqoeTjEfGcVF-kYKVDfm5OgN-9n5eK2CgfbZQ75uWbr005aA/formResponse'
+
+const INTEREST_OPTIONS = [
+  'Teams with Collaboration',
+  'Cloud Sync',
+  'Enterprise',
+  'Data Mesh',
+  'Just curious',
+]
+
+const BETA_OPTIONS = [
+  "Yes, I'm interested in testing!",
+  'Maybe, contact me with more details',
+  'No, just notify me when it launches',
+]
+
 export function Footer() {
   const [email, setEmail] = useState('')
+  const [interest, setInterest] = useState('')
+  const [painPoint, setPainPoint] = useState('')
+  const [role, setRole] = useState('')
+  const [beta, setBeta] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [inputFocused, setInputFocused] = useState(false)
+  const [showMore, setShowMore] = useState(false)
+  const formRef = useRef<HTMLFormElement>(null)
   const taglineRef = useRef<HTMLDivElement>(null)
   const [taglineVisible, setTaglineVisible] = useState(false)
   const hasTrackedRef = useRef(false)
+
+  useEffect(() => {
+    if (showMore && formRef.current) {
+      setTimeout(() => {
+        formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }, 100)
+    }
+  }, [showMore])
 
   useEffect(() => {
     const el = taglineRef.current
@@ -42,20 +71,23 @@ export function Footer() {
     setError('')
 
     try {
-      const res = await fetch('/api/waitlist', {
+      const params = new URLSearchParams()
+      params.set('entry.1696857376', email)
+      if (interest) params.set('entry.1305804243', interest)
+      if (painPoint) params.set('entry.520140552', painPoint)
+      if (role) params.set('entry.993401634', role)
+      if (beta) params.set('entry.1602105192', beta)
+
+      await fetch(GOOGLE_FORM_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email_address: email }),
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString(),
       })
 
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || 'Something went wrong')
-      }
-
       setSubmitted(true)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong')
+    } catch {
+      setError('Something went wrong. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -96,25 +128,19 @@ export function Footer() {
           </p>
 
           {!submitted ? (
-            <>
-              <form onSubmit={handleSubmit} className="flex gap-3 max-w-[440px] mx-auto">
+            <form ref={formRef} onSubmit={handleSubmit} className={`mx-auto transition-all duration-500 ease-out ${showMore ? 'max-w-[520px]' : 'max-w-[480px]'}`}>
+              {/* Email row */}
+              <div className={`flex gap-3 transition-all duration-500 ease-out ${showMore ? 'max-w-[400px] mx-auto' : ''}`}>
                 <input
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  onFocus={() => setInputFocused(true)}
-                  onBlur={() => setInputFocused(false)}
+                  onChange={(e) => { setEmail(e.target.value); if (!showMore && e.target.value) setShowMore(true) }}
                   placeholder="you@company.com"
                   required
                   autoComplete="off"
                   data-lpignore="true"
                   data-1p-ignore
                   className="flex-1 bg-[#111916]/60 border border-[#52B788]/10 rounded-full px-5 py-3 text-[0.85rem] font-[var(--font-outfit)] text-[#C8D8C4] placeholder:text-[#3D5A3A] focus:outline-none focus:border-[#52B788]/25 focus:bg-[#111916]/80 transition-all duration-300"
-                  style={{
-                    boxShadow: inputFocused
-                      ? '0 0 20px rgba(82, 183, 136, 0.15), 0 0 40px rgba(82, 183, 136, 0.05), inset 0 0 10px rgba(82, 183, 136, 0.03)'
-                      : 'none',
-                  }}
                 />
                 <button
                   type="submit"
@@ -130,11 +156,94 @@ export function Footer() {
                     </>
                   )}
                 </button>
-              </form>
+              </div>
+
+              {/* Additional fields — slide in after email is typed */}
+              <div
+                className="overflow-hidden transition-all duration-500 ease-out"
+                style={{ maxHeight: showMore ? '600px' : '0', opacity: showMore ? 1 : 0 }}
+              >
+                <div className="mt-5 space-y-4 text-left">
+                  {/* Interest */}
+                  <div>
+                    <label className="block text-[0.7rem] font-[var(--font-outfit)] text-[#5A7A58] mb-1.5 uppercase tracking-wider">
+                      What interests you most?
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {INTEREST_OPTIONS.map((opt) => (
+                        <button
+                          key={opt}
+                          type="button"
+                          onClick={() => setInterest(interest === opt ? '' : opt)}
+                          className={`px-3 py-1.5 rounded-full text-[0.75rem] font-[var(--font-outfit)] border transition-all duration-200 ${
+                            interest === opt
+                              ? 'bg-[#52B788]/15 border-[#52B788]/40 text-[#52B788]'
+                              : 'bg-[#111916]/40 border-[#52B788]/10 text-[#5A7A58] hover:border-[#52B788]/25 hover:text-[#7A9A78]'
+                          }`}
+                        >
+                          {opt}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Role */}
+                  <div>
+                    <label className="block text-[0.7rem] font-[var(--font-outfit)] text-[#5A7A58] mb-1.5 uppercase tracking-wider">
+                      Your role or industry
+                    </label>
+                    <input
+                      type="text"
+                      value={role}
+                      onChange={(e) => setRole(e.target.value)}
+                      placeholder="e.g. Data Engineer, Finance"
+                      className="w-full bg-[#111916]/60 border border-[#52B788]/10 rounded-xl px-4 py-2.5 text-[0.8rem] font-[var(--font-outfit)] text-[#C8D8C4] placeholder:text-[#3D5A3A] focus:outline-none focus:border-[#52B788]/25 transition-all duration-300"
+                    />
+                  </div>
+
+                  {/* Pain point */}
+                  <div>
+                    <label className="block text-[0.7rem] font-[var(--font-outfit)] text-[#5A7A58] mb-1.5 uppercase tracking-wider">
+                      Any specific pain point? <span className="normal-case tracking-normal text-[#3D5A3A]">(optional)</span>
+                    </label>
+                    <textarea
+                      value={painPoint}
+                      onChange={(e) => setPainPoint(e.target.value)}
+                      placeholder="Tell us what problem you're trying to solve..."
+                      rows={2}
+                      className="w-full bg-[#111916]/60 border border-[#52B788]/10 rounded-xl px-4 py-2.5 text-[0.8rem] font-[var(--font-outfit)] text-[#C8D8C4] placeholder:text-[#3D5A3A] focus:outline-none focus:border-[#52B788]/25 transition-all duration-300 resize-none"
+                    />
+                  </div>
+
+                  {/* Beta testing */}
+                  <div>
+                    <label className="block text-[0.7rem] font-[var(--font-outfit)] text-[#5A7A58] mb-1.5 uppercase tracking-wider">
+                      Interested in beta testing?
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {BETA_OPTIONS.map((opt) => (
+                        <button
+                          key={opt}
+                          type="button"
+                          onClick={() => setBeta(beta === opt ? '' : opt)}
+                          className={`px-3 py-1.5 rounded-full text-[0.75rem] font-[var(--font-outfit)] border transition-all duration-200 ${
+                            beta === opt
+                              ? 'bg-[#52B788]/15 border-[#52B788]/40 text-[#52B788]'
+                              : 'bg-[#111916]/40 border-[#52B788]/10 text-[#5A7A58] hover:border-[#52B788]/25 hover:text-[#7A9A78]'
+                          }`}
+                        >
+                          {opt}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {error && (
-                <p className="mt-3 text-[0.8rem] font-[var(--font-outfit)] text-red-400">{error}</p>
+                <p className="mt-3 text-[0.8rem] font-[var(--font-outfit)] text-red-400 text-center">{error}</p>
               )}
-            </>
+            </form>
           ) : (
             <div className="flex items-center justify-center gap-2 text-[#52B788] font-[var(--font-outfit)] text-[0.9rem]">
               <Check size={18} />
