@@ -18,7 +18,7 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   metadataBase: new URL('https://baseil.ai'),
   title: {
-    default: 'Baseil — Get All Your Data Talking',
+    default: 'Baseil.ai - Get All Your Data Talking',
     template: '%s | Baseil',
   },
   description:
@@ -48,13 +48,13 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     siteName: 'Baseil',
-    title: 'Baseil — Get All Your Data Talking',
+    title: 'Baseil.ai - Get All Your Data Talking',
     description:
       'One data agent. Every database. Ask in plain English, get answers instantly. Baseil maps your schemas, connects your data, and serves it to humans and AI agents.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Baseil — Get All Your Data Talking',
+    title: 'Baseil.ai - Get All Your Data Talking',
     description:
       'One data agent. Every database. Ask in plain English, get answers instantly. Baseil maps your schemas, connects your data, and serves it to humans and AI agents.',
   },
