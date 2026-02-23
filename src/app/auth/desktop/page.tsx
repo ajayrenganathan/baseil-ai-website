@@ -1,6 +1,6 @@
 'use client'
 
-import { ClerkProvider, SignIn, useAuth, useClerk } from '@clerk/nextjs'
+import { ClerkProvider, SignIn, useAuth, useClerk, useUser } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
 
 const CLERK_KEY = 'pk_live_Y2xlcmsuYmFzZWlsLmFpJA'
@@ -10,6 +10,7 @@ type AuthStatus = 'sign-in' | 'exchanging' | 'done' | 'error'
 function DesktopAuthInner() {
   const { isSignedIn, isLoaded, getToken } = useAuth()
   const { signOut } = useClerk()
+  const { user } = useUser()
   const [status, setStatus] = useState<AuthStatus>('sign-in')
   const [error, setError] = useState<string | null>(null)
   const [redirectUrl, setRedirectUrl] = useState<string>('')
@@ -40,8 +41,19 @@ function DesktopAuthInner() {
           return
         }
 
-        // Build the full redirect URL and store it for the fallback link
-        const url = `baseil://auth/callback?clerk_jwt=${encodeURIComponent(clerkJwt)}`
+        // Build callback URL with JWT + user profile data
+        const params = new URLSearchParams({ clerk_jwt: clerkJwt })
+        if (user?.primaryEmailAddress?.emailAddress) {
+          params.set('email', user.primaryEmailAddress.emailAddress)
+        }
+        if (user?.fullName) {
+          params.set('name', user.fullName)
+        }
+        if (user?.imageUrl) {
+          params.set('image_url', user.imageUrl)
+        }
+
+        const url = `baseil://auth/callback?${params.toString()}`
         setRedirectUrl(url)
 
         // Redirect back to Electron via custom protocol
@@ -54,7 +66,7 @@ function DesktopAuthInner() {
     }
 
     redirect()
-  }, [isLoaded, isSignedIn, getToken])
+  }, [isLoaded, isSignedIn, getToken, user])
 
   // Done — redirecting to Electron
   if (status === 'done') {
