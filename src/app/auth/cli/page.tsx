@@ -4,6 +4,7 @@ import { ClerkProvider, SignIn, useAuth, useClerk, useUser } from '@clerk/nextjs
 import { useEffect, useState } from 'react'
 
 const CLERK_KEY = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_live_Y2xlcmsuYmFzZWlsLmFpJA'
+const CALLBACK_STORAGE_KEY = 'baseil_cli_callback_url'
 
 // Only allow redirects back to localhost — prevents open redirect attacks
 function isAllowedCallback(url: string): boolean {
@@ -28,10 +29,18 @@ function CliAuthInner() {
   const [error, setError] = useState<string | null>(null)
   const [callbackUrl, setCallbackUrl] = useState<string>('')
 
-  // Read callback_url from query params
+  // On mount: read callback_url from query params and persist to sessionStorage.
+  // After OAuth redirect, Clerk sends us back to /auth/cli (no query params),
+  // so we recover the callback_url from sessionStorage.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    setCallbackUrl(params.get('callback_url') || '')
+    const urlParam = params.get('callback_url')
+    if (urlParam) {
+      sessionStorage.setItem(CALLBACK_STORAGE_KEY, urlParam)
+      setCallbackUrl(urlParam)
+    } else {
+      setCallbackUrl(sessionStorage.getItem(CALLBACK_STORAGE_KEY) || '')
+    }
   }, [])
 
   // Handle ?signout query param
@@ -67,6 +76,9 @@ function CliAuthInner() {
         if (user?.fullName) {
           params.set('name', user.fullName)
         }
+
+        // Clean up sessionStorage
+        sessionStorage.removeItem(CALLBACK_STORAGE_KEY)
 
         // Redirect back to localhost CLI web UI
         const separator = callbackUrl.includes('?') ? '&' : '?'
@@ -170,7 +182,7 @@ function CliAuthInner() {
 
       <SignIn
         routing="hash"
-        forceRedirectUrl={`/auth/cli?callback_url=${encodeURIComponent(callbackUrl)}`}
+        forceRedirectUrl="/auth/cli"
         appearance={{
           layout: {
             socialButtonsVariant: 'blockButton' as const,
