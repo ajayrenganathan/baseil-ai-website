@@ -5,15 +5,34 @@ import { useEffect, useState } from 'react'
 
 const CLERK_KEY = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_live_Y2xlcmsuYmFzZWlsLmFpJA'
 
+// Only allow redirects back to localhost — prevents open redirect attacks
+function isAllowedCallback(url: string): boolean {
+  try {
+    const parsed = new URL(url)
+    return (
+      (parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1') &&
+      parsed.protocol === 'http:'
+    )
+  } catch {
+    return false
+  }
+}
+
 type AuthStatus = 'sign-in' | 'exchanging' | 'done' | 'error'
 
-function DesktopAuthInner() {
+function CliAuthInner() {
   const { isSignedIn, isLoaded, getToken } = useAuth()
   const { signOut } = useClerk()
   const { user } = useUser()
   const [status, setStatus] = useState<AuthStatus>('sign-in')
   const [error, setError] = useState<string | null>(null)
-  const [redirectUrl, setRedirectUrl] = useState<string>('')
+  const [callbackUrl, setCallbackUrl] = useState<string>('')
+
+  // Read callback_url from query params
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    setCallbackUrl(params.get('callback_url') || '')
+  }, [])
 
   // Handle ?signout query param
   useEffect(() => {
@@ -21,14 +40,13 @@ function DesktopAuthInner() {
     const params = new URLSearchParams(window.location.search)
     if (params.has('signout') && isSignedIn) {
       signOut().then(() => {
-        window.location.href = '/auth/desktop'
+        window.location.href = `/auth/cli?callback_url=${encodeURIComponent(callbackUrl)}`
       })
     }
-  }, [isLoaded, isSignedIn, signOut])
+  }, [isLoaded, isSignedIn, signOut, callbackUrl])
 
   useEffect(() => {
-    if (!isLoaded || !isSignedIn) return
-    // Skip if signing out
+    if (!isLoaded || !isSignedIn || !callbackUrl) return
     if (new URLSearchParams(window.location.search).has('signout')) return
 
     const redirect = async () => {
@@ -41,22 +59,19 @@ function DesktopAuthInner() {
           return
         }
 
-        // Build callback URL with JWT + user profile data
-        const params = new URLSearchParams({ clerk_jwt: clerkJwt })
+        // Build redirect URL back to the CLI web UI with the JWT
+        const params = new URLSearchParams({ session_token: clerkJwt })
         if (user?.primaryEmailAddress?.emailAddress) {
           params.set('email', user.primaryEmailAddress.emailAddress)
         }
         if (user?.fullName) {
           params.set('name', user.fullName)
         }
-        if (user?.imageUrl) {
-          params.set('image_url', user.imageUrl)
-        }
 
-        const url = `baseil://auth/callback?${params.toString()}`
-        setRedirectUrl(url)
+        // Redirect back to localhost CLI web UI
+        const separator = callbackUrl.includes('?') ? '&' : '?'
+        const url = `${callbackUrl}${separator}${params.toString()}`
 
-        // Redirect back to Electron via custom protocol
         window.location.href = url
         setStatus('done')
       } catch (e) {
@@ -66,9 +81,21 @@ function DesktopAuthInner() {
     }
 
     redirect()
-  }, [isLoaded, isSignedIn, getToken, user])
+  }, [isLoaded, isSignedIn, getToken, user, callbackUrl])
 
-  // Done — redirecting to Electron
+  if (!callbackUrl || !isAllowedCallback(callbackUrl)) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen px-6">
+        <div className="text-center max-w-md">
+          <p className="text-red-400 text-sm mb-2">Invalid or missing callback URL</p>
+          <p className="text-[#556253] text-xs">
+            This page can only redirect back to a local Baseil server (localhost).
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   if (status === 'done') {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen px-6">
@@ -83,16 +110,15 @@ function DesktopAuthInner() {
             Signed in successfully
           </h1>
           <p className="text-[#556253] text-sm">
-            Redirecting back to the Baseil desktop app...
+            Redirecting back to your Baseil server...
           </p>
           <p className="text-[#556253] text-xs mt-4">
-            If the app doesn&apos;t open automatically,{' '}
-            <a href={redirectUrl} className="text-[#52B788] hover:text-[#6FCF97]">
-              click here
-            </a>
+            If you&apos;re not redirected automatically, close this tab and refresh your Baseil page.
           </p>
           <button
-            onClick={() => signOut().then(() => { window.location.href = '/auth/desktop' })}
+            onClick={() => signOut().then(() => {
+              window.location.href = `/auth/cli?callback_url=${encodeURIComponent(callbackUrl)}`
+            })}
             className="mt-6 text-[#556253] text-xs hover:text-[#C8D8C4] transition-colors"
           >
             Sign out and use a different account
@@ -102,7 +128,6 @@ function DesktopAuthInner() {
     )
   }
 
-  // Exchanging token
   if (status === 'exchanging') {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen px-6">
@@ -114,7 +139,6 @@ function DesktopAuthInner() {
     )
   }
 
-  // Error
   if (status === 'error') {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen px-6">
@@ -132,7 +156,6 @@ function DesktopAuthInner() {
     )
   }
 
-  // Sign-in form
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-6">
       <div className="mb-8 text-center">
@@ -141,13 +164,13 @@ function DesktopAuthInner() {
           Sign in to Baseil
         </h1>
         <p className="text-[#556253] text-sm">
-          for the desktop app
+          for your local server
         </p>
       </div>
 
       <SignIn
         routing="hash"
-        forceRedirectUrl="/auth/desktop"
+        forceRedirectUrl={`/auth/cli?callback_url=${encodeURIComponent(callbackUrl)}`}
         appearance={{
           layout: {
             socialButtonsVariant: 'blockButton' as const,
@@ -188,12 +211,14 @@ function DesktopAuthInner() {
       />
 
       <p className="mt-6 text-[#556253] text-xs text-center max-w-sm">
-        After signing in, you&apos;ll be redirected back to the Baseil desktop app automatically.
+        After signing in, you&apos;ll be redirected back to your local Baseil server.
       </p>
 
       {isSignedIn && (
         <button
-          onClick={() => signOut().then(() => { window.location.href = '/auth/desktop' })}
+          onClick={() => signOut().then(() => {
+            window.location.href = `/auth/cli?callback_url=${encodeURIComponent(callbackUrl)}`
+          })}
           className="mt-4 text-[#556253] text-xs hover:text-[#C8D8C4] transition-colors"
         >
           Sign out
@@ -203,14 +228,14 @@ function DesktopAuthInner() {
   )
 }
 
-export default function DesktopAuthPage() {
+export default function CliAuthPage() {
   return (
     <ClerkProvider
       publishableKey={CLERK_KEY}
-      signInForceRedirectUrl="/auth/desktop"
-      signUpForceRedirectUrl="/auth/desktop"
+      signInForceRedirectUrl="/auth/cli"
+      signUpForceRedirectUrl="/auth/cli"
     >
-      <DesktopAuthInner />
+      <CliAuthInner />
     </ClerkProvider>
   )
 }
