@@ -141,9 +141,9 @@ export function Hero() {
 
         {/* Description */}
         <p className={`font-[var(--font-outfit)] text-[0.9rem] leading-relaxed text-[#8FAF8A] max-w-[520px] mx-auto mb-5 transition-all duration-700 delay-[800ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-          Baseil is an <span className="text-[#6FCF97]" style={{ textShadow: '0 0 12px rgba(82,183,136,0.15)' }}>AI data agent</span> that crawls into your databases, maps every schema, and serves up answers. No config, no connectors, no drama.
+          Baseil is an <span className="text-[#6FCF97]" style={{ textShadow: '0 0 12px rgba(82,183,136,0.15)' }}>AI data agent</span> that crawls into your databases, maps every schema, and serves up grounded answers. No config, no connectors, no hallucinations.
           <br className="hidden sm:block" />
-          <span className="text-[#6FCF97]" style={{ textShadow: '0 0 12px rgba(82,183,136,0.15)' }}>One intelligent layer</span> where humans and AI agents ask in plain English and get answers instantly.
+          <span className="text-[#6FCF97]" style={{ textShadow: '0 0 12px rgba(82,183,136,0.15)' }}>One intelligent layer</span> where humans and AI agents ask in plain English and get answers from your data.
         </p>
 
         {/* Positioning subtitle */}
