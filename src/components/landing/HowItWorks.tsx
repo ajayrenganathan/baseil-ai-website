@@ -157,96 +157,73 @@ function StepCard({
 }
 
 function ConnectingDots() {
+  // Static stagger delays to avoid hydration mismatch
+  const particleDelays = [0, 0.8, 1.6, 2.4, 3.2]
+
   return (
     <div className="hidden md:flex absolute inset-0 items-center justify-center pointer-events-none" aria-hidden="true">
       <svg
         className="absolute top-1/2 left-0 w-full"
         style={{ transform: 'translateY(-50%)' }}
-        height="40"
-        viewBox="0 0 1000 40"
+        height="6"
+        viewBox="0 0 1000 6"
         preserveAspectRatio="none"
         fill="none"
       >
-        {/* Dotted line from step 1 to step 2 */}
-        <line
-          x1="200"
-          y1="20"
-          x2="470"
-          y2="20"
-          stroke="rgba(82,183,136,0.15)"
-          strokeWidth="1"
-          strokeDasharray="4 8"
-        />
-        {/* Dotted line from step 2 to step 3 */}
-        <line
-          x1="530"
-          y1="20"
-          x2="800"
-          y2="20"
-          stroke="rgba(82,183,136,0.15)"
-          strokeWidth="1"
-          strokeDasharray="4 8"
-        />
-        {/* Animated dot 1 -> 2 */}
-        <circle r="3" fill="#52B788" opacity="0.7">
-          <animateMotion
-            dur="3s"
-            repeatCount="indefinite"
-            path="M200,20 L470,20"
-          />
-          <animate
-            attributeName="opacity"
-            values="0;0.8;0.8;0"
-            dur="3s"
-            repeatCount="indefinite"
-          />
-        </circle>
-        <circle r="3" fill="#52B788" opacity="0.7">
-          <animateMotion
-            dur="3s"
-            repeatCount="indefinite"
-            path="M200,20 L470,20"
-            begin="1.5s"
-          />
-          <animate
-            attributeName="opacity"
-            values="0;0.8;0.8;0"
-            dur="3s"
-            repeatCount="indefinite"
-            begin="1.5s"
-          />
-        </circle>
-        {/* Animated dot 2 -> 3 */}
-        <circle r="3" fill="#6FCF97" opacity="0.7">
-          <animateMotion
-            dur="3s"
-            repeatCount="indefinite"
-            path="M530,20 L800,20"
-            begin="0.5s"
-          />
-          <animate
-            attributeName="opacity"
-            values="0;0.8;0.8;0"
-            dur="3s"
-            repeatCount="indefinite"
-            begin="0.5s"
-          />
-        </circle>
-        <circle r="3" fill="#6FCF97" opacity="0.7">
-          <animateMotion
-            dur="3s"
-            repeatCount="indefinite"
-            path="M530,20 L800,20"
-            begin="2s"
-          />
-          <animate
-            attributeName="opacity"
-            values="0;0.8;0.8;0"
-            dur="3s"
-            repeatCount="indefinite"
-            begin="2s"
-          />
-        </circle>
+        <defs>
+          {/* Gradient line: fades in/out at edges */}
+          <linearGradient id="particle-gradient-left" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#52B788" stopOpacity="0" />
+            <stop offset="50%" stopColor="#52B788" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#52B788" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="particle-gradient-right" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#6FCF97" stopOpacity="0" />
+            <stop offset="50%" stopColor="#6FCF97" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#6FCF97" stopOpacity="0" />
+          </linearGradient>
+          {/* Motion paths */}
+          <path id="connector-path-left" d="M 200 3 L 470 3" />
+          <path id="connector-path-right" d="M 530 3 L 800 3" />
+        </defs>
+
+        {/* Gradient trail lines */}
+        <rect x="200" y="2.2" width="270" height="1.2" fill="url(#particle-gradient-left)" />
+        <rect x="530" y="2.2" width="270" height="1.2" fill="url(#particle-gradient-right)" />
+
+        {/* Flowing particles: step 1 -> 2 */}
+        {particleDelays.map((delay, i) => (
+          <circle key={`left-${i}`} r="2" fill="#6FCF97">
+            <animateMotion dur="4s" repeatCount="indefinite" begin={`${delay}s`}>
+              <mpath href="#connector-path-left" />
+            </animateMotion>
+            <animate
+              attributeName="opacity"
+              values="0;1;1;0"
+              keyTimes="0;0.1;0.9;1"
+              dur="4s"
+              repeatCount="indefinite"
+              begin={`${delay}s`}
+            />
+          </circle>
+        ))}
+
+        {/* Flowing particles: step 2 -> 3 */}
+        {particleDelays.map((delay, i) => (
+          <circle key={`right-${i}`} r="2" fill="#8FAF8A">
+            <animateMotion dur="4s" repeatCount="indefinite" begin={`${delay + 0.4}s`}>
+              <mpath href="#connector-path-right" />
+            </animateMotion>
+            <animate
+              attributeName="opacity"
+              values="0;1;1;0"
+              keyTimes="0;0.1;0.9;1"
+              dur="4s"
+              repeatCount="indefinite"
+              begin={`${delay + 0.4}s`}
+            />
+          </circle>
+        ))}
       </svg>
     </div>
   )
