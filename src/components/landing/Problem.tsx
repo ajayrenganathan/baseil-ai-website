@@ -11,7 +11,7 @@ const SLIDES = [
   {
     id: 'problem',
     label: 'The Problem',
-    duration: 3500,
+    duration: 5000,
     accent: '#C9672E',
     description:
       "Today\u2019s agents wear too many hats. Understanding users, hunting across databases, formulating queries, formatting responses. Every new data source increases hallucinations.",
@@ -19,7 +19,7 @@ const SLIDES = [
   {
     id: 'solution',
     label: 'The Solution',
-    duration: 3500,
+    duration: 5000,
     accent: '#52B788',
     description:
       'Intelligence at the data layer itself. One calm layer that deciphers what data you need and where it lives.',
@@ -27,14 +27,26 @@ const SLIDES = [
   {
     id: 'swarm',
     label: 'The Swarm',
-    duration: 3500,
+    duration: 5000,
     accent: '#6FCF97',
     description:
       'Deploy as a swarm. Multiple Baseil agents form a mesh. Each owning its own databases, sharing knowledge across your infrastructure.',
   },
 ] as const
 
-const TRANSITION_MS = 600
+const TRANSITION_MS = 700
+
+/* Static stagger variants — module-level to avoid hydration mismatch */
+const PULSE_VARIANTS = [
+  { dur: '2.3s', delay: '0.1s' },
+  { dur: '3.1s', delay: '0.8s' },
+  { dur: '2.7s', delay: '1.4s' },
+  { dur: '3.4s', delay: '0.3s' },
+  { dur: '2.1s', delay: '1.1s' },
+  { dur: '3.6s', delay: '0.6s' },
+  { dur: '2.9s', delay: '1.7s' },
+  { dur: '3.2s', delay: '0.2s' },
+]
 
 /* ─────────────────────────────────────────────────────────────
    TILT UTILITY
@@ -190,43 +202,88 @@ function SlideProblem() {
 
   return (
     <svg className="w-full" viewBox="0 0 600 220" fill="none">
-      {/* Tangled dashed lines — every source to center */}
+      {/* Tangled dashed lines — every source to center. Progressive draw-in. */}
       {sources.map((s, i) => (
         <path
           key={`line-${i}`}
           d={`M ${s.x} ${s.y} Q ${300 + (s.x > 300 ? -40 : 40)} ${110 + (s.y > 110 ? -30 : 30)} 300 110`}
           fill="none"
-          stroke="rgba(201, 103, 46, 0.13)"
+          stroke="rgba(201, 103, 46, 0.22)"
           strokeWidth="1"
-          strokeDasharray="4 6"
+          strokeDasharray="260"
+          className="baseil-anim-draw-path"
+          style={{
+            ['--total-length' as string]: '260',
+            animation: `draw-path 1.8s ease-out ${0.12 * i}s both`,
+          }}
         />
       ))}
-      {/* Extra cross-tangles for chaotic feel */}
-      <path d="M 55 35 Q 200 180 460 188" fill="none" stroke="rgba(201,103,46,0.07)" strokeWidth="0.8" strokeDasharray="3 8" />
-      <path d="M 545 28 Q 400 190 140 190" fill="none" stroke="rgba(201,103,46,0.07)" strokeWidth="0.8" strokeDasharray="3 8" />
-      <path d="M 155 18 Q 300 200 555 175" fill="none" stroke="rgba(201,103,46,0.06)" strokeWidth="0.8" strokeDasharray="3 8" />
+      {/* Extra cross-tangles for chaotic feel — draw-in slightly later */}
+      <path
+        d="M 55 35 Q 200 180 460 188"
+        fill="none"
+        stroke="rgba(201,103,46,0.12)"
+        strokeWidth="0.8"
+        strokeDasharray="480"
+        className="baseil-anim-draw-path"
+        style={{ ['--total-length' as string]: '480', animation: 'draw-path 2.2s ease-out 1.0s both' }}
+      />
+      <path
+        d="M 545 28 Q 400 190 140 190"
+        fill="none"
+        stroke="rgba(201,103,46,0.12)"
+        strokeWidth="0.8"
+        strokeDasharray="480"
+        className="baseil-anim-draw-path"
+        style={{ ['--total-length' as string]: '480', animation: 'draw-path 2.2s ease-out 1.2s both' }}
+      />
+      <path
+        d="M 155 18 Q 300 200 555 175"
+        fill="none"
+        stroke="rgba(201,103,46,0.1)"
+        strokeWidth="0.8"
+        strokeDasharray="480"
+        className="baseil-anim-draw-path"
+        style={{ ['--total-length' as string]: '480', animation: 'draw-path 2.2s ease-out 1.4s both' }}
+      />
 
-      {/* Source nodes */}
-      {sources.map((s, i) => (
-        <g key={i}>
-          <rect x={s.x - 16} y={s.y - 16} width="32" height="32" rx="7" fill="#0A0F0D" stroke="rgba(201,103,46,0.2)" strokeWidth="1" />
-          <SourceIcon type={s.type} cx={s.x} cy={s.y} color="#C9672E" />
-          <text
-            x={s.x}
-            y={s.y + 26}
-            textAnchor="middle"
-            fontSize="9"
-            fill="#5A7A58"
-            fontFamily="var(--font-outfit)"
+      {/* Source nodes with irregular pulses */}
+      {sources.map((s, i) => {
+        const variant = PULSE_VARIANTS[i % PULSE_VARIANTS.length]
+        return (
+          <g
+            key={i}
+            className="baseil-anim-source-pulse"
+            style={{
+              transformOrigin: `${s.x}px ${s.y}px`,
+              animation: `baseil-pulse ${variant.dur} ease-in-out ${variant.delay} infinite`,
+            }}
           >
-            {s.label}
-          </text>
-        </g>
-      ))}
+            <rect x={s.x - 16} y={s.y - 16} width="32" height="32" rx="7" fill="#0A0F0D" stroke="rgba(201,103,46,0.25)" strokeWidth="1" />
+            <SourceIcon type={s.type} cx={s.x} cy={s.y} color="#C9672E" />
+            <text
+              x={s.x}
+              y={s.y + 26}
+              textAnchor="middle"
+              fontSize="9"
+              fill="#5A7A58"
+              fontFamily="var(--font-outfit)"
+            >
+              {s.label}
+            </text>
+          </g>
+        )
+      })}
 
-      {/* Central overwhelmed bot */}
-      <g>
-        <rect x="272" y="82" width="56" height="56" rx="14" fill="#0A0F0D" stroke="rgba(245,158,11,0.25)" strokeWidth="1.5" />
+      {/* Central overwhelmed bot — subtle wiggle */}
+      <g
+        className="baseil-anim-tangle-wiggle"
+        style={{
+          transformOrigin: '300px 110px',
+          animation: 'tangle-wiggle 1.8s ease-in-out infinite',
+        }}
+      >
+        <rect x="272" y="82" width="56" height="56" rx="14" fill="#0A0F0D" stroke="rgba(245,158,11,0.3)" strokeWidth="1.5" />
         {/* Simple bot face */}
         <rect x="288" y="100" width="5" height="5" rx="1" fill="#F59E0B" opacity="0.7" />
         <rect x="307" y="100" width="5" height="5" rx="1" fill="#F59E0B" opacity="0.7" />
@@ -266,13 +323,17 @@ function SlideSolution() {
         </filter>
       </defs>
 
-      {/* Lines: Sources → Baseil */}
+      {/* Lines: Sources → Baseil — staggered particles for organic feel */}
       {sourceYs.map((y, i) => (
         <g key={`left-${i}`}>
           <line x1="135" y1={y} x2="265" y2="110" stroke="rgba(82,183,136,0.06)" strokeWidth="4" filter="url(#sol-glow)" />
           <line x1="135" y1={y} x2="265" y2="110" stroke="rgba(82,183,136,0.18)" strokeWidth="1.2" />
           <circle r="2.5" fill="#52B788" opacity="0.6">
-            <animateMotion dur={`${2.2 + i * 0.4}s`} repeatCount="indefinite" path={`M135,${y} L265,110`} />
+            <animateMotion dur={`${2.2 + i * 0.4}s`} repeatCount="indefinite" begin={`${i * 0.3}s`} path={`M135,${y} L265,110`} />
+          </circle>
+          {/* Return particle for source reads */}
+          <circle r="1.8" fill="#6FCF97" opacity="0.35">
+            <animateMotion dur={`${2.6 + i * 0.3}s`} repeatCount="indefinite" begin={`${i * 0.5 + 1}s`} path={`M265,110 L135,${y}`} />
           </circle>
         </g>
       ))}
@@ -314,13 +375,16 @@ function SlideSolution() {
         )
       })}
 
-      {/* Baseil center */}
-      <g>
-        <circle cx="300" cy="110" r="42" fill="none" stroke="rgba(82,183,136,0.06)" strokeWidth="1">
+      {/* Baseil center — calm breathing glow */}
+      <g
+        className="baseil-anim-breathing-glow"
+        style={{ animation: 'breathing-glow 3.2s ease-in-out infinite' }}
+      >
+        <circle cx="300" cy="110" r="42" fill="none" stroke="rgba(82,183,136,0.08)" strokeWidth="1">
           <animate attributeName="r" values="42;46;42" dur="4s" repeatCount="indefinite" />
           <animate attributeName="opacity" values="1;0.3;1" dur="4s" repeatCount="indefinite" />
         </circle>
-        <rect x="268" y="78" width="64" height="64" rx="16" fill="#0A0F0D" stroke="rgba(82,183,136,0.2)" strokeWidth="1.5" />
+        <rect x="268" y="78" width="64" height="64" rx="16" fill="#0A0F0D" stroke="rgba(82,183,136,0.25)" strokeWidth="1.5" />
         <image href="/robot/robot-leaf.png" x="280" y="88" width="40" height="44" />
         <text x="300" y="160" textAnchor="middle" fontSize="11" fill="#52B788" fontFamily="var(--font-outfit)" opacity="0.6">baseil</text>
       </g>
@@ -399,13 +463,19 @@ function SlideSwarm() {
       ))}
 
       {/* Mesh line: Baseil-1 ↔ Baseil-2 */}
-      <line x1="220" y1="110" x2="380" y2="110" stroke="rgba(111,207,151,0.2)" strokeWidth="1.5" strokeDasharray="6 4" />
-      {/* Bidirectional particles */}
+      <line x1="220" y1="110" x2="380" y2="110" stroke="rgba(111,207,151,0.25)" strokeWidth="1.5" strokeDasharray="6 4" />
+      {/* Bidirectional particles — multiple staggered for richer flow */}
       <circle r="3" fill="#6FCF97" opacity="0.7">
         <animateMotion dur="3s" repeatCount="indefinite" path="M220,110 L380,110" />
       </circle>
+      <circle r="2" fill="#6FCF97" opacity="0.5">
+        <animateMotion dur="3s" repeatCount="indefinite" begin="1.5s" path="M220,110 L380,110" />
+      </circle>
       <circle r="3" fill="#52B788" opacity="0.7">
         <animateMotion dur="3.4s" repeatCount="indefinite" path="M380,110 L220,110" />
+      </circle>
+      <circle r="2" fill="#52B788" opacity="0.5">
+        <animateMotion dur="3.4s" repeatCount="indefinite" begin="1.7s" path="M380,110 L220,110" />
       </circle>
 
       {/* Left DB nodes */}
@@ -426,24 +496,33 @@ function SlideSwarm() {
         </g>
       ))}
 
-      {/* Baseil-1 (left) */}
-      <g>
-        <circle cx="195" cy="110" r="35" fill="none" stroke="rgba(82,183,136,0.06)" strokeWidth="1">
+      {/* Baseil-1 (left) — synchronized breathing */}
+      <g
+        className="baseil-anim-breathing-glow"
+        style={{ animation: 'breathing-glow 3.2s ease-in-out infinite' }}
+      >
+        <circle cx="195" cy="110" r="35" fill="none" stroke="rgba(82,183,136,0.08)" strokeWidth="1">
           <animate attributeName="r" values="35;38;35" dur="4s" repeatCount="indefinite" />
           <animate attributeName="opacity" values="1;0.3;1" dur="4s" repeatCount="indefinite" />
         </circle>
-        <rect x="168" y="83" width="54" height="54" rx="14" fill="#0A0F0D" stroke="rgba(82,183,136,0.2)" strokeWidth="1.5" />
+        <rect x="168" y="83" width="54" height="54" rx="14" fill="#0A0F0D" stroke="rgba(82,183,136,0.25)" strokeWidth="1.5" />
         <image href="/robot/robot-leaf.png" x="177" y="90" width="36" height="40" />
         <text x="195" y="152" textAnchor="middle" fontSize="10" fill="#52B788" fontFamily="var(--font-outfit)" opacity="0.6">baseil-1</text>
       </g>
 
-      {/* Baseil-2 (right) */}
-      <g>
-        <circle cx="405" cy="110" r="35" fill="none" stroke="rgba(111,207,151,0.06)" strokeWidth="1">
+      {/* Baseil-2 (right) — fades in, then breathes in sync */}
+      <g
+        className="baseil-anim-node-fade-in baseil-anim-breathing-glow"
+        style={{
+          transformOrigin: '405px 110px',
+          animation: 'node-fade-in 0.9s ease-out both, breathing-glow 3.2s ease-in-out 0.9s infinite',
+        }}
+      >
+        <circle cx="405" cy="110" r="35" fill="none" stroke="rgba(111,207,151,0.08)" strokeWidth="1">
           <animate attributeName="r" values="35;38;35" dur="4s" repeatCount="indefinite" />
           <animate attributeName="opacity" values="1;0.3;1" dur="4s" repeatCount="indefinite" />
         </circle>
-        <rect x="378" y="83" width="54" height="54" rx="14" fill="#0A0F0D" stroke="rgba(111,207,151,0.2)" strokeWidth="1.5" />
+        <rect x="378" y="83" width="54" height="54" rx="14" fill="#0A0F0D" stroke="rgba(111,207,151,0.25)" strokeWidth="1.5" />
         <image href="/robot/robot-leaf.png" x="387" y="90" width="36" height="40" />
         <text x="405" y="152" textAnchor="middle" fontSize="10" fill="#6FCF97" fontFamily="var(--font-outfit)" opacity="0.6">baseil-2</text>
       </g>
@@ -545,11 +624,39 @@ export function Problem() {
               transition: 'border-color 0.6s ease',
               '--glow-x': `${glow.x}%`,
               '--glow-y': `${glow.y}%`,
+              '--tilt-x': `${tilt.rotateY}`,
+              '--tilt-y': `${tilt.rotateX}`,
             } as React.CSSProperties}
           >
+            {/* Parallax depth layer: background dot grid (slowest) */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-40"
+              aria-hidden="true"
+              style={{
+                backgroundImage:
+                  'radial-gradient(rgba(82, 183, 136, 0.08) 1px, transparent 1px)',
+                backgroundSize: '22px 22px',
+                transform:
+                  'translate3d(calc(var(--tilt-x, 0) * -0.8px), calc(var(--tilt-y, 0) * -0.8px), 0)',
+                transition: 'transform 0.2s ease-out',
+              }}
+            />
+
+            {/* Parallax depth layer: mid-layer accent glow */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              aria-hidden="true"
+              style={{
+                background: `radial-gradient(ellipse at 50% 50%, ${slide.accent}14 0%, transparent 62%)`,
+                transform:
+                  'translate3d(calc(var(--tilt-x, 0) * -2px), calc(var(--tilt-y, 0) * -2px), 0)',
+                transition: 'background 0.7s ease, transform 0.2s ease-out',
+              }}
+            />
+
             <div className="absolute inset-0 baseil-grain opacity-[0.02]" />
 
-            <div className="flex flex-col items-center gap-5 md:gap-8">
+            <div className="relative flex flex-col items-center gap-5 md:gap-8">
               {/* Description text — crossfade using grid stacking for auto height */}
               <div className="grid w-full max-w-[500px]">
                 {SLIDES.map((s, i) => (
@@ -559,7 +666,11 @@ export function Problem() {
                     style={{
                       color: i === 0 ? '#5A7A58' : '#8FAF8A',
                       opacity: currentSlide === i && !isTransitioning ? 1 : 0,
-                      transition: `opacity ${TRANSITION_MS}ms ease`,
+                      transform:
+                        currentSlide === i && !isTransitioning
+                          ? 'scale(1) translateY(0)'
+                          : 'scale(0.98) translateY(4px)',
+                      transition: `opacity ${TRANSITION_MS}ms ease, transform ${TRANSITION_MS}ms ease`,
                       pointerEvents: currentSlide === i ? 'auto' : 'none',
                     }}
                   >
@@ -568,15 +679,29 @@ export function Problem() {
                 ))}
               </div>
 
-              {/* SVG diagram — crossfade */}
-              <div className="relative w-full max-w-none md:max-w-[600px] h-[200px] md:h-[220px]">
+              {/* SVG diagram — crossfade with subtle scale morph (foreground, full parallax) */}
+              <div
+                className="relative w-full max-w-none md:max-w-[600px] h-[200px] md:h-[220px]"
+                style={{
+                  transform:
+                    'translate3d(calc(var(--tilt-x, 0) * 1.5px), calc(var(--tilt-y, 0) * 1.5px), 0)',
+                  transition: 'transform 0.15s ease-out',
+                }}
+              >
                 {slideComponents.map((comp, i) => (
                   <div
                     key={i}
                     className="absolute inset-0 -mx-2 md:mx-0"
                     style={{
                       opacity: currentSlide === i && !isTransitioning ? 1 : 0,
-                      transition: `opacity ${TRANSITION_MS}ms ease`,
+                      transform:
+                        currentSlide === i && !isTransitioning
+                          ? 'scale(1)'
+                          : currentSlide === i
+                            ? 'scale(1.02)'
+                            : 'scale(0.98)',
+                      transformOrigin: 'center',
+                      transition: `opacity ${TRANSITION_MS}ms ease, transform ${TRANSITION_MS}ms ease`,
                       pointerEvents: currentSlide === i ? 'auto' : 'none',
                     }}
                   >

@@ -1,32 +1,72 @@
 'use client'
 
 import { useRef, useState, useEffect, useCallback } from 'react'
-import { Plug, Radar, Globe, MessageSquareHeart, Pin } from 'lucide-react'
+import { MessageSquareHeart, Pin } from 'lucide-react'
 import { trackEvent } from '@/lib/analytics'
+import { ConnectIcon } from './icons/ConnectIcon'
+import { DiscoverIcon } from './icons/DiscoverIcon'
+import { ServeIcon } from './icons/ServeIcon'
+
+function MicroConnect() {
+  return (
+    <div className="mt-4 p-2 rounded-md bg-[#0D1410] border border-[#52B788]/10 font-mono text-[0.68rem] text-[#8FAF8A] overflow-hidden">
+      <span className="text-[#52B788]">$</span> baseil connect postgres://<span className="text-[#6FCF97]">app-db</span>
+      <span className="inline-block w-2 h-3 ml-1 bg-[#52B788] align-middle animate-pulse" />
+    </div>
+  )
+}
+
+function MicroDiscover() {
+  return (
+    <div className="mt-4 flex items-center gap-1.5 text-[0.7rem] font-[var(--font-outfit)] text-[#8FAF8A]">
+      <span className="inline-block w-2 h-2 rounded-sm bg-[#52B788]/60 animate-pulse" />
+      <span>users</span>
+      <span className="text-[#52B788]/40">→</span>
+      <span className="inline-block w-2 h-2 rounded-sm bg-[#52B788]/60 animate-pulse" style={{ animationDelay: '0.3s' }} />
+      <span>orders</span>
+      <span className="text-[#52B788]/40">→</span>
+      <span className="inline-block w-2 h-2 rounded-sm bg-[#52B788]/60 animate-pulse" style={{ animationDelay: '0.6s' }} />
+      <span>products</span>
+    </div>
+  )
+}
+
+function MicroServe() {
+  return (
+    <div className="mt-4 flex items-center gap-2 text-[0.7rem] font-[var(--font-outfit)]">
+      <span className="px-2 py-0.5 rounded-full bg-[#52B788]/10 border border-[#52B788]/20 text-[#6FCF97]">chat</span>
+      <span className="px-2 py-0.5 rounded-full bg-[#52B788]/10 border border-[#52B788]/20 text-[#6FCF97]">mcp</span>
+      <span className="px-2 py-0.5 rounded-full bg-[#52B788]/10 border border-[#52B788]/20 text-[#6FCF97]">api</span>
+    </div>
+  )
+}
 
 const STEPS = [
   {
-    icon: Plug,
+    Icon: ConnectIcon,
+    Micro: MicroConnect,
     title: 'Connect',
     description: 'Point Baseil at your database and watch it shake hands.',
     note: 'Currently supports PostgreSQL — more coming soon.',
-    emoji: '🔌',
+    number: '01',
     color: '#52B788',
   },
   {
-    icon: Radar,
+    Icon: DiscoverIcon,
+    Micro: MicroDiscover,
     title: 'Discover',
     description: 'Baseil maps every table, column, and relationship on its own. You do nothing.',
     note: null,
-    emoji: '🧠',
+    number: '02',
     color: '#6FCF97',
   },
   {
-    icon: Globe,
+    Icon: ServeIcon,
+    Micro: MicroServe,
     title: 'Serve',
     description: 'Natural language, APIs, MCPs — humans, agents, and apps all get answers instantly.',
     note: null,
-    emoji: '⚡',
+    number: '03',
     color: '#8FAF8A',
   },
 ]
@@ -45,6 +85,7 @@ function StepCard({
   const [glowPos, setGlowPos] = useState({ x: 50, y: 50 })
   const [isHovering, setIsHovering] = useState(false)
   const [displayNum, setDisplayNum] = useState('00')
+  const [scrollProgress, setScrollProgress] = useState(0)
   const hasAnimated = useRef(false)
 
   // Step number counter animation
@@ -70,6 +111,20 @@ function StepCard({
       return () => clearInterval(timer)
     }
   }, [visible, index])
+
+  // Scroll-linked progress ring — tracks card visibility ratio
+  useEffect(() => {
+    const card = cardRef.current
+    if (!card) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setScrollProgress(entry.intersectionRatio)
+      },
+      { threshold: [0, 0.1, 0.25, 0.4, 0.5, 0.6, 0.75, 0.9, 1] }
+    )
+    observer.observe(card)
+    return () => observer.disconnect()
+  }, [])
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return
@@ -119,27 +174,50 @@ function StepCard({
         }}
       />
 
-      <span
-        className="text-[0.65rem] font-[var(--font-outfit)] text-[#3D5A3A] absolute top-4 right-4 transition-all duration-300 font-mono tabular-nums"
-        style={{
-          textShadow: visible ? '0 0 8px rgba(82, 183, 136, 0.3)' : 'none',
-        }}
+      {/* Step counter with scroll-linked progress ring */}
+      <div
+        className="absolute top-3 right-3 inline-flex items-center justify-center"
+        style={{ width: 40, height: 40 }}
+        aria-hidden="true"
       >
-        {displayNum}
-      </span>
+        <svg width="40" height="40" viewBox="0 0 40 40" className="absolute inset-0">
+          <circle cx="20" cy="20" r="17" fill="none" stroke="rgba(82, 183, 136, 0.08)" strokeWidth="1.5" />
+          <circle
+            cx="20"
+            cy="20"
+            r="17"
+            fill="none"
+            stroke="#52B788"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeDasharray="106.8"
+            strokeDashoffset={106.8 * (1 - scrollProgress)}
+            transform="rotate(-90 20 20)"
+            style={{ transition: 'stroke-dashoffset 0.5s ease-out', opacity: 0.55 }}
+          />
+        </svg>
+        <span
+          className="relative text-[0.65rem] font-[var(--font-outfit)] text-[#3D5A3A] transition-all duration-300 font-mono tabular-nums"
+          style={{
+            textShadow: visible ? '0 0 8px rgba(82, 183, 136, 0.3)' : 'none',
+          }}
+        >
+          {displayNum}
+        </span>
+      </div>
 
       <div
-        className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-all duration-500 group-hover:scale-110"
+        className="w-14 h-14 rounded-xl flex items-center justify-center mb-5 transition-all duration-500 group-hover:scale-110"
         style={{
           background: `${step.color}10`,
           border: `1px solid ${step.color}20`,
         }}
       >
-        <step.icon size={22} style={{ color: step.color }} className="opacity-70 group-hover:opacity-100 transition-opacity duration-500" />
+        <step.Icon size={40} />
       </div>
 
       <h3 className="font-[var(--font-newsreader)] text-[1.3rem] text-[#C8D8C4] mb-2 relative z-[1]">
-        <span className="mr-2">{step.emoji}</span>{step.title}
+        {step.title}
       </h3>
       <p className="font-[var(--font-outfit)] text-[0.85rem] text-[#8FAF8A] leading-relaxed relative z-[1]">
         {step.description}
@@ -149,101 +227,81 @@ function StepCard({
           {step.note}
         </p>
       )}
+      <div className="relative z-[1]">
+        <step.Micro />
+      </div>
     </div>
   )
 }
 
 function ConnectingDots() {
+  // Static stagger delays to avoid hydration mismatch
+  const particleDelays = [0, 0.8, 1.6, 2.4, 3.2]
+
   return (
     <div className="hidden md:flex absolute inset-0 items-center justify-center pointer-events-none" aria-hidden="true">
       <svg
         className="absolute top-1/2 left-0 w-full"
         style={{ transform: 'translateY(-50%)' }}
-        height="40"
-        viewBox="0 0 1000 40"
+        height="6"
+        viewBox="0 0 1000 6"
         preserveAspectRatio="none"
         fill="none"
       >
-        {/* Dotted line from step 1 to step 2 */}
-        <line
-          x1="200"
-          y1="20"
-          x2="470"
-          y2="20"
-          stroke="rgba(82,183,136,0.15)"
-          strokeWidth="1"
-          strokeDasharray="4 8"
-        />
-        {/* Dotted line from step 2 to step 3 */}
-        <line
-          x1="530"
-          y1="20"
-          x2="800"
-          y2="20"
-          stroke="rgba(82,183,136,0.15)"
-          strokeWidth="1"
-          strokeDasharray="4 8"
-        />
-        {/* Animated dot 1 -> 2 */}
-        <circle r="3" fill="#52B788" opacity="0.7">
-          <animateMotion
-            dur="3s"
-            repeatCount="indefinite"
-            path="M200,20 L470,20"
-          />
-          <animate
-            attributeName="opacity"
-            values="0;0.8;0.8;0"
-            dur="3s"
-            repeatCount="indefinite"
-          />
-        </circle>
-        <circle r="3" fill="#52B788" opacity="0.7">
-          <animateMotion
-            dur="3s"
-            repeatCount="indefinite"
-            path="M200,20 L470,20"
-            begin="1.5s"
-          />
-          <animate
-            attributeName="opacity"
-            values="0;0.8;0.8;0"
-            dur="3s"
-            repeatCount="indefinite"
-            begin="1.5s"
-          />
-        </circle>
-        {/* Animated dot 2 -> 3 */}
-        <circle r="3" fill="#6FCF97" opacity="0.7">
-          <animateMotion
-            dur="3s"
-            repeatCount="indefinite"
-            path="M530,20 L800,20"
-            begin="0.5s"
-          />
-          <animate
-            attributeName="opacity"
-            values="0;0.8;0.8;0"
-            dur="3s"
-            repeatCount="indefinite"
-            begin="0.5s"
-          />
-        </circle>
-        <circle r="3" fill="#6FCF97" opacity="0.7">
-          <animateMotion
-            dur="3s"
-            repeatCount="indefinite"
-            path="M530,20 L800,20"
-            begin="2s"
-          />
-          <animate
-            attributeName="opacity"
-            values="0;0.8;0.8;0"
-            dur="3s"
-            repeatCount="indefinite"
-            begin="2s"
-          />
-        </circle>
+        <defs>
+          {/* Gradient line: fades in/out at edges */}
+          <linearGradient id="particle-gradient-left" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#52B788" stopOpacity="0" />
+            <stop offset="50%" stopColor="#52B788" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#52B788" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="particle-gradient-right" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#6FCF97" stopOpacity="0" />
+            <stop offset="50%" stopColor="#6FCF97" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#6FCF97" stopOpacity="0" />
+          </linearGradient>
+          {/* Motion paths */}
+          <path id="connector-path-left" d="M 200 3 L 470 3" />
+          <path id="connector-path-right" d="M 530 3 L 800 3" />
+        </defs>
+
+        {/* Gradient trail lines */}
+        <rect x="200" y="2.2" width="270" height="1.2" fill="url(#particle-gradient-left)" />
+        <rect x="530" y="2.2" width="270" height="1.2" fill="url(#particle-gradient-right)" />
+
+        {/* Flowing particles: step 1 -> 2 */}
+        {particleDelays.map((delay, i) => (
+          <circle key={`left-${i}`} r="2" fill="#6FCF97">
+            <animateMotion dur="4s" repeatCount="indefinite" begin={`${delay}s`}>
+              <mpath href="#connector-path-left" />
+            </animateMotion>
+            <animate
+              attributeName="opacity"
+              values="0;1;1;0"
+              keyTimes="0;0.1;0.9;1"
+              dur="4s"
+              repeatCount="indefinite"
+              begin={`${delay}s`}
+            />
+          </circle>
+        ))}
+
+        {/* Flowing particles: step 2 -> 3 */}
+        {particleDelays.map((delay, i) => (
+          <circle key={`right-${i}`} r="2" fill="#8FAF8A">
+            <animateMotion dur="4s" repeatCount="indefinite" begin={`${delay + 0.4}s`}>
+              <mpath href="#connector-path-right" />
+            </animateMotion>
+            <animate
+              attributeName="opacity"
+              values="0;1;1;0"
+              keyTimes="0;0.1;0.9;1"
+              dur="4s"
+              repeatCount="indefinite"
+              begin={`${delay + 0.4}s`}
+            />
+          </circle>
+        ))}
       </svg>
     </div>
   )
