@@ -322,13 +322,17 @@ function SlideSolution() {
         </filter>
       </defs>
 
-      {/* Lines: Sources → Baseil */}
+      {/* Lines: Sources → Baseil — staggered particles for organic feel */}
       {sourceYs.map((y, i) => (
         <g key={`left-${i}`}>
           <line x1="135" y1={y} x2="265" y2="110" stroke="rgba(82,183,136,0.06)" strokeWidth="4" filter="url(#sol-glow)" />
           <line x1="135" y1={y} x2="265" y2="110" stroke="rgba(82,183,136,0.18)" strokeWidth="1.2" />
           <circle r="2.5" fill="#52B788" opacity="0.6">
-            <animateMotion dur={`${2.2 + i * 0.4}s`} repeatCount="indefinite" path={`M135,${y} L265,110`} />
+            <animateMotion dur={`${2.2 + i * 0.4}s`} repeatCount="indefinite" begin={`${i * 0.3}s`} path={`M135,${y} L265,110`} />
+          </circle>
+          {/* Return particle for source reads */}
+          <circle r="1.8" fill="#6FCF97" opacity="0.35">
+            <animateMotion dur={`${2.6 + i * 0.3}s`} repeatCount="indefinite" begin={`${i * 0.5 + 1}s`} path={`M265,110 L135,${y}`} />
           </circle>
         </g>
       ))}
@@ -370,13 +374,16 @@ function SlideSolution() {
         )
       })}
 
-      {/* Baseil center */}
-      <g>
-        <circle cx="300" cy="110" r="42" fill="none" stroke="rgba(82,183,136,0.06)" strokeWidth="1">
+      {/* Baseil center — calm breathing glow */}
+      <g
+        className="baseil-anim-breathing-glow"
+        style={{ animation: 'breathing-glow 3.2s ease-in-out infinite' }}
+      >
+        <circle cx="300" cy="110" r="42" fill="none" stroke="rgba(82,183,136,0.08)" strokeWidth="1">
           <animate attributeName="r" values="42;46;42" dur="4s" repeatCount="indefinite" />
           <animate attributeName="opacity" values="1;0.3;1" dur="4s" repeatCount="indefinite" />
         </circle>
-        <rect x="268" y="78" width="64" height="64" rx="16" fill="#0A0F0D" stroke="rgba(82,183,136,0.2)" strokeWidth="1.5" />
+        <rect x="268" y="78" width="64" height="64" rx="16" fill="#0A0F0D" stroke="rgba(82,183,136,0.25)" strokeWidth="1.5" />
         <image href="/robot/robot-leaf.png" x="280" y="88" width="40" height="44" />
         <text x="300" y="160" textAnchor="middle" fontSize="11" fill="#52B788" fontFamily="var(--font-outfit)" opacity="0.6">baseil</text>
       </g>
