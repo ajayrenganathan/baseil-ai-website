@@ -251,7 +251,7 @@ export function Sandbox() {
       {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[radial-gradient(ellipse,_rgba(82,183,136,0.04)_0%,_transparent_60%)]" />
 
-      <div className="max-w-[1050px] mx-auto px-6">
+      <div className="max-w-[1200px] mx-auto px-6">
         {/* Section label */}
         <div className="text-center mb-14">
           <span className="text-[0.7rem] font-[var(--font-outfit)] uppercase tracking-[0.2em] text-[#52B788]/50 mb-4 block">

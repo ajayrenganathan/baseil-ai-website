@@ -81,7 +81,7 @@ export function QuickStart() {
         style={{ background: 'radial-gradient(circle, #52B788 0%, transparent 70%)' }}
       />
 
-      <div className="relative max-w-[900px] mx-auto">
+      <div className="relative max-w-[1100px] mx-auto">
         {/* Section label */}
         <div className={`flex items-center gap-2 mb-4 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <ChevronRight size={16} className="text-[#52B788]" />

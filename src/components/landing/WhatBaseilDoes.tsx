@@ -76,7 +76,7 @@ export function WhatBaseilDoes() {
         style={{ background: 'radial-gradient(circle, #52B788 0%, transparent 70%)' }}
       />
 
-      <div className="relative max-w-[1100px] mx-auto">
+      <div className="relative max-w-[1200px] mx-auto px-6">
         {/* Section label */}
         <p className={`font-[var(--font-outfit)] text-[0.72rem] uppercase tracking-[0.25em] text-[#52B788] mb-3 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           // What Baseil Does
