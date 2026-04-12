@@ -48,6 +48,7 @@ function StepCard({
   const [glowPos, setGlowPos] = useState({ x: 50, y: 50 })
   const [isHovering, setIsHovering] = useState(false)
   const [displayNum, setDisplayNum] = useState('00')
+  const [scrollProgress, setScrollProgress] = useState(0)
   const hasAnimated = useRef(false)
 
   // Step number counter animation
@@ -73,6 +74,20 @@ function StepCard({
       return () => clearInterval(timer)
     }
   }, [visible, index])
+
+  // Scroll-linked progress ring — tracks card visibility ratio
+  useEffect(() => {
+    const card = cardRef.current
+    if (!card) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setScrollProgress(entry.intersectionRatio)
+      },
+      { threshold: [0, 0.1, 0.25, 0.4, 0.5, 0.6, 0.75, 0.9, 1] }
+    )
+    observer.observe(card)
+    return () => observer.disconnect()
+  }, [])
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return
@@ -122,14 +137,37 @@ function StepCard({
         }}
       />
 
-      <span
-        className="text-[0.65rem] font-[var(--font-outfit)] text-[#3D5A3A] absolute top-4 right-4 transition-all duration-300 font-mono tabular-nums"
-        style={{
-          textShadow: visible ? '0 0 8px rgba(82, 183, 136, 0.3)' : 'none',
-        }}
+      {/* Step counter with scroll-linked progress ring */}
+      <div
+        className="absolute top-3 right-3 inline-flex items-center justify-center"
+        style={{ width: 40, height: 40 }}
+        aria-hidden="true"
       >
-        {displayNum}
-      </span>
+        <svg width="40" height="40" viewBox="0 0 40 40" className="absolute inset-0">
+          <circle cx="20" cy="20" r="17" fill="none" stroke="rgba(82, 183, 136, 0.08)" strokeWidth="1.5" />
+          <circle
+            cx="20"
+            cy="20"
+            r="17"
+            fill="none"
+            stroke="#52B788"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeDasharray="106.8"
+            strokeDashoffset={106.8 * (1 - scrollProgress)}
+            transform="rotate(-90 20 20)"
+            style={{ transition: 'stroke-dashoffset 0.5s ease-out', opacity: 0.55 }}
+          />
+        </svg>
+        <span
+          className="relative text-[0.65rem] font-[var(--font-outfit)] text-[#3D5A3A] transition-all duration-300 font-mono tabular-nums"
+          style={{
+            textShadow: visible ? '0 0 8px rgba(82, 183, 136, 0.3)' : 'none',
+          }}
+        >
+          {displayNum}
+        </span>
+      </div>
 
       <div
         className="w-14 h-14 rounded-xl flex items-center justify-center mb-5 transition-all duration-500 group-hover:scale-110"
