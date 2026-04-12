@@ -252,10 +252,32 @@ Blog posts live in `content/blog/` following the existing convention.
 
 - Each post includes frontmatter with `title`, `description`, `date`, `author`, `tags`.
 - Tags align with keyword clusters (e.g., `data-harness`, `mcp`, `a2a`, `agents`, `no-code`).
-- Each post has a clear CTA at the end (try Baseil / join the waitlist / read the next related post).
+- Each post has a clear CTA at the end (try Baseil, join the waitlist, or read the next related post).
 - Internal links between thematically related posts.
+- External links to authoritative sources where relevant (MCP spec, A2A announcements, relevant research, well-known tools or platforms) to add credibility and useful context.
 - SEO posts focus on search-intent answers with practical examples.
 - Credibility posts focus on opinionated takes with architecture depth.
+
+**Writing style:**
+
+- Natural, casual, human voice. Not corporate. Not overly formal.
+- Use technical terminology accurately when the audience warrants it (credibility posts, MCP post, agentic backends post) but don't hide behind jargon.
+- Vary sentence length. Short punchy sentences for impact, longer ones for nuance.
+- Avoid overusing em dashes. Prefer commas, parentheses, sentence breaks, colons. An em dash occasionally is fine; every paragraph is too many.
+- Write like a person who cares about the topic, not like a marketing team optimizing for SEO (even though we're optimizing for SEO). The SEO lands naturally when the content is genuinely useful.
+- No AI-tell phrases ("dive into", "game-changer", "unleash the power of", "in today's fast-paced world").
+
+### 3.3.1 Blog Framework Compatibility
+
+The blog posts reuse the existing framework in `src/lib/blog.ts` and `src/components/blog/MarkdownRenderer.tsx`. The existing system supports: headings, code blocks, tables (GFM), lists, blockquotes, images, links.
+
+**If the existing framework is restrictive for these posts, it's in scope to extend it.** Expected extensions:
+
+- **Mermaid diagrams** (already planned in section 3.4).
+- **Frontmatter schema extension** — if posts need fields the current schema doesn't support (e.g., `heroImage`, `ogImage`, `canonicalUrl`, `readingTime`, `relatedPosts`), extend `src/lib/blog.ts` to parse and expose them, and extend the blog post page template to use them. Document the final schema in the spec update when this happens.
+- **Rendering extensions** — if the current `MarkdownRenderer` can't style something specific a post needs (callouts, admonitions, two-column layouts, inline expandable sections), add the handler. Don't force the post to work around rendering limits.
+
+Any framework extension must be backward compatible with the 3 existing posts (they should still render without modification).
 
 ### 3.4 Blog Visualizations (Mermaid + Custom)
 
