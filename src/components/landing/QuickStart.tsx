@@ -18,18 +18,18 @@ const TAB_CONTENT: Record<InstallTab, TabContent> = {
   'one-liner': {
     comment: '# One command. One agent. One layer for all your data.',
     command: 'curl -fsSL https://releases.baseil.ai/install.sh | sh',
-    caption: 'Works on macOS and Linux. Installs the CLI and registers a local service so Baseil is ready when you are.',
+    caption: 'macOS and Linux. Ready in seconds.',
   },
   'desktop': {
     comment: '# The desktop app wraps the CLI. Install the CLI first, then the app.',
     command: 'curl -fsSL https://releases.baseil.ai/install.sh | sh',
     secondary: 'open https://releases.baseil.ai/desktop/latest/baseil-arm64.dmg',
-    caption: 'macOS arm64 today. Windows and Intel Mac are on the roadmap.',
+    caption: 'macOS arm64. Windows and Intel Mac coming.',
   },
   'beta': {
     comment: '# Early access to the next release. New features land here first.',
     command: 'curl -fsSL https://releases.baseil.ai/install.sh | BASEIL_VERSION=beta sh',
-    caption: 'Beta builds are stable enough for most people and ship weekly. Switch back to stable any time with the same installer.',
+    caption: 'Weekly pre-release builds. Switch back any time.',
   },
 }
 
