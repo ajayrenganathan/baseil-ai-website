@@ -9,10 +9,10 @@ import { trackEvent } from '@/lib/analytics'
 const SECTIONS = [
   { label: 'Home', id: 'top' },
   { label: 'How it Works', id: 'how-it-works' },
+  { label: 'Install', id: 'quick-start' },
   { label: 'What We Do', id: 'what-baseil-does' },
   { label: 'Capabilities', id: 'capabilities' },
   { label: 'Demo', id: 'sandbox' },
-  { label: 'Install', id: 'quick-start' },
 ]
 
 export function Navigation() {

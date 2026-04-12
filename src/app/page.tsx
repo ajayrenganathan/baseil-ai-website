@@ -16,11 +16,11 @@ export default function LandingPage() {
       <Navigation />
       <Hero />
       <HowItWorks />
+      <QuickStart />
       <WhatBaseilDoes />
       <Capabilities />
       <Problem />
       <Sandbox />
-      <QuickStart />
       <Footer />
     </div>
   )
