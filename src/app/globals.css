@@ -653,7 +653,8 @@ html {
   .baseil-anim-particle-flow,
   .baseil-anim-tangle-wiggle,
   .baseil-anim-progress-ring-fill,
-  .baseil-anim-serve-split {
+  .baseil-anim-serve-split,
+  .baseil-anim-source-pulse {
     animation: none !important;
   }
 }

@@ -253,6 +253,7 @@ function SlideProblem() {
         return (
           <g
             key={i}
+            className="baseil-anim-source-pulse"
             style={{
               transformOrigin: `${s.x}px ${s.y}px`,
               animation: `baseil-pulse ${variant.dur} ease-in-out ${variant.delay} infinite`,
