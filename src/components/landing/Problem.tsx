@@ -11,7 +11,7 @@ const SLIDES = [
   {
     id: 'problem',
     label: 'The Problem',
-    duration: 3500,
+    duration: 5000,
     accent: '#C9672E',
     description:
       "Today\u2019s agents wear too many hats. Understanding users, hunting across databases, formulating queries, formatting responses. Every new data source increases hallucinations.",
@@ -19,7 +19,7 @@ const SLIDES = [
   {
     id: 'solution',
     label: 'The Solution',
-    duration: 3500,
+    duration: 5000,
     accent: '#52B788',
     description:
       'Intelligence at the data layer itself. One calm layer that deciphers what data you need and where it lives.',
@@ -27,14 +27,14 @@ const SLIDES = [
   {
     id: 'swarm',
     label: 'The Swarm',
-    duration: 3500,
+    duration: 5000,
     accent: '#6FCF97',
     description:
       'Deploy as a swarm. Multiple Baseil agents form a mesh. Each owning its own databases, sharing knowledge across your infrastructure.',
   },
 ] as const
 
-const TRANSITION_MS = 600
+const TRANSITION_MS = 700
 
 /* Static stagger variants — module-level to avoid hydration mismatch */
 const PULSE_VARIANTS = [
@@ -623,11 +623,39 @@ export function Problem() {
               transition: 'border-color 0.6s ease',
               '--glow-x': `${glow.x}%`,
               '--glow-y': `${glow.y}%`,
+              '--tilt-x': `${tilt.rotateY}`,
+              '--tilt-y': `${tilt.rotateX}`,
             } as React.CSSProperties}
           >
+            {/* Parallax depth layer: background dot grid (slowest) */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-40"
+              aria-hidden="true"
+              style={{
+                backgroundImage:
+                  'radial-gradient(rgba(82, 183, 136, 0.08) 1px, transparent 1px)',
+                backgroundSize: '22px 22px',
+                transform:
+                  'translate3d(calc(var(--tilt-x, 0) * -0.8px), calc(var(--tilt-y, 0) * -0.8px), 0)',
+                transition: 'transform 0.2s ease-out',
+              }}
+            />
+
+            {/* Parallax depth layer: mid-layer accent glow */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              aria-hidden="true"
+              style={{
+                background: `radial-gradient(ellipse at 50% 50%, ${slide.accent}14 0%, transparent 62%)`,
+                transform:
+                  'translate3d(calc(var(--tilt-x, 0) * -2px), calc(var(--tilt-y, 0) * -2px), 0)',
+                transition: 'background 0.7s ease, transform 0.2s ease-out',
+              }}
+            />
+
             <div className="absolute inset-0 baseil-grain opacity-[0.02]" />
 
-            <div className="flex flex-col items-center gap-5 md:gap-8">
+            <div className="relative flex flex-col items-center gap-5 md:gap-8">
               {/* Description text — crossfade using grid stacking for auto height */}
               <div className="grid w-full max-w-[500px]">
                 {SLIDES.map((s, i) => (
@@ -637,7 +665,11 @@ export function Problem() {
                     style={{
                       color: i === 0 ? '#5A7A58' : '#8FAF8A',
                       opacity: currentSlide === i && !isTransitioning ? 1 : 0,
-                      transition: `opacity ${TRANSITION_MS}ms ease`,
+                      transform:
+                        currentSlide === i && !isTransitioning
+                          ? 'scale(1) translateY(0)'
+                          : 'scale(0.98) translateY(4px)',
+                      transition: `opacity ${TRANSITION_MS}ms ease, transform ${TRANSITION_MS}ms ease`,
                       pointerEvents: currentSlide === i ? 'auto' : 'none',
                     }}
                   >
@@ -646,15 +678,29 @@ export function Problem() {
                 ))}
               </div>
 
-              {/* SVG diagram — crossfade */}
-              <div className="relative w-full max-w-none md:max-w-[600px] h-[200px] md:h-[220px]">
+              {/* SVG diagram — crossfade with subtle scale morph (foreground, full parallax) */}
+              <div
+                className="relative w-full max-w-none md:max-w-[600px] h-[200px] md:h-[220px]"
+                style={{
+                  transform:
+                    'translate3d(calc(var(--tilt-x, 0) * 1.5px), calc(var(--tilt-y, 0) * 1.5px), 0)',
+                  transition: 'transform 0.15s ease-out',
+                }}
+              >
                 {slideComponents.map((comp, i) => (
                   <div
                     key={i}
                     className="absolute inset-0 -mx-2 md:mx-0"
                     style={{
                       opacity: currentSlide === i && !isTransitioning ? 1 : 0,
-                      transition: `opacity ${TRANSITION_MS}ms ease`,
+                      transform:
+                        currentSlide === i && !isTransitioning
+                          ? 'scale(1)'
+                          : currentSlide === i
+                            ? 'scale(1.02)'
+                            : 'scale(0.98)',
+                      transformOrigin: 'center',
+                      transition: `opacity ${TRANSITION_MS}ms ease, transform ${TRANSITION_MS}ms ease`,
                       pointerEvents: currentSlide === i ? 'auto' : 'none',
                     }}
                   >
