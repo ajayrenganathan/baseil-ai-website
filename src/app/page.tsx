@@ -5,6 +5,7 @@ import { Hero } from '@/components/landing/Hero'
 import { Problem } from '@/components/landing/Problem'
 import { Sandbox } from '@/components/landing/Sandbox'
 import { HowItWorks } from '@/components/landing/HowItWorks'
+import { WhatBaseilDoes } from '@/components/landing/WhatBaseilDoes'
 import { Capabilities } from '@/components/landing/Capabilities'
 import { Footer } from '@/components/landing/Footer'
 
@@ -14,6 +15,7 @@ export default function LandingPage() {
       <Navigation />
       <Hero />
       <HowItWorks />
+      <WhatBaseilDoes />
       <Capabilities />
       <Problem />
       <Sandbox />
