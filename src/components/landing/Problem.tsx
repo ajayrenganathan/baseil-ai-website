@@ -462,13 +462,19 @@ function SlideSwarm() {
       ))}
 
       {/* Mesh line: Baseil-1 ↔ Baseil-2 */}
-      <line x1="220" y1="110" x2="380" y2="110" stroke="rgba(111,207,151,0.2)" strokeWidth="1.5" strokeDasharray="6 4" />
-      {/* Bidirectional particles */}
+      <line x1="220" y1="110" x2="380" y2="110" stroke="rgba(111,207,151,0.25)" strokeWidth="1.5" strokeDasharray="6 4" />
+      {/* Bidirectional particles — multiple staggered for richer flow */}
       <circle r="3" fill="#6FCF97" opacity="0.7">
         <animateMotion dur="3s" repeatCount="indefinite" path="M220,110 L380,110" />
       </circle>
+      <circle r="2" fill="#6FCF97" opacity="0.5">
+        <animateMotion dur="3s" repeatCount="indefinite" begin="1.5s" path="M220,110 L380,110" />
+      </circle>
       <circle r="3" fill="#52B788" opacity="0.7">
         <animateMotion dur="3.4s" repeatCount="indefinite" path="M380,110 L220,110" />
+      </circle>
+      <circle r="2" fill="#52B788" opacity="0.5">
+        <animateMotion dur="3.4s" repeatCount="indefinite" begin="1.7s" path="M380,110 L220,110" />
       </circle>
 
       {/* Left DB nodes */}
@@ -489,24 +495,33 @@ function SlideSwarm() {
         </g>
       ))}
 
-      {/* Baseil-1 (left) */}
-      <g>
-        <circle cx="195" cy="110" r="35" fill="none" stroke="rgba(82,183,136,0.06)" strokeWidth="1">
+      {/* Baseil-1 (left) — synchronized breathing */}
+      <g
+        className="baseil-anim-breathing-glow"
+        style={{ animation: 'breathing-glow 3.2s ease-in-out infinite' }}
+      >
+        <circle cx="195" cy="110" r="35" fill="none" stroke="rgba(82,183,136,0.08)" strokeWidth="1">
           <animate attributeName="r" values="35;38;35" dur="4s" repeatCount="indefinite" />
           <animate attributeName="opacity" values="1;0.3;1" dur="4s" repeatCount="indefinite" />
         </circle>
-        <rect x="168" y="83" width="54" height="54" rx="14" fill="#0A0F0D" stroke="rgba(82,183,136,0.2)" strokeWidth="1.5" />
+        <rect x="168" y="83" width="54" height="54" rx="14" fill="#0A0F0D" stroke="rgba(82,183,136,0.25)" strokeWidth="1.5" />
         <image href="/robot/robot-leaf.png" x="177" y="90" width="36" height="40" />
         <text x="195" y="152" textAnchor="middle" fontSize="10" fill="#52B788" fontFamily="var(--font-outfit)" opacity="0.6">baseil-1</text>
       </g>
 
-      {/* Baseil-2 (right) */}
-      <g>
-        <circle cx="405" cy="110" r="35" fill="none" stroke="rgba(111,207,151,0.06)" strokeWidth="1">
+      {/* Baseil-2 (right) — fades in, then breathes in sync */}
+      <g
+        className="baseil-anim-node-fade-in baseil-anim-breathing-glow"
+        style={{
+          transformOrigin: '405px 110px',
+          animation: 'node-fade-in 0.9s ease-out both, breathing-glow 3.2s ease-in-out 0.9s infinite',
+        }}
+      >
+        <circle cx="405" cy="110" r="35" fill="none" stroke="rgba(111,207,151,0.08)" strokeWidth="1">
           <animate attributeName="r" values="35;38;35" dur="4s" repeatCount="indefinite" />
           <animate attributeName="opacity" values="1;0.3;1" dur="4s" repeatCount="indefinite" />
         </circle>
-        <rect x="378" y="83" width="54" height="54" rx="14" fill="#0A0F0D" stroke="rgba(111,207,151,0.2)" strokeWidth="1.5" />
+        <rect x="378" y="83" width="54" height="54" rx="14" fill="#0A0F0D" stroke="rgba(111,207,151,0.25)" strokeWidth="1.5" />
         <image href="/robot/robot-leaf.png" x="387" y="90" width="36" height="40" />
         <text x="405" y="152" textAnchor="middle" fontSize="10" fill="#6FCF97" fontFamily="var(--font-outfit)" opacity="0.6">baseil-2</text>
       </g>
