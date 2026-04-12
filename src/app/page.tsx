@@ -7,6 +7,7 @@ import { Sandbox } from '@/components/landing/Sandbox'
 import { HowItWorks } from '@/components/landing/HowItWorks'
 import { WhatBaseilDoes } from '@/components/landing/WhatBaseilDoes'
 import { Capabilities } from '@/components/landing/Capabilities'
+import { QuickStart } from '@/components/landing/QuickStart'
 import { Footer } from '@/components/landing/Footer'
 
 export default function LandingPage() {
@@ -19,6 +20,7 @@ export default function LandingPage() {
       <Capabilities />
       <Problem />
       <Sandbox />
+      <QuickStart />
       <Footer />
     </div>
   )

@@ -12,6 +12,7 @@ const SECTIONS = [
   { label: 'What We Do', id: 'what-baseil-does' },
   { label: 'Capabilities', id: 'capabilities' },
   { label: 'Demo', id: 'sandbox' },
+  { label: 'Install', id: 'quick-start' },
 ]
 
 export function Navigation() {
