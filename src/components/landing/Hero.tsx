@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { User, Bot, ArrowRight, Plug, Network, Sparkles } from 'lucide-react'
+import { User, Bot, ArrowRight, Plug, Network } from 'lucide-react'
 import { ComingSoonBadge } from './ComingSoonBadge'
 import { HeroShowcase } from './showcase/HeroShowcase'
 import { BaseilMascot } from './BaseilMascot'
@@ -158,7 +158,6 @@ export function Hero() {
             { icon: Bot, label: 'Agents', comingSoon: false },
             { icon: Plug, label: 'MCP Tools', comingSoon: false },
             { icon: Network, label: 'A2A Agents', comingSoon: true },
-            { icon: Sparkles, label: 'No-Code Analysis', comingSoon: false },
           ].map((chip, i) => (
             <div
               key={chip.label}
