@@ -7,9 +7,44 @@ import { ConnectIcon } from './icons/ConnectIcon'
 import { DiscoverIcon } from './icons/DiscoverIcon'
 import { ServeIcon } from './icons/ServeIcon'
 
+function MicroConnect() {
+  return (
+    <div className="mt-4 p-2 rounded-md bg-[#0D1410] border border-[#52B788]/10 font-mono text-[0.68rem] text-[#8FAF8A] overflow-hidden">
+      <span className="text-[#52B788]">$</span> baseil connect postgres://<span className="text-[#6FCF97]">app-db</span>
+      <span className="inline-block w-2 h-3 ml-1 bg-[#52B788] align-middle animate-pulse" />
+    </div>
+  )
+}
+
+function MicroDiscover() {
+  return (
+    <div className="mt-4 flex items-center gap-1.5 text-[0.7rem] font-[var(--font-outfit)] text-[#8FAF8A]">
+      <span className="inline-block w-2 h-2 rounded-sm bg-[#52B788]/60 animate-pulse" />
+      <span>users</span>
+      <span className="text-[#52B788]/40">→</span>
+      <span className="inline-block w-2 h-2 rounded-sm bg-[#52B788]/60 animate-pulse" style={{ animationDelay: '0.3s' }} />
+      <span>orders</span>
+      <span className="text-[#52B788]/40">→</span>
+      <span className="inline-block w-2 h-2 rounded-sm bg-[#52B788]/60 animate-pulse" style={{ animationDelay: '0.6s' }} />
+      <span>products</span>
+    </div>
+  )
+}
+
+function MicroServe() {
+  return (
+    <div className="mt-4 flex items-center gap-2 text-[0.7rem] font-[var(--font-outfit)]">
+      <span className="px-2 py-0.5 rounded-full bg-[#52B788]/10 border border-[#52B788]/20 text-[#6FCF97]">chat</span>
+      <span className="px-2 py-0.5 rounded-full bg-[#52B788]/10 border border-[#52B788]/20 text-[#6FCF97]">mcp</span>
+      <span className="px-2 py-0.5 rounded-full bg-[#52B788]/10 border border-[#52B788]/20 text-[#6FCF97]">api</span>
+    </div>
+  )
+}
+
 const STEPS = [
   {
     Icon: ConnectIcon,
+    Micro: MicroConnect,
     title: 'Connect',
     description: 'Point Baseil at your database and watch it shake hands.',
     note: 'Currently supports PostgreSQL — more coming soon.',
@@ -18,6 +53,7 @@ const STEPS = [
   },
   {
     Icon: DiscoverIcon,
+    Micro: MicroDiscover,
     title: 'Discover',
     description: 'Baseil maps every table, column, and relationship on its own. You do nothing.',
     note: null,
@@ -26,6 +62,7 @@ const STEPS = [
   },
   {
     Icon: ServeIcon,
+    Micro: MicroServe,
     title: 'Serve',
     description: 'Natural language, APIs, MCPs — humans, agents, and apps all get answers instantly.',
     note: null,
@@ -190,6 +227,9 @@ function StepCard({
           {step.note}
         </p>
       )}
+      <div className="relative z-[1]">
+        <step.Micro />
+      </div>
     </div>
   )
 }
