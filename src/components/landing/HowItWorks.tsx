@@ -1,32 +1,35 @@
 'use client'
 
 import { useRef, useState, useEffect, useCallback } from 'react'
-import { Plug, Radar, Globe, MessageSquareHeart, Pin } from 'lucide-react'
+import { MessageSquareHeart, Pin } from 'lucide-react'
 import { trackEvent } from '@/lib/analytics'
+import { ConnectIcon } from './icons/ConnectIcon'
+import { DiscoverIcon } from './icons/DiscoverIcon'
+import { ServeIcon } from './icons/ServeIcon'
 
 const STEPS = [
   {
-    icon: Plug,
+    Icon: ConnectIcon,
     title: 'Connect',
     description: 'Point Baseil at your database and watch it shake hands.',
     note: 'Currently supports PostgreSQL — more coming soon.',
-    emoji: '🔌',
+    number: '01',
     color: '#52B788',
   },
   {
-    icon: Radar,
+    Icon: DiscoverIcon,
     title: 'Discover',
     description: 'Baseil maps every table, column, and relationship on its own. You do nothing.',
     note: null,
-    emoji: '🧠',
+    number: '02',
     color: '#6FCF97',
   },
   {
-    icon: Globe,
+    Icon: ServeIcon,
     title: 'Serve',
     description: 'Natural language, APIs, MCPs — humans, agents, and apps all get answers instantly.',
     note: null,
-    emoji: '⚡',
+    number: '03',
     color: '#8FAF8A',
   },
 ]
@@ -129,17 +132,17 @@ function StepCard({
       </span>
 
       <div
-        className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-all duration-500 group-hover:scale-110"
+        className="w-14 h-14 rounded-xl flex items-center justify-center mb-5 transition-all duration-500 group-hover:scale-110"
         style={{
           background: `${step.color}10`,
           border: `1px solid ${step.color}20`,
         }}
       >
-        <step.icon size={22} style={{ color: step.color }} className="opacity-70 group-hover:opacity-100 transition-opacity duration-500" />
+        <step.Icon size={40} />
       </div>
 
       <h3 className="font-[var(--font-newsreader)] text-[1.3rem] text-[#C8D8C4] mb-2 relative z-[1]">
-        <span className="mr-2">{step.emoji}</span>{step.title}
+        {step.title}
       </h3>
       <p className="font-[var(--font-outfit)] text-[0.85rem] text-[#8FAF8A] leading-relaxed relative z-[1]">
         {step.description}
