@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { User, Bot, ArrowRight } from 'lucide-react'
+import { User, Bot, ArrowRight, Plug, Network, Sparkles } from 'lucide-react'
+import { ComingSoonBadge } from './ComingSoonBadge'
 import { HeroShowcase } from './showcase/HeroShowcase'
 import { BaseilMascot } from './BaseilMascot'
 import { trackEvent } from '@/lib/analytics'
@@ -145,11 +146,19 @@ export function Hero() {
           <span className="text-[#6FCF97]" style={{ textShadow: '0 0 12px rgba(82,183,136,0.15)' }}>One intelligent layer</span> where humans and AI agents ask in plain English and get answers instantly.
         </p>
 
-        {/* Audience chips */}
-        <div className={`flex items-center justify-center gap-2.5 mb-7 transition-all duration-700 delay-[950ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        {/* Positioning subtitle */}
+        <p className={`font-[var(--font-outfit)] text-[0.82rem] leading-relaxed text-[#8FAF8A]/80 max-w-[560px] mx-auto mb-5 italic transition-all duration-700 delay-[850ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+          The intelligent data harness that connects your databases, exposes them as <span className="text-[#6FCF97] not-italic">MCP tools</span>, and serves answers to humans and agents alike. No code required.
+        </p>
+
+        {/* Audience and capability chips */}
+        <div className={`flex items-center justify-center flex-wrap gap-2.5 mb-7 transition-all duration-700 delay-[950ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           {[
-            { icon: User, label: 'Humans' },
-            { icon: Bot, label: 'Agents' },
+            { icon: User, label: 'Humans', comingSoon: false },
+            { icon: Bot, label: 'Agents', comingSoon: false },
+            { icon: Plug, label: 'MCP Tools', comingSoon: false },
+            { icon: Network, label: 'A2A Agents', comingSoon: true },
+            { icon: Sparkles, label: 'No-Code Analysis', comingSoon: false },
           ].map((chip, i) => (
             <div
               key={chip.label}
@@ -158,6 +167,7 @@ export function Hero() {
             >
               <chip.icon size={13} className="text-[#52B788]/50 group-hover:text-[#52B788]/80 transition-colors duration-300" />
               <span className="text-[0.72rem] font-[var(--font-outfit)] text-[#8FAF8A] group-hover:text-[#C8D8C4] transition-colors duration-300">{chip.label}</span>
+              {chip.comingSoon && <ComingSoonBadge className="ml-1" />}
             </div>
           ))}
         </div>
