@@ -115,4 +115,4 @@ Related:
 
 - [What Is an Intelligent Data Agent?](/blog/what-is-intelligent-data-agent)
 - [Expose Your Database as MCP Tools](/blog/expose-database-as-mcp-no-code)
-- [Why Agent Experience Is the New Developer Experience](/blog/agent-experience-ax-new-developer-experience)
+- [Why Agent Experience (AX) Is the New UX](/blog/agent-experience-new-user-experience)

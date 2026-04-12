@@ -99,4 +99,4 @@ If you want to see your own database talking to Claude in 5 minutes, the [quicks
 Related reading:
 
 - [Building the Agentic Data Layer](/blog/building-agentic-data-layer-mcp-a2a)
-- [Why Agent Experience Is the New Developer Experience](/blog/agent-experience-ax-new-developer-experience)
+- [Why Agent Experience (AX) Is the New UX](/blog/agent-experience-new-user-experience)

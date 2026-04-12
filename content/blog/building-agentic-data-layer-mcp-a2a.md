@@ -103,6 +103,6 @@ If you want to see the pattern in operation, [try Baseil locally](/docs/quicksta
 
 The [quickstart](/docs/quickstart) is the fastest path. If you want to read more on the broader frame:
 
-- [Why Agent Experience Is the New Developer Experience](/blog/agent-experience-ax-new-developer-experience)
+- [Why Agent Experience (AX) Is the New UX](/blog/agent-experience-new-user-experience)
 - [The Data Harness Your AI Stack Is Missing](/blog/data-harness-missing-from-ai-stack)
 - [Inside Baseil's 5-Agent Pipeline](/blog/inside-baseil-5-agent-pipeline)

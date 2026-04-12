@@ -111,4 +111,4 @@ If you're running Baseil in production, put it behind your normal auth and netwo
 
 - Blog: [Expose Your Database as MCP Tools — No Code Required](/blog/expose-database-as-mcp-no-code)
 - Blog: [Building the Agentic Data Layer](/blog/building-agentic-data-layer-mcp-a2a)
-- Blog: [Why Agent Experience Is the New Developer Experience](/blog/agent-experience-ax-new-developer-experience)
+- Blog: [Why Agent Experience (AX) Is the New UX](/blog/agent-experience-new-user-experience)

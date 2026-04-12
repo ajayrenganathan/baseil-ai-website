@@ -151,5 +151,5 @@ If you want to see the pipeline in action, [the quickstart](/docs/quickstart) wa
 Related:
 
 - [Building the Agentic Data Layer](/blog/building-agentic-data-layer-mcp-a2a)
-- [Why Agent Experience Is the New Developer Experience](/blog/agent-experience-ax-new-developer-experience)
+- [Why Agent Experience (AX) Is the New UX](/blog/agent-experience-new-user-experience)
 - [What Is an Intelligent Data Agent?](/blog/what-is-intelligent-data-agent)
