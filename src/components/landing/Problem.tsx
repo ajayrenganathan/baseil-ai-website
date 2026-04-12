@@ -36,6 +36,18 @@ const SLIDES = [
 
 const TRANSITION_MS = 600
 
+/* Static stagger variants — module-level to avoid hydration mismatch */
+const PULSE_VARIANTS = [
+  { dur: '2.3s', delay: '0.1s' },
+  { dur: '3.1s', delay: '0.8s' },
+  { dur: '2.7s', delay: '1.4s' },
+  { dur: '3.4s', delay: '0.3s' },
+  { dur: '2.1s', delay: '1.1s' },
+  { dur: '3.6s', delay: '0.6s' },
+  { dur: '2.9s', delay: '1.7s' },
+  { dur: '3.2s', delay: '0.2s' },
+]
+
 /* ─────────────────────────────────────────────────────────────
    TILT UTILITY
    ───────────────────────────────────────────────────────────── */
@@ -190,43 +202,87 @@ function SlideProblem() {
 
   return (
     <svg className="w-full" viewBox="0 0 600 220" fill="none">
-      {/* Tangled dashed lines — every source to center */}
+      {/* Tangled dashed lines — every source to center. Progressive draw-in. */}
       {sources.map((s, i) => (
         <path
           key={`line-${i}`}
           d={`M ${s.x} ${s.y} Q ${300 + (s.x > 300 ? -40 : 40)} ${110 + (s.y > 110 ? -30 : 30)} 300 110`}
           fill="none"
-          stroke="rgba(201, 103, 46, 0.13)"
+          stroke="rgba(201, 103, 46, 0.22)"
           strokeWidth="1"
-          strokeDasharray="4 6"
+          strokeDasharray="260"
+          className="baseil-anim-draw-path"
+          style={{
+            ['--total-length' as string]: '260',
+            animation: `draw-path 1.8s ease-out ${0.12 * i}s both`,
+          }}
         />
       ))}
-      {/* Extra cross-tangles for chaotic feel */}
-      <path d="M 55 35 Q 200 180 460 188" fill="none" stroke="rgba(201,103,46,0.07)" strokeWidth="0.8" strokeDasharray="3 8" />
-      <path d="M 545 28 Q 400 190 140 190" fill="none" stroke="rgba(201,103,46,0.07)" strokeWidth="0.8" strokeDasharray="3 8" />
-      <path d="M 155 18 Q 300 200 555 175" fill="none" stroke="rgba(201,103,46,0.06)" strokeWidth="0.8" strokeDasharray="3 8" />
+      {/* Extra cross-tangles for chaotic feel — draw-in slightly later */}
+      <path
+        d="M 55 35 Q 200 180 460 188"
+        fill="none"
+        stroke="rgba(201,103,46,0.12)"
+        strokeWidth="0.8"
+        strokeDasharray="480"
+        className="baseil-anim-draw-path"
+        style={{ ['--total-length' as string]: '480', animation: 'draw-path 2.2s ease-out 1.0s both' }}
+      />
+      <path
+        d="M 545 28 Q 400 190 140 190"
+        fill="none"
+        stroke="rgba(201,103,46,0.12)"
+        strokeWidth="0.8"
+        strokeDasharray="480"
+        className="baseil-anim-draw-path"
+        style={{ ['--total-length' as string]: '480', animation: 'draw-path 2.2s ease-out 1.2s both' }}
+      />
+      <path
+        d="M 155 18 Q 300 200 555 175"
+        fill="none"
+        stroke="rgba(201,103,46,0.1)"
+        strokeWidth="0.8"
+        strokeDasharray="480"
+        className="baseil-anim-draw-path"
+        style={{ ['--total-length' as string]: '480', animation: 'draw-path 2.2s ease-out 1.4s both' }}
+      />
 
-      {/* Source nodes */}
-      {sources.map((s, i) => (
-        <g key={i}>
-          <rect x={s.x - 16} y={s.y - 16} width="32" height="32" rx="7" fill="#0A0F0D" stroke="rgba(201,103,46,0.2)" strokeWidth="1" />
-          <SourceIcon type={s.type} cx={s.x} cy={s.y} color="#C9672E" />
-          <text
-            x={s.x}
-            y={s.y + 26}
-            textAnchor="middle"
-            fontSize="9"
-            fill="#5A7A58"
-            fontFamily="var(--font-outfit)"
+      {/* Source nodes with irregular pulses */}
+      {sources.map((s, i) => {
+        const variant = PULSE_VARIANTS[i % PULSE_VARIANTS.length]
+        return (
+          <g
+            key={i}
+            style={{
+              transformOrigin: `${s.x}px ${s.y}px`,
+              animation: `baseil-pulse ${variant.dur} ease-in-out ${variant.delay} infinite`,
+            }}
           >
-            {s.label}
-          </text>
-        </g>
-      ))}
+            <rect x={s.x - 16} y={s.y - 16} width="32" height="32" rx="7" fill="#0A0F0D" stroke="rgba(201,103,46,0.25)" strokeWidth="1" />
+            <SourceIcon type={s.type} cx={s.x} cy={s.y} color="#C9672E" />
+            <text
+              x={s.x}
+              y={s.y + 26}
+              textAnchor="middle"
+              fontSize="9"
+              fill="#5A7A58"
+              fontFamily="var(--font-outfit)"
+            >
+              {s.label}
+            </text>
+          </g>
+        )
+      })}
 
-      {/* Central overwhelmed bot */}
-      <g>
-        <rect x="272" y="82" width="56" height="56" rx="14" fill="#0A0F0D" stroke="rgba(245,158,11,0.25)" strokeWidth="1.5" />
+      {/* Central overwhelmed bot — subtle wiggle */}
+      <g
+        className="baseil-anim-tangle-wiggle"
+        style={{
+          transformOrigin: '300px 110px',
+          animation: 'tangle-wiggle 1.8s ease-in-out infinite',
+        }}
+      >
+        <rect x="272" y="82" width="56" height="56" rx="14" fill="#0A0F0D" stroke="rgba(245,158,11,0.3)" strokeWidth="1.5" />
         {/* Simple bot face */}
         <rect x="288" y="100" width="5" height="5" rx="1" fill="#F59E0B" opacity="0.7" />
         <rect x="307" y="100" width="5" height="5" rx="1" fill="#F59E0B" opacity="0.7" />
