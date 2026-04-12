@@ -15,8 +15,8 @@ export default function LandingPage() {
     <div className="landing-page min-h-screen bg-[#0A0F0D] text-[#C8D8C4] overflow-x-hidden">
       <Navigation />
       <Hero />
-      <HowItWorks />
       <QuickStart />
+      <HowItWorks />
       <WhatBaseilDoes />
       <Capabilities />
       <Problem />
