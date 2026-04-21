@@ -182,17 +182,17 @@ export function Navigation() {
 
           <div className="flex items-center gap-4">
             <a
-              href={isHome ? '#early-access' : '/#early-access'}
+              href={isHome ? '#quick-start' : '/#quick-start'}
               onClick={(e) => {
-                trackEvent('cta_click', { button_label: 'join_waitlist', section: 'navigation' })
+                trackEvent('cta_click', { button_label: 'install', section: 'navigation' })
                 if (isHome) {
                   e.preventDefault()
-                  scrollTo('early-access')
+                  scrollTo('quick-start')
                 }
               }}
               className="baseil-cta-primary text-[0.8rem] px-5 py-2"
             >
-              Join Waitlist
+              Install
             </a>
 
             {/* Hamburger button — mobile only */}
@@ -294,18 +294,18 @@ export function Navigation() {
 
           {/* CTA */}
           <a
-            href={isHome ? '#early-access' : '/#early-access'}
+            href={isHome ? '#quick-start' : '/#quick-start'}
             onClick={(e) => {
-              trackEvent('cta_click', { button_label: 'join_waitlist', section: 'mobile_navigation' })
+              trackEvent('cta_click', { button_label: 'install', section: 'mobile_navigation' })
               setMobileOpen(false)
               if (isHome) {
                 e.preventDefault()
-                scrollTo('early-access')
+                scrollTo('quick-start')
               }
             }}
             className="baseil-cta-primary text-[0.9rem] px-7 py-2.5 mt-2"
           >
-            Join Waitlist
+            Install
           </a>
         </div>
       </div>

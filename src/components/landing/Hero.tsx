@@ -174,11 +174,11 @@ export function Hero() {
         {/* CTA buttons */}
         <div className={`flex items-center justify-center gap-3 mb-10 transition-all duration-700 delay-[1100ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <a
-            href="#early-access"
-            onClick={(e) => { e.preventDefault(); trackEvent('cta_click', { button_label: 'join_waitlist', section: 'hero' }); document.getElementById('early-access')?.scrollIntoView({ behavior: 'smooth' }) }}
+            href="#quick-start"
+            onClick={(e) => { e.preventDefault(); trackEvent('cta_click', { button_label: 'install', section: 'hero' }); document.getElementById('quick-start')?.scrollIntoView({ behavior: 'smooth' }) }}
             className="baseil-cta-primary text-[0.85rem] px-6 py-2.5 flex items-center gap-2"
           >
-            Join the Waitlist
+            Install
             <ArrowRight size={15} />
           </a>
           <a
