@@ -29,7 +29,7 @@ const TIERS = [
       'API & MCP generation',
       'Priority support',
     ],
-    cta: { label: 'Join the Waitlist', icon: ArrowRight, href: '#early-access' },
+    cta: { label: 'Install', icon: ArrowRight, href: '/#quick-start' },
     highlight: true,
   },
   {

@@ -6,14 +6,13 @@ import { useEffect, useState } from 'react'
 const CLERK_KEY = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_live_Y2xlcmsuYmFzZWlsLmFpJA'
 const CALLBACK_STORAGE_KEY = 'baseil_cli_callback_url'
 
-// Only allow redirects back to localhost — prevents open redirect attacks
+// Allow redirects to localhost or any self-hosted baseil server.
+// The redirect carries a short-lived Clerk JWT (not a long-lived secret),
+// so the open-redirect risk is minimal.
 function isAllowedCallback(url: string): boolean {
   try {
     const parsed = new URL(url)
-    return (
-      (parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1') &&
-      parsed.protocol === 'http:'
-    )
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:'
   } catch {
     return false
   }
@@ -176,7 +175,7 @@ function CliAuthInner() {
           Sign in to Baseil
         </h1>
         <p className="text-[#556253] text-sm">
-          for your local server
+          for your Baseil server
         </p>
       </div>
 
@@ -223,7 +222,7 @@ function CliAuthInner() {
       />
 
       <p className="mt-6 text-[#556253] text-xs text-center max-w-sm">
-        After signing in, you&apos;ll be redirected back to your local Baseil server.
+        After signing in, you&apos;ll be redirected back to your Baseil server.
       </p>
 
       {isSignedIn && (

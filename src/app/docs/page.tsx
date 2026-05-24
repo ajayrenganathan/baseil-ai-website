@@ -1,21 +1,37 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-import Image from 'next/image'
+import type { Metadata } from 'next'
 import Link from 'next/link'
+import { getAllDocs } from '@/lib/docs'
 import { Navigation } from '@/components/landing/Navigation'
 import { Footer } from '@/components/landing/Footer'
-import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react'
+import { ArrowRight, Book } from 'lucide-react'
 
-export default function DocsPage() {
-  const [visible, setVisible] = useState(false)
-  useEffect(() => { setVisible(true) }, [])
+export const metadata: Metadata = {
+  title: 'Documentation',
+  description: 'Baseil docs — install, connect databases, and get your first query running in minutes.',
+  alternates: { canonical: '/docs' },
+}
+
+const categoryLabels: Record<string, string> = {
+  'getting-started': 'Getting Started',
+  'guides': 'Guides',
+  'reference': 'Reference',
+  'general': 'General',
+}
+
+export default function DocsListingPage() {
+  const docs = getAllDocs()
+
+  const grouped = docs.reduce<Record<string, typeof docs>>((acc, doc) => {
+    const cat = doc.category || 'general'
+    if (!acc[cat]) acc[cat] = []
+    acc[cat].push(doc)
+    return acc
+  }, {})
 
   return (
     <div className="min-h-screen bg-[#0A0F0D] text-[#C8D8C4] overflow-x-hidden">
       <Navigation />
 
-      {/* Aurora background */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div
           className="absolute top-[10%] left-[30%] w-[500px] h-[500px] rounded-full blur-[120px] opacity-[0.05]"
@@ -24,69 +40,60 @@ export default function DocsPage() {
       </div>
       <div className="fixed inset-0 z-[1] pointer-events-none opacity-[0.02] baseil-grain" />
 
-      <div className="relative z-10 pt-32 pb-20">
-        <div className="max-w-[700px] mx-auto px-6 text-center">
-          {/* Back link */}
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-[0.78rem] font-[var(--font-outfit)] text-[#5A7A58] hover:text-[#52B788] transition-colors duration-300 mb-12 group"
-          >
-            <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform duration-300" />
-            Back to Home
-          </Link>
+      <div className="relative z-10 pt-28 pb-20">
+        <div className="max-w-[900px] mx-auto px-6">
+          <header className="mb-12">
+            <p className="text-[0.72rem] font-[var(--font-outfit)] uppercase tracking-[0.25em] text-[#52B788] mb-3">
+              // Documentation
+            </p>
+            <h1 className="font-[var(--font-newsreader)] text-[clamp(2rem,5vw,3rem)] text-[#C8D8C4] leading-tight mb-4">
+              Get your first query running in minutes.
+            </h1>
+            <p className="font-[var(--font-outfit)] text-[1rem] text-[#8FAF8A] leading-relaxed max-w-[640px]">
+              Install Baseil, connect a database, and ask it questions. Start with the quickstart below, or jump to the section you need.
+            </p>
+          </header>
 
-          {/* Badge */}
-          <div className={`mb-8 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#52B788]/20 bg-[#52B788]/[0.05] text-[0.72rem] font-[var(--font-outfit)] uppercase tracking-[0.2em] text-[#52B788]">
-              <Sparkles size={12} className="animate-pulse" />
-              Coming Soon
-            </span>
-          </div>
-
-          {/* Mascot */}
-          <div className={`mb-6 transition-all duration-1000 delay-200 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <Image
-              src="/robot/robot-front-left.png"
-              alt="Baseil mascot"
-              width={140}
-              height={170}
-              priority
-              className="mx-auto select-none pointer-events-none drop-shadow-[0_0_30px_rgba(82,183,136,0.15)] mascot-float"
-              style={{ objectFit: 'contain', height: 'auto' }}
-            />
-          </div>
-
-          {/* Heading */}
-          <h1 className={`font-[var(--font-newsreader)] text-[clamp(2rem,4vw,3rem)] font-medium leading-[1.1] tracking-tight mb-4 gradient-text-animated glow-text transition-all duration-1000 delay-400 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-            Documentation
-          </h1>
-
-          <p className={`font-[var(--font-outfit)] text-[0.95rem] leading-relaxed text-[#8FAF8A] max-w-[480px] mx-auto mb-4 transition-all duration-700 delay-[600ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-            We&apos;re writing docs as fast as our mascot can type.
-            <br />
-            Spoiler: those little hands aren&apos;t great with keyboards.
-          </p>
-
-          <p className={`font-[var(--font-newsreader)] text-[1rem] italic text-[#5A7A58] mb-10 transition-all duration-700 delay-[800ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-            Guides, API references, and tutorials are on the way.
-          </p>
-
-          {/* CTA */}
-          <div className={`flex items-center justify-center gap-3 transition-all duration-700 delay-[1000ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            <Link
-              href="/#early-access"
-              className="baseil-cta-primary text-[0.85rem] px-6 py-2.5 flex items-center gap-2"
-            >
-              Join the Waitlist
-              <ArrowRight size={15} />
-            </Link>
-            <Link
-              href="/"
-              className="baseil-cta-ghost text-[0.85rem] px-6 py-2.5"
-            >
-              Back to Home
-            </Link>
-          </div>
+          {docs.length === 0 ? (
+            <div className="p-8 rounded-xl border border-[#52B788]/[0.08] bg-[#111916]/40 text-center">
+              <Book size={32} className="mx-auto mb-3 text-[#52B788]/40" />
+              <p className="font-[var(--font-outfit)] text-[0.95rem] text-[#8FAF8A]">
+                Docs coming soon.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-10">
+              {Object.entries(grouped).map(([category, items]) => (
+                <section key={category}>
+                  <h2 className="font-[var(--font-outfit)] text-[0.78rem] uppercase tracking-[0.2em] text-[#52B788]/70 mb-4">
+                    {categoryLabels[category] || category}
+                  </h2>
+                  <div className="grid gap-3">
+                    {items.map(doc => (
+                      <Link
+                        key={doc.slug}
+                        href={`/docs/${doc.slug}`}
+                        className="group flex items-start gap-4 p-5 rounded-xl border border-[#52B788]/[0.08] bg-[#111916]/40 hover:bg-[#111916]/60 hover:border-[#52B788]/20 transition-all duration-300"
+                      >
+                        <div className="shrink-0 p-2 rounded-lg bg-[#52B788]/10 text-[#52B788] mt-0.5">
+                          <Book size={16} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-[var(--font-outfit)] text-[1rem] font-medium text-[#C8D8C4] group-hover:text-[#6FCF97] transition-colors duration-300 mb-1">
+                            {doc.title}
+                          </h3>
+                          <p className="font-[var(--font-outfit)] text-[0.88rem] text-[#8FAF8A] leading-relaxed">
+                            {doc.description}
+                          </p>
+                        </div>
+                        <ArrowRight size={16} className="shrink-0 text-[#52B788]/40 group-hover:text-[#52B788] group-hover:translate-x-0.5 transition-all duration-300 mt-1" />
+                      </Link>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

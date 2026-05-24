@@ -3,6 +3,7 @@
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeSanitize from 'rehype-sanitize'
+import { MermaidDiagram } from './MermaidDiagram'
 
 export function MarkdownRenderer({ content }: { content: string }) {
   return (
@@ -72,17 +73,30 @@ export function MarkdownRenderer({ content }: { content: string }) {
               </code>
             )
           }
+          if (className === 'language-mermaid') {
+            const source = String(children).replace(/\n$/, '')
+            return <MermaidDiagram source={source} />
+          }
           return (
             <code className={`${className} block`} {...props}>
               {children}
             </code>
           )
         },
-        pre: ({ children }) => (
-          <pre className="bg-[#0D1410] border border-[#52B788]/[0.08] rounded-xl p-5 mb-6 overflow-x-auto text-[0.84rem] leading-[1.7] font-mono text-[#8FAF8A] scrollbar-thin">
-            {children}
-          </pre>
-        ),
+        pre: ({ children }) => {
+          const firstChild = Array.isArray(children) ? children[0] : children
+          if (firstChild && typeof firstChild === 'object' && 'type' in (firstChild as object)) {
+            const type = (firstChild as { type?: unknown }).type
+            if (type === MermaidDiagram) {
+              return <>{children}</>
+            }
+          }
+          return (
+            <pre className="bg-[#0D1410] border border-[#52B788]/[0.08] rounded-xl p-5 mb-6 overflow-x-auto text-[0.84rem] leading-[1.7] font-mono text-[#8FAF8A] scrollbar-thin">
+              {children}
+            </pre>
+          )
+        },
         hr: () => (
           <hr className="border-0 h-[1px] bg-gradient-to-r from-transparent via-[#52B788]/15 to-transparent my-10" />
         ),

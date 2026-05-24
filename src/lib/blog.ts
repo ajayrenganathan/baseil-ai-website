@@ -13,6 +13,7 @@ export interface BlogPost {
   tags: string[]
   readTime: string
   content: string
+  published: boolean
 }
 
 export function getAllPosts(): BlogPost[] {
@@ -35,11 +36,13 @@ export function getAllPosts(): BlogPost[] {
       tags: data.tags || [],
       readTime: data.readTime || estimateReadTime(content),
       content,
+      published: data.published !== false,
     }
   })
 
-  // Sort by date descending
-  return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  return posts
+    .filter(p => p.published !== false)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {
@@ -61,6 +64,7 @@ export function getPostBySlug(slug: string): BlogPost | null {
     tags: data.tags || [],
     readTime: data.readTime || estimateReadTime(content),
     content,
+    published: data.published !== false,
   }
 }
 
