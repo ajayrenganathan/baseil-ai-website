@@ -17,17 +17,18 @@ interface TabContent {
 const TAB_CONTENT: Record<InstallTab, TabContent> = {
   'one-liner': {
     comment: '# One command. One agent. One layer for all your data.',
-    command: 'coming soon — join the waitlist for early access',
+    command: 'curl -fsSL https://releases.baseil.ai/install.sh | sh',
     caption: 'macOS and Linux. Ready in seconds.',
   },
   'desktop': {
-    comment: '# The desktop app wraps the CLI.',
-    command: 'coming soon — join the waitlist for early access',
+    comment: '# The desktop app wraps the CLI. Install the CLI first, then the app.',
+    command: 'curl -fsSL https://releases.baseil.ai/install.sh | sh',
+    secondary: 'open https://releases.baseil.ai/desktop/latest/baseil-arm64.dmg',
     caption: 'macOS arm64. Windows and Intel Mac coming.',
   },
   'beta': {
     comment: '# Early access to the next release. New features land here first.',
-    command: 'coming soon — join the waitlist for early access',
+    command: 'curl -fsSL https://releases.baseil.ai/install.sh | BASEIL_VERSION=beta sh',
     caption: 'Weekly pre-release builds. Switch back any time.',
   },
 }

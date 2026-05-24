@@ -90,87 +90,83 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify([
-              {
-                '@context': 'https://schema.org',
-                '@type': 'WebSite',
-                name: 'Baseil',
-                url: 'https://baseil.ai',
-                description:
-                  'Baseil is the intelligent data harness. Connect your databases, expose them as MCP tools, and give agents (and humans) natural-language access with no code.',
-                publisher: {
-                  '@type': 'Organization',
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@graph': [
+                {
+                  '@type': 'WebSite',
                   name: 'Baseil',
                   url: 'https://baseil.ai',
-                  logo: {
-                    '@type': 'ImageObject',
-                    url: 'https://baseil.ai/robot/robot-leaf.png',
+                  description:
+                    'Baseil is the intelligent data harness. Connect your databases, expose them as MCP tools, and give agents (and humans) natural-language access with no code.',
+                  publisher: {
+                    '@type': 'Organization',
+                    name: 'Baseil',
+                    url: 'https://baseil.ai',
+                    logo: {
+                      '@type': 'ImageObject',
+                      url: 'https://baseil.ai/robot/robot-leaf.png',
+                    },
                   },
                 },
-              },
-              {
-                '@context': 'https://schema.org',
-                '@type': 'SoftwareApplication',
-                name: 'Baseil',
-                applicationCategory: 'DeveloperApplication',
-                operatingSystem: 'Cross-platform',
-                description:
-                  'Baseil is the intelligent data harness. Connect your databases, expose them as MCP tools, and give agents (and humans) natural-language access with no code. One layer for every interface.',
-                url: 'https://baseil.ai',
-                logo: 'https://baseil.ai/robot/robot-leaf.png',
-                image: 'https://baseil.ai/opengraph-image',
-                offers: {
-                  '@type': 'Offer',
-                  price: '0',
-                  priceCurrency: 'USD',
+                {
+                  '@type': 'SoftwareApplication',
+                  name: 'Baseil',
+                  applicationCategory: 'DeveloperApplication',
+                  operatingSystem: 'Cross-platform',
+                  description:
+                    'Baseil is the intelligent data harness. Connect your databases, expose them as MCP tools, and give agents (and humans) natural-language access with no code. One layer for every interface.',
+                  url: 'https://baseil.ai',
+                  logo: 'https://baseil.ai/robot/robot-leaf.png',
+                  image: 'https://baseil.ai/opengraph-image',
+                  offers: {
+                    '@type': 'Offer',
+                    price: '0',
+                    priceCurrency: 'USD',
+                  },
+                  featureList: [
+                    'Natural language data retrieval',
+                    'Expose databases as MCP tools',
+                    'A2A-ready agent exposure',
+                    'Cross-database joins',
+                    'Schema auto-discovery',
+                    'Intelligent data retrieval across databases',
+                    'No-code data analysis',
+                    'Data intelligence layer for AI agents',
+                  ],
                 },
-                featureList: [
-                  'Natural language data retrieval',
-                  'Expose databases as MCP tools',
-                  'A2A-ready agent exposure',
-                  'Cross-database joins',
-                  'Schema auto-discovery',
-                  'Intelligent data retrieval across databases',
-                  'No-code data analysis',
-                  'Data intelligence layer for AI agents',
-                ],
-              },
-              {
-                '@context': 'https://schema.org',
-                '@type': 'SiteNavigationElement',
-                name: 'Documentation',
-                url: 'https://baseil.ai/docs',
-                description: 'Install Baseil, connect databases, and get your first query running in minutes.',
-              },
-              {
-                '@context': 'https://schema.org',
-                '@type': 'SiteNavigationElement',
-                name: 'Blog',
-                url: 'https://baseil.ai/blog',
-                description: 'Guides, deep dives, and thought leadership on intelligent data retrieval and agentic systems.',
-              },
-              {
-                '@context': 'https://schema.org',
-                '@type': 'SiteNavigationElement',
-                name: 'Pricing',
-                url: 'https://baseil.ai/pricing',
-                description: 'Baseil pricing plans. Free during beta.',
-              },
-              {
-                '@context': 'https://schema.org',
-                '@type': 'SiteNavigationElement',
-                name: 'Platform',
-                url: 'https://baseil.ai/platform',
-                description: 'Baseil cloud platform for teams.',
-              },
-              {
-                '@context': 'https://schema.org',
-                '@type': 'SiteNavigationElement',
-                name: 'Contact',
-                url: 'https://baseil.ai/contact',
-                description: 'Get in touch with the Baseil team.',
-              },
-            ]),
+                {
+                  '@type': 'SiteNavigationElement',
+                  name: 'Documentation',
+                  url: 'https://baseil.ai/docs',
+                  description: 'Install Baseil, connect databases, and get your first query running in minutes.',
+                },
+                {
+                  '@type': 'SiteNavigationElement',
+                  name: 'Blog',
+                  url: 'https://baseil.ai/blog',
+                  description: 'Guides, deep dives, and thought leadership on intelligent data retrieval and agentic systems.',
+                },
+                {
+                  '@type': 'SiteNavigationElement',
+                  name: 'Pricing',
+                  url: 'https://baseil.ai/pricing',
+                  description: 'Baseil pricing plans. Free during beta.',
+                },
+                {
+                  '@type': 'SiteNavigationElement',
+                  name: 'Platform',
+                  url: 'https://baseil.ai/platform',
+                  description: 'Baseil cloud platform for teams.',
+                },
+                {
+                  '@type': 'SiteNavigationElement',
+                  name: 'Contact',
+                  url: 'https://baseil.ai/contact',
+                  description: 'Get in touch with the Baseil team.',
+                },
+              ],
+            }),
           }}
         />
       </head>

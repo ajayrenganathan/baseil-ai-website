@@ -4,6 +4,7 @@ description: "A deep dive into the architecture that turns a raw database connec
 date: "2026-04-21"
 author: "Baseil Team"
 tags: ["architecture", "agents", "engineering", "internals"]
+published: false
 ---
 
 Most text-to-SQL tools are a single-shot call: you pass a question and a schema into a language model, it emits SQL, you run it. This shape is easy to build and easy to demo. It also breaks in a predictable set of ways: wrong tables, silent errors, injection risks, no audit trail, no capacity to learn from what went wrong. If you want a system robust enough to put in front of other agents, or to hand to your data team as something they can trust, the single-shot architecture is the wrong starting point.

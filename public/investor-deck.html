@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baseil AI — Investor Deck</title>
+<style>
+:root {
+  --bg: #0A0F0D;
+  --surface: #111916;
+  --accent: #52B788;
+  --accent-dim: #3d8a66;
+  --text: #F0F0F0;
+  --text-muted: #A0A0A0;
+  --card-bg: #1A2420;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,300;0,400;0,600;0,700&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+.slide {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 80px;
+  position: relative;
+  border-bottom: 1px solid rgba(82, 183, 136, 0.1);
+}
+
+.slide-number {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 300;
+}
+
+h1 {
+  font-family: 'Newsreader', serif;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1.1;
+  margin-bottom: 24px;
+}
+
+h2 {
+  font-family: 'Newsreader', serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--accent);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.85rem;
+}
+
+p {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+  max-width: 700px;
+}
+
+.accent { color: var(--accent); }
+.highlight {
+  background: linear-gradient(120deg, var(--accent) 0%, #7dd3a8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Slide 1 - Cover */
+.cover {
+  text-align: center;
+  background: radial-gradient(ellipse at 50% 80%, rgba(82, 183, 136, 0.08) 0%, transparent 60%);
+}
+
+.cover .logo {
+  font-family: 'Newsreader', serif;
+  font-size: 5rem;
+  font-weight: 700;
+  letter-spacing: -2px;
+  margin-bottom: 16px;
+}
+
+.cover .tagline {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+
+.cover .contact {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 40px;
+}
+
+.cover .contact a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* Slide 2 - Problem */
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 1100px;
+  margin-top: 40px;
+}
+
+.problem-card {
+  background: var(--card-bg);
+  border: 1px solid rgba(82, 183, 136, 0.15);
+  border-radius: 16px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.problem-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #e74c3c, #e67e22);
+}
+
+.problem-card h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+
+.problem-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Slide 3 - Solution */
+.solution-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  width: 100%;
+  max-width: 1100px;
+  align-items: center;
+}
+
+.solution-steps {
+  list-style: none;
+}
+
+.solution-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.step-num {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.step-text h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.step-text p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Architecture Diagram */
+.arch-diagram {
+  background: var(--surface);
+  border: 1px solid rgba(82, 183, 136, 0.2);
+  border-radius: 20px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.arch-layer {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.arch-node {
+  background: var(--card-bg);
+  border: 1px solid rgba(82, 183, 136, 0.3);
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: center;
+  min-width: 90px;
+}
+
+.arch-node.highlight-node {
+  background: linear-gradient(135deg, rgba(82, 183, 136, 0.2), rgba(82, 183, 136, 0.05));
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.arch-arrow {
+  color: var(--accent);
+  font-size: 1.5rem;
+  opacity: 0.6;
+}
+
+/* Slide 4 - Value Prop */
+.value-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  width: 100%;
+  max-width: 1100px;
+  margin-top: 40px;
+}
+
+.value-card {
+  background: var(--card-bg);
+  border: 1px solid rgba(82, 183, 136, 0.12);
+  border-radius: 16px;
+  padding: 32px 28px;
+  text-align: center;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.value-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+}
+
+.value-icon {
+  font-size: 2.2rem;
+  margin-bottom: 16px;
+}
+
+.value-card h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.value-card p {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0 auto;
+}
+
+/* Slide 5 - Market */
+.market-content {
+  width: 100%;
+  max-width: 1000px;
+}
+
+.tam-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 40px;
+  margin-bottom: 50px;
+}
+
+.tam-circle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.tam-circle .ring {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border: 2px solid;
+}
+
+.tam-circle .ring.tam {
+  width: 220px;
+  height: 220px;
+  border-color: rgba(82, 183, 136, 0.3);
+  background: rgba(82, 183, 136, 0.03);
+}
+
+.tam-circle .ring.sam {
+  width: 160px;
+  height: 160px;
+  border-color: rgba(82, 183, 136, 0.5);
+  background: rgba(82, 183, 136, 0.06);
+}
+
+.tam-circle .ring.som {
+  width: 90px;
+  height: 90px;
+  border-color: var(--accent);
+  background: rgba(82, 183, 136, 0.12);
+}
+
+.tam-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.tam-value {
+  font-family: 'Newsreader', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.tam-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tam-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tam-legend-item .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.tam-legend-item .dot.tam-dot { opacity: 0.3; }
+.tam-legend-item .dot.sam-dot { opacity: 0.6; }
+.tam-legend-item .dot.som-dot { opacity: 1; }
+
+.tam-legend-item span {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.tam-legend-item strong {
+  color: var(--text);
+}
+
+/* Slide 6 - Product & Technology */
+.tech-content {
+  width: 100%;
+  max-width: 1100px;
+}
+
+.pipeline-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 40px 0;
+  flex-wrap: wrap;
+}
+
+.pipeline-node {
+  background: var(--card-bg);
+  border: 1px solid rgba(82, 183, 136, 0.25);
+  border-radius: 12px;
+  padding: 16px 20px;
+  text-align: center;
+  min-width: 130px;
+}
+
+.pipeline-node .node-icon {
+  font-size: 1.5rem;
+  margin-bottom: 6px;
+}
+
+.pipeline-node .node-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+}
+
+.pipeline-arrow {
+  color: var(--accent);
+  font-size: 1.2rem;
+  opacity: 0.5;
+}
+
+.tech-features {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.tech-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: var(--surface);
+  border-radius: 12px;
+  border: 1px solid rgba(82, 183, 136, 0.08);
+}
+
+.tech-feature .check {
+  color: var(--accent);
+  font-size: 1.1rem;
+  margin-top: 2px;
+}
+
+.tech-feature p {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* P2P Visualization Slide */
+.p2p-flow {
+  width: 100%;
+  max-width: 1100px;
+  margin-top: 40px;
+}
+
+.p2p-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+.p2p-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.p2p-column-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.p2p-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card-bg);
+  border: 1px solid rgba(82, 183, 136, 0.15);
+  border-radius: 10px;
+  padding: 10px 16px;
+  min-width: 150px;
+}
+
+.p2p-item .p2p-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.p2p-item .p2p-label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.p2p-dot-blue { background: #5dade2; }
+.p2p-dot-green { background: var(--accent); }
+.p2p-dot-yellow { background: #f1c40f; }
+.p2p-dot-purple { background: #bb8fce; }
+
+.p2p-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+}
+
+.p2p-connector-line {
+  width: 40px;
+  height: 2px;
+  background: var(--accent);
+  opacity: 0.35;
+  position: relative;
+}
+
+.p2p-connector-line::after {
+  content: '';
+  position: absolute;
+  right: -3px;
+  top: -3px;
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 6px solid var(--accent);
+  opacity: 0.5;
+}
+
+.p2p-connector-text {
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 6px;
+  white-space: nowrap;
+}
+
+.p2p-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 40px;
+  width: 100%;
+  max-width: 1100px;
+}
+
+.p2p-summary-item {
+  text-align: center;
+  padding: 24px 16px;
+  background: var(--card-bg);
+  border-radius: 14px;
+  border: 1px solid rgba(82, 183, 136, 0.1);
+}
+
+.p2p-summary-item .sum-num {
+  font-family: 'Newsreader', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.p2p-summary-item h4 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.p2p-summary-item p {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+  margin: 0 auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .slide { padding: 40px 24px; }
+  .solution-content { grid-template-columns: 1fr; }
+  .value-grid { grid-template-columns: 1fr; }
+  .tech-features { grid-template-columns: 1fr; }
+  .tam-visual { flex-direction: column; }
+  .p2p-row { flex-direction: column; gap: 20px; }
+  .p2p-connector { transform: rotate(90deg); padding: 10px 0; }
+  .p2p-summary { grid-template-columns: repeat(2, 1fr); }
+  .pipeline-visual { flex-direction: column; }
+}
+
+/* Print */
+@media print {
+  .slide { page-break-after: always; min-height: auto; padding: 40px; }
+}
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: Cover -->
+<section class="slide cover">
+  <span class="slide-number">01</span>
+  <h1 class="logo"><span class="highlight">Baseil</span></h1>
+  <p class="tagline">The intelligent data harness your AI stack is missing.</p>
+  <p style="font-size: 1.1rem; color: var(--text); max-width: 600px; text-align: center;">
+    Connect your databases. Step away.<br>
+    Come back to instantly queryable data and autonomous insights.
+  </p>
+  <div class="contact" style="margin-top: 50px;">
+    <p>ajay.renganathan@gmail.com &middot; baseil.ai</p>
+  </div>
+</section>
+
+<!-- SLIDE 2: The Problem -->
+<section class="slide">
+  <span class="slide-number">02</span>
+  <h3>// The Problem</h3>
+  <h2>Building AI agents on enterprise data is <span class="accent">broken</span></h2>
+  <p style="text-align: center; margin-bottom: 20px;">Current approaches are token-wasteful, brittle, and don't scale to autonomous analytics.</p>
+
+  <div class="problem-grid">
+    <div class="problem-card">
+      <h4>Generic Harnesses, Wasteful Queries</h4>
+      <p>Today's AI harnesses treat databases as an afterthought. Every query burns tokens on schema discovery, produces suboptimal SQL, and can't learn from past interactions.</p>
+    </div>
+    <div class="problem-card">
+      <h4>Integration Hell</h4>
+      <p>Enterprises must build custom APIs and MCPs for every data source. Each new agent needs its own connector, multiplying engineering effort by N agents x M databases.</p>
+    </div>
+    <div class="problem-card">
+      <h4>100s of Tools = Hallucinations</h4>
+      <p>When an agent connects to dozens of tools, LLM tool selection degrades. More tools means more confusion, more hallucinated queries, and unreliable results.</p>
+    </div>
+    <div class="problem-card">
+      <h4>No Path to Autonomous Insights</h4>
+      <p>Current solutions stop at query execution. There's no mechanism to autonomously discover patterns, learn relationships, or generate new analytical endpoints without human intervention.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 3: The Solution -->
+<section class="slide">
+  <span class="slide-number">03</span>
+  <h3>// The Solution</h3>
+  <h2>A harness that <span class="accent">learns</span> your data</h2>
+
+  <div class="solution-content">
+    <div>
+      <p style="margin-bottom: 30px;">Baseil autonomously onboards databases, maps schemas, and serves grounded answers. No config. No connectors. No hallucinations.</p>
+
+      <ul class="solution-steps">
+        <li>
+          <span class="step-num">1</span>
+          <div class="step-text">
+            <h4>Connect</h4>
+            <p>Point Baseil at any database. It shakes hands and begins autonomous discovery.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">2</span>
+          <div class="step-text">
+            <h4>Discover & Learn</h4>
+            <p>Auto-maps tables, columns, relationships, and data types. Samples data to understand domain context.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">3</span>
+          <div class="step-text">
+            <h4>Serve & Scale</h4>
+            <p>Exposes data via Chat, MCP tools, and APIs. Learns from feedback. Gets smarter over time.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="arch-diagram">
+      <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">Architecture</div>
+      <div class="arch-layer">
+        <div class="arch-node">PostgreSQL</div>
+        <div class="arch-node">MySQL</div>
+        <div class="arch-node">Elasticsearch</div>
+      </div>
+      <div class="arch-arrow">&darr;</div>
+      <div class="arch-layer">
+        <div class="arch-node highlight-node">Baseil Harness</div>
+      </div>
+      <div class="arch-arrow">&darr;</div>
+      <div class="arch-layer">
+        <div class="arch-node">Chat</div>
+        <div class="arch-node">MCP</div>
+        <div class="arch-node">APIs</div>
+        <div class="arch-node">A2A</div>
+      </div>
+      <div class="arch-arrow">&darr;</div>
+      <div class="arch-layer">
+        <div class="arch-node">Humans</div>
+        <div class="arch-node">AI Agents</div>
+        <div class="arch-node">Applications</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 4: Value Proposition -->
+<section class="slide">
+  <span class="slide-number">04</span>
+  <h3>// Value Proposition</h3>
+  <h2>Why Baseil wins</h2>
+  <p style="text-align: center;">One intelligent layer replaces N custom integrations, eliminates hallucinations, and unlocks autonomous analytics.</p>
+
+  <div class="value-grid">
+    <div class="value-card">
+      <div class="value-icon">&#9889;</div>
+      <h4>Token Efficient</h4>
+      <p>Golden Cache and sparse tools mean fewer tokens per query. Context is saved and reused, not rebuilt every time.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">&#129504;</div>
+      <h4>Autonomous Onboarding</h4>
+      <p>Databases are crawled, schemas mapped, and tools generated without human configuration.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">&#128274;</div>
+      <h4>Zero Hallucinations</h4>
+      <p>Template-driven SQL with parameterized queries. User input never touches SQL directly.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">&#128640;</div>
+      <h4>Instant Scale</h4>
+      <p>One connection serves unlimited agents, apps, and humans through MCP, API, and chat interfaces.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">&#128218;</div>
+      <h4>Learns Over Time</h4>
+      <p>Feedback loops, pinned queries, and rules make the system measurably sharper each week.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">&#127919;</div>
+      <h4>Built for Small Teams</h4>
+      <p>Connect your data, step away. Come back to queryable databases and insight endpoints with no engineering overhead.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 5: Market Opportunity -->
+<section class="slide">
+  <span class="slide-number">05</span>
+  <h3>// Market Opportunity</h3>
+  <h2>The AI data infrastructure wave</h2>
+
+  <div class="market-content">
+    <div class="tam-visual">
+      <div class="tam-circle">
+        <div class="ring tam">
+          <div class="ring sam">
+            <div class="ring som">
+              <span class="tam-value" style="font-size: 0.9rem;">$2B</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tam-legend">
+        <div class="tam-legend-item">
+          <div class="dot tam-dot"></div>
+          <span><strong>TAM $48B</strong> &mdash; Global AI infrastructure & data management market (2026)</span>
+        </div>
+        <div class="tam-legend-item">
+          <div class="dot sam-dot"></div>
+          <span><strong>SAM $12B</strong> &mdash; AI-powered data access & query automation for enterprises</span>
+        </div>
+        <div class="tam-legend-item">
+          <div class="dot som-dot"></div>
+          <span><strong>SOM $2B</strong> &mdash; SMBs & mid-market teams adopting AI agents for data workflows</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: center;">
+      <div style="padding: 20px; background: var(--card-bg); border-radius: 12px;">
+        <div style="font-family: 'Newsreader', serif; font-size: 2rem; font-weight: 700; color: var(--accent);">73%</div>
+        <p style="font-size: 0.8rem; margin-top: 6px;">of enterprises plan AI agent deployment by 2027</p>
+      </div>
+      <div style="padding: 20px; background: var(--card-bg); border-radius: 12px;">
+        <div style="font-family: 'Newsreader', serif; font-size: 2rem; font-weight: 700; color: var(--accent);">6mo+</div>
+        <p style="font-size: 0.8rem; margin-top: 6px;">average time to build custom data-agent integrations</p>
+      </div>
+      <div style="padding: 20px; background: var(--card-bg); border-radius: 12px;">
+        <div style="font-family: 'Newsreader', serif; font-size: 2rem; font-weight: 700; color: var(--accent);">40%</div>
+        <p style="font-size: 0.8rem; margin-top: 6px;">of agent failures trace to data hallucinations</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 6: Product & Technology -->
+<section class="slide">
+  <span class="slide-number">06</span>
+  <h3>// Product & Technology</h3>
+  <h2>5-agent pipeline: <span class="accent">defensible by design</span></h2>
+
+  <div class="tech-content">
+    <div class="pipeline-visual">
+      <div class="pipeline-node">
+        <div class="node-icon">&#128269;</div>
+        <div class="node-label">Discovery</div>
+      </div>
+      <span class="pipeline-arrow">&rarr;</span>
+      <div class="pipeline-node">
+        <div class="node-icon">&#128295;</div>
+        <div class="node-label">Tool Builder</div>
+      </div>
+      <span class="pipeline-arrow">&rarr;</span>
+      <div class="pipeline-node">
+        <div class="node-icon">&#128737;</div>
+        <div class="node-label">Reviewer</div>
+      </div>
+      <span class="pipeline-arrow">&rarr;</span>
+      <div class="pipeline-node">
+        <div class="node-icon">&#9989;</div>
+        <div class="node-label">Tester</div>
+      </div>
+      <span class="pipeline-arrow">&rarr;</span>
+      <div class="pipeline-node">
+        <div class="node-icon">&#128640;</div>
+        <div class="node-label">Deploy</div>
+      </div>
+    </div>
+
+    <div class="tech-features">
+      <div class="tech-feature">
+        <span class="check">&#10003;</span>
+        <p><strong>Sparse Tools</strong> &mdash; ~10 parameterized templates cover thousands of query variants. LLMs pick correctly.</p>
+      </div>
+      <div class="tech-feature">
+        <span class="check">&#10003;</span>
+        <p><strong>Template SQL</strong> &mdash; Fixed skeletons with variable params. Injection-proof by architecture.</p>
+      </div>
+      <div class="tech-feature">
+        <span class="check">&#10003;</span>
+        <p><strong>Golden Cache</strong> &mdash; Pin verified queries for instant, deterministic results. Zero tokens spent.</p>
+      </div>
+      <div class="tech-feature">
+        <span class="check">&#10003;</span>
+        <p><strong>Real DB Testing</strong> &mdash; Every generated tool validated against live schemas, not mocks.</p>
+      </div>
+      <div class="tech-feature">
+        <span class="check">&#10003;</span>
+        <p><strong>Schema Drift Detection</strong> &mdash; Re-run discovery catches changes before queries break.</p>
+      </div>
+      <div class="tech-feature">
+        <span class="check">&#10003;</span>
+        <p><strong>MCP + A2A Native</strong> &mdash; Every data source auto-exposed via Model Context Protocol and Agent-to-Agent mesh.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 7: P2P Insight Delivery -->
+<section class="slide">
+  <span class="slide-number">07</span>
+  <h3>// P2P Insight Delivery</h3>
+  <h2>Distributed autonomous <span class="accent">backend data agents</span></h2>
+  <p style="text-align: center; margin-bottom: 10px;">Each database gets its own agent. Agents learn schemas, generate insights, and serve them as endpoints. No central bottleneck.</p>
+
+  <!-- Clean horizontal flow diagram -->
+  <div class="p2p-flow">
+    <div class="p2p-row">
+
+      <!-- Column 1: Data Sources -->
+      <div class="p2p-column">
+        <div class="p2p-column-label">Data Sources</div>
+        <div class="p2p-item">
+          <span class="p2p-dot p2p-dot-blue"></span>
+          <span class="p2p-label">PostgreSQL</span>
+        </div>
+        <div class="p2p-item">
+          <span class="p2p-dot p2p-dot-blue"></span>
+          <span class="p2p-label">MySQL</span>
+        </div>
+        <div class="p2p-item">
+          <span class="p2p-dot p2p-dot-blue"></span>
+          <span class="p2p-label">Elasticsearch</span>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div class="p2p-connector">
+        <div class="p2p-connector-line"></div>
+        <div class="p2p-connector-text">Auto-onboard</div>
+      </div>
+
+      <!-- Column 2: Baseil Agents -->
+      <div class="p2p-column">
+        <div class="p2p-column-label">Baseil Agents</div>
+        <div class="p2p-item" style="border-color: rgba(82, 183, 136, 0.35);">
+          <span class="p2p-dot p2p-dot-green"></span>
+          <span class="p2p-label">Data Agent 1</span>
+        </div>
+        <div class="p2p-item" style="border-color: rgba(82, 183, 136, 0.35);">
+          <span class="p2p-dot p2p-dot-green"></span>
+          <span class="p2p-label">Data Agent 2</span>
+        </div>
+        <div class="p2p-item" style="border-color: rgba(82, 183, 136, 0.35);">
+          <span class="p2p-dot p2p-dot-green"></span>
+          <span class="p2p-label">Data Agent 3</span>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div class="p2p-connector">
+        <div class="p2p-connector-line"></div>
+        <div class="p2p-connector-text">Discover</div>
+      </div>
+
+      <!-- Column 3: Generated Insights -->
+      <div class="p2p-column">
+        <div class="p2p-column-label">Insights</div>
+        <div class="p2p-item">
+          <span class="p2p-dot p2p-dot-yellow"></span>
+          <span class="p2p-label">Schema maps</span>
+        </div>
+        <div class="p2p-item">
+          <span class="p2p-dot p2p-dot-yellow"></span>
+          <span class="p2p-label">Join patterns</span>
+        </div>
+        <div class="p2p-item">
+          <span class="p2p-dot p2p-dot-yellow"></span>
+          <span class="p2p-label">Anomalies</span>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div class="p2p-connector">
+        <div class="p2p-connector-line"></div>
+        <div class="p2p-connector-text">Serve</div>
+      </div>
+
+      <!-- Column 4: Delivery -->
+      <div class="p2p-column">
+        <div class="p2p-column-label">Endpoints</div>
+        <div class="p2p-item">
+          <span class="p2p-dot p2p-dot-purple"></span>
+          <span class="p2p-label">REST APIs</span>
+        </div>
+        <div class="p2p-item">
+          <span class="p2p-dot p2p-dot-purple"></span>
+          <span class="p2p-label">MCP Tools</span>
+        </div>
+        <div class="p2p-item">
+          <span class="p2p-dot p2p-dot-purple"></span>
+          <span class="p2p-label">A2A Mesh</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Summary stats -->
+  <div class="p2p-summary">
+    <div class="p2p-summary-item">
+      <div class="sum-num">1</div>
+      <h4>Connect</h4>
+      <p>Add a connection string. Agent spawns automatically.</p>
+    </div>
+    <div class="p2p-summary-item">
+      <div class="sum-num">2</div>
+      <h4>Absorb</h4>
+      <p>Agent maps schemas, relationships, and domain context.</p>
+    </div>
+    <div class="p2p-summary-item">
+      <div class="sum-num">3</div>
+      <h4>Discover</h4>
+      <p>Autonomous insight generation across all sources.</p>
+    </div>
+    <div class="p2p-summary-item">
+      <div class="sum-num">4</div>
+      <h4>Deliver</h4>
+      <p>Low-latency endpoints. No central orchestrator.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 8: The Ask -->
+<section class="slide cover" style="text-align: center;">
+  <span class="slide-number">08</span>
+  <h3>// The Vision</h3>
+  <h2 style="max-width: 800px;">Connect your data. <span class="accent">Step away.</span><br>Come back to intelligence.</h2>
+  <p style="text-align: center; margin-top: 20px; font-size: 1.2rem; color: var(--text);">
+    Best for small teams that want to focus on data<br>and let Baseil build the insights.
+  </p>
+  <div style="margin-top: 50px; padding: 30px 50px; background: var(--card-bg); border-radius: 16px; border: 1px solid rgba(82, 183, 136, 0.2); display: inline-block;">
+    <p style="font-size: 1rem; color: var(--text); margin-bottom: 8px;"><strong>Ajay Renganathan</strong></p>
+    <p style="font-size: 0.9rem;">ajay.renganathan@gmail.com &middot; baseil.ai</p>
+  </div>
+</section>
+
+</body>
+</html>

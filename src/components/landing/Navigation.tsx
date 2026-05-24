@@ -6,74 +6,31 @@ import Link from 'next/link'
 import { BaseilLogo } from './BaseilLogo'
 import { trackEvent } from '@/lib/analytics'
 
-const SECTIONS = [
+const SECTION_LINKS = [
   { label: 'Home', id: 'top' },
   { label: 'Install', id: 'quick-start' },
   { label: 'How it Works', id: 'how-it-works' },
-  { label: 'What We Do', id: 'what-baseil-does' },
-  { label: 'Capabilities', id: 'capabilities' },
-  { label: 'Demo', id: 'sandbox' },
+]
+
+const PAGE_LINKS = [
+  { label: 'Docs', href: '/docs' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Pricing', href: '/pricing' },
+  { label: 'Platform', href: '/platform' },
 ]
 
 export function Navigation() {
   const pathname = usePathname()
   const isHome = pathname === '/'
   const [scrolled, setScrolled] = useState(false)
-  const [scrollProgress, setScrollProgress] = useState(0)
-  const [activeSection, setActiveSection] = useState('top')
   const [mobileOpen, setMobileOpen] = useState(false)
 
-  // Scroll tracking
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 40)
-      const scrollTop = window.scrollY
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      setScrollProgress(docHeight > 0 ? (scrollTop / docHeight) * 100 : 0)
-    }
+    const onScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Scroll spy — track which section is in view
-  useEffect(() => {
-    if (!isHome) return
-
-    const sectionIds = SECTIONS.map(s => s.id).filter(id => id !== 'top')
-    const observers: IntersectionObserver[] = []
-
-    const handleIntersect = (id: string) => (entries: IntersectionObserverEntry[]) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          setActiveSection(id)
-        }
-      })
-    }
-
-    sectionIds.forEach(id => {
-      const el = document.getElementById(id)
-      if (el) {
-        const observer = new IntersectionObserver(handleIntersect(id), {
-          rootMargin: '-40% 0px -55% 0px',
-        })
-        observer.observe(el)
-        observers.push(observer)
-      }
-    })
-
-    // Track "top" — if scrolled to near top, mark Home as active
-    const topCheck = () => {
-      if (window.scrollY < 200) setActiveSection('top')
-    }
-    window.addEventListener('scroll', topCheck, { passive: true })
-
-    return () => {
-      observers.forEach(o => o.disconnect())
-      window.removeEventListener('scroll', topCheck)
-    }
-  }, [isHome])
-
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (mobileOpen) {
       document.body.style.overflow = 'hidden'
@@ -91,15 +48,6 @@ export function Navigation() {
     }
   }, [])
 
-  const handleMobileNav = (id: string) => {
-    setMobileOpen(false)
-    scrollTo(id)
-  }
-
-  const handleMobileLink = () => {
-    setMobileOpen(false)
-  }
-
   return (
     <>
       <nav
@@ -116,24 +64,19 @@ export function Navigation() {
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-7">
-            {/* Landing page sections */}
-            {SECTIONS.map(item => (
+            {SECTION_LINKS.map(item => (
               isHome ? (
                 <button
                   key={item.id}
                   onClick={() => scrollTo(item.id)}
-                  className={`nav-link-underline text-[0.82rem] font-[var(--font-outfit)] transition-colors duration-300 ${
-                    activeSection === item.id
-                      ? 'text-[#C8D8C4] nav-link-active'
-                      : 'text-[#5A7A58] hover:text-[#C8D8C4]'
-                  }`}
+                  className="nav-link-underline text-[0.82rem] font-[var(--font-outfit)] text-[#5A7A58] hover:text-[#C8D8C4] transition-colors duration-300"
                 >
                   {item.label}
                 </button>
               ) : (
                 <Link
                   key={item.id}
-                  href={`/#${item.id === 'top' ? '' : item.id}`}
+                  href={item.id === 'top' ? '/' : `/#${item.id}`}
                   className="nav-link-underline text-[0.82rem] font-[var(--font-outfit)] text-[#5A7A58] hover:text-[#C8D8C4] transition-colors duration-300"
                 >
                   {item.label}
@@ -141,59 +84,31 @@ export function Navigation() {
               )
             ))}
 
-            {/* Pricing page link */}
-            <Link
-              href="/pricing"
-              className={`nav-link-underline text-[0.82rem] font-[var(--font-outfit)] transition-colors duration-300 ${
-                pathname === '/pricing'
-                  ? 'text-[#C8D8C4] nav-link-active'
-                  : 'text-[#5A7A58] hover:text-[#C8D8C4]'
-              }`}
-            >
-              Pricing
-            </Link>
-
-            {/* Blog page link — hidden for now, needs work */}
-
-            {/* Platform page link */}
-            <Link
-              href="/platform"
-              className={`nav-link-underline text-[0.82rem] font-[var(--font-outfit)] transition-colors duration-300 ${
-                pathname === '/platform'
-                  ? 'text-[#C8D8C4] nav-link-active'
-                  : 'text-[#5A7A58] hover:text-[#C8D8C4]'
-              }`}
-            >
-              Platform
-            </Link>
-
-            {/* Contact page link */}
-            <Link
-              href="/contact"
-              className={`nav-link-underline text-[0.82rem] font-[var(--font-outfit)] transition-colors duration-300 ${
-                pathname === '/contact'
-                  ? 'text-[#C8D8C4] nav-link-active'
-                  : 'text-[#5A7A58] hover:text-[#C8D8C4]'
-              }`}
-            >
-              Contact
-            </Link>
+            {PAGE_LINKS.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`nav-link-underline text-[0.82rem] font-[var(--font-outfit)] transition-colors duration-300 ${
+                  pathname.startsWith(link.href)
+                    ? 'text-[#C8D8C4] nav-link-active'
+                    : 'text-[#5A7A58] hover:text-[#C8D8C4]'
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
 
           <div className="flex items-center gap-4">
-            <a
-              href={isHome ? '#quick-start' : '/#quick-start'}
-              onClick={(e) => {
+            <Link
+              href="/docs/quickstart"
+              onClick={() => {
                 trackEvent('cta_click', { button_label: 'install', section: 'navigation' })
-                if (isHome) {
-                  e.preventDefault()
-                  scrollTo('quick-start')
-                }
               }}
               className="baseil-cta-primary text-[0.8rem] px-5 py-2"
             >
               Install
-            </a>
+            </Link>
 
             {/* Hamburger button — mobile only */}
             <button
@@ -232,17 +147,12 @@ export function Navigation() {
         <div className={`flex flex-col items-center justify-center h-full gap-6 transition-all duration-500 ${
           mobileOpen ? 'translate-y-0 opacity-100' : '-translate-y-6 opacity-0'
         }`}>
-          {/* Section links */}
-          {SECTIONS.map((item, i) => (
+          {SECTION_LINKS.map((item, i) => (
             isHome ? (
               <button
                 key={item.id}
-                onClick={() => handleMobileNav(item.id)}
-                className={`text-[1.1rem] font-[var(--font-outfit)] transition-all duration-300 ${
-                  activeSection === item.id
-                    ? 'text-[#C8D8C4]'
-                    : 'text-[#5A7A58]'
-                }`}
+                onClick={() => { setMobileOpen(false); scrollTo(item.id) }}
+                className="text-[1.1rem] font-[var(--font-outfit)] text-[#5A7A58] hover:text-[#C8D8C4] transition-colors duration-300"
                 style={{ transitionDelay: `${i * 50}ms` }}
               >
                 {item.label}
@@ -250,8 +160,8 @@ export function Navigation() {
             ) : (
               <Link
                 key={item.id}
-                href={`/#${item.id === 'top' ? '' : item.id}`}
-                onClick={handleMobileLink}
+                href={item.id === 'top' ? '/' : `/#${item.id}`}
+                onClick={() => setMobileOpen(false)}
                 className="text-[1.1rem] font-[var(--font-outfit)] text-[#5A7A58] hover:text-[#C8D8C4] transition-colors duration-300"
                 style={{ transitionDelay: `${i * 50}ms` }}
               >
@@ -260,53 +170,33 @@ export function Navigation() {
             )
           ))}
 
-          {/* Divider */}
           <div className="w-12 h-[1px] bg-[#52B788]/15 my-1" />
 
-          {/* Page links */}
-          <Link
-            href="/pricing"
-            onClick={handleMobileLink}
-            className={`text-[1.1rem] font-[var(--font-outfit)] transition-colors duration-300 ${
-              pathname === '/pricing' ? 'text-[#C8D8C4]' : 'text-[#5A7A58]'
-            }`}
-          >
-            Pricing
-          </Link>
-          <Link
-            href="/platform"
-            onClick={handleMobileLink}
-            className={`text-[1.1rem] font-[var(--font-outfit)] transition-colors duration-300 ${
-              pathname === '/platform' ? 'text-[#C8D8C4]' : 'text-[#5A7A58]'
-            }`}
-          >
-            Platform
-          </Link>
-          <Link
-            href="/contact"
-            onClick={handleMobileLink}
-            className={`text-[1.1rem] font-[var(--font-outfit)] transition-colors duration-300 ${
-              pathname === '/contact' ? 'text-[#C8D8C4]' : 'text-[#5A7A58]'
-            }`}
-          >
-            Contact
-          </Link>
+          {PAGE_LINKS.map((link, i) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setMobileOpen(false)}
+              className={`text-[1.1rem] font-[var(--font-outfit)] transition-colors duration-300 ${
+                pathname.startsWith(link.href) ? 'text-[#C8D8C4]' : 'text-[#5A7A58]'
+              }`}
+              style={{ transitionDelay: `${(i + SECTION_LINKS.length) * 50}ms` }}
+            >
+              {link.label}
+            </Link>
+          ))}
 
           {/* CTA */}
-          <a
-            href={isHome ? '#quick-start' : '/#quick-start'}
-            onClick={(e) => {
+          <Link
+            href="/docs/quickstart"
+            onClick={() => {
               trackEvent('cta_click', { button_label: 'install', section: 'mobile_navigation' })
               setMobileOpen(false)
-              if (isHome) {
-                e.preventDefault()
-                scrollTo('quick-start')
-              }
             }}
             className="baseil-cta-primary text-[0.9rem] px-7 py-2.5 mt-2"
           >
             Install
-          </a>
+          </Link>
         </div>
       </div>
     </>
