@@ -5,7 +5,7 @@ import { Check, Copy, ChevronRight } from 'lucide-react'
 import { ComingSoonBadge } from './ComingSoonBadge'
 
 type InstallTab = 'one-liner' | 'desktop' | 'beta'
-type Platform = 'unix' | 'windows'
+type Platform = 'mac' | 'linux' | 'windows'
 
 interface TabContent {
   comment: string
@@ -17,24 +17,25 @@ interface TabContent {
 const TAB_CONTENT: Record<InstallTab, TabContent> = {
   'one-liner': {
     comment: '# One command. One agent. One layer for all your data.',
-    command: 'coming soon — join the waitlist for early access',
-    caption: 'macOS and Linux. Ready in seconds.',
+    command: 'curl -fsSL https://releases.baseil.ai/install.sh | sh',
+    caption: 'macOS (Apple Silicon) and Linux (x64). Installs to ~/.baseil, sets up PostgreSQL, and starts the server.',
   },
   'desktop': {
-    comment: '# The desktop app wraps the CLI.',
-    command: 'coming soon — join the waitlist for early access',
-    caption: 'macOS arm64. Windows and Intel Mac coming.',
+    comment: '# Download the desktop app — connects to your baseil server.',
+    command: 'curl -fsSL https://releases.baseil.ai/install.sh | sh',
+    secondary: 'open https://releases.baseil.ai/desktop/latest/baseil-0.1.0-arm64.dmg',
+    caption: 'macOS arm64 DMG. The desktop app connects to your local or remote baseil server.',
   },
   'beta': {
     comment: '# Early access to the next release. New features land here first.',
-    command: 'coming soon — join the waitlist for early access',
-    caption: 'Weekly pre-release builds. Switch back any time.',
+    command: 'curl -fsSL https://releases.baseil.ai/install.sh | BASEIL_VERSION=beta sh',
+    caption: 'Pre-release builds. Switch back any time with baseil upgrade.',
   },
 }
 
 export function QuickStart() {
   const [activeTab, setActiveTab] = useState<InstallTab>('one-liner')
-  const [platform, setPlatform] = useState<Platform>('unix')
+  const [platform, setPlatform] = useState<Platform>('mac')
   const [copied, setCopied] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
   const [visible, setVisible] = useState(false)
@@ -90,9 +91,24 @@ export function QuickStart() {
         </div>
 
         {/* Heading */}
-        <p className={`font-[var(--font-newsreader)] text-[clamp(1.5rem,3vw,2.2rem)] text-[#C8D8C4] leading-tight mb-8 max-w-[620px] transition-all duration-700 delay-100 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <p className={`font-[var(--font-newsreader)] text-[clamp(1.5rem,3vw,2.2rem)] text-[#C8D8C4] leading-tight mb-4 max-w-[620px] transition-all duration-700 delay-100 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           From zero to talking-to-your-data in one command.
         </p>
+
+        {/* Trust pills */}
+        <div className={`flex flex-wrap items-center gap-2.5 mb-8 transition-all duration-700 delay-150 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          {['Self-hosted', 'Your VPC, your data', 'No data leaves your network', 'End-to-end encrypted'].map(tag => (
+            <span
+              key={tag}
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.72rem] font-[var(--font-outfit)] text-[#6FCF97] bg-[#52B788]/8 border border-[#52B788]/15"
+            >
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" className="shrink-0">
+                <path d="M2 5.5L4 7.5L8 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              {tag}
+            </span>
+          ))}
+        </div>
 
         {/* Terminal card */}
         <div
@@ -130,18 +146,23 @@ export function QuickStart() {
 
             {/* Platform tabs (right) */}
             <div className="flex items-center gap-1 ml-auto">
+              {([
+                { id: 'mac' as const, label: 'macOS', sublabel: 'Apple Silicon' },
+                { id: 'linux' as const, label: 'Linux', sublabel: 'x64' },
+              ]).map(p => (
+                <button
+                  key={p.id}
+                  onClick={() => setPlatform(p.id)}
+                  className={`px-3 py-1 rounded-md text-[0.72rem] font-[var(--font-outfit)] transition-colors duration-200 ${
+                    platform === p.id
+                      ? 'bg-[#52B788]/15 text-[#6FCF97] border border-[#52B788]/30'
+                      : 'text-[#5A7A58] hover:text-[#8FAF8A] border border-transparent'
+                  }`}
+                >
+                  {p.label}
+                </button>
+              ))}
               <button
-                onClick={() => setPlatform('unix')}
-                className={`px-3 py-1 rounded-md text-[0.72rem] font-[var(--font-outfit)] transition-colors duration-200 ${
-                  platform === 'unix'
-                    ? 'bg-[#52B788]/15 text-[#6FCF97] border border-[#52B788]/30'
-                    : 'text-[#5A7A58] hover:text-[#8FAF8A] border border-transparent'
-                }`}
-              >
-                macOS &amp; Linux
-              </button>
-              <button
-                onClick={() => { /* windows soon */ }}
                 disabled
                 className="px-3 py-1 rounded-md text-[0.72rem] font-[var(--font-outfit)] text-[#3D5A3A] border border-transparent cursor-not-allowed inline-flex items-center gap-1.5"
                 title="Coming soon"
@@ -188,6 +209,13 @@ export function QuickStart() {
         <p className={`font-[var(--font-outfit)] text-[0.85rem] text-[#8FAF8A] leading-relaxed mt-6 max-w-[600px] transition-all duration-700 delay-300 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           {current.caption}
         </p>
+
+        {/* Platform support note */}
+        <div className={`flex items-center gap-6 mt-4 text-[0.75rem] text-[#5A7A58] font-[var(--font-outfit)] transition-all duration-700 delay-400 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <span>✓ macOS arm64 (Apple Silicon)</span>
+          <span>✓ Linux x64 (Ubuntu, Debian, CentOS)</span>
+          <span className="text-[#3D5A3A]">○ Windows (coming soon)</span>
+        </div>
       </div>
     </section>
   )
