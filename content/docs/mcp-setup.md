@@ -11,14 +11,14 @@ The [Model Context Protocol](https://modelcontextprotocol.io/) is how AI agents 
 
 When Baseil is running with one or more connections, these tools are live on the MCP endpoint:
 
-- **`baseil__query`** — Ask a natural-language question. Baseil picks the right tool, runs the query, returns structured results.
-- **`baseil__describe`** — Enumerate schemas, tables, columns. Good for agents that want to look around before asking.
-- **`baseil__execute`** — Run a specific named tool with explicit arguments. Useful when the agent already knows what it wants.
-- **`baseil__setup`** — Add a new connection programmatically. Scoped to admin keys only.
-- **`baseil__status`** — Check background tasks (ongoing onboarding, index rebuilds, etc.).
-- **`baseil__rules`** — Create, list, update rules.
-- **`baseil__ack`** — Acknowledge tool results, used for multi-step reasoning.
-- **`baseil__help`** — List every available tool with descriptions. Agents use this to discover capabilities.
+- **`baseil__query`**: Ask a natural-language question. Baseil picks the right tool, runs the query, returns structured results.
+- **`baseil__describe`**: Enumerate schemas, tables, columns. Good for agents that want to look around before asking.
+- **`baseil__execute`**: Run a specific named tool with explicit arguments. Useful when the agent already knows what it wants.
+- **`baseil__setup`**: Add, list, or test database connections from an agent. The web UI is the usual path; this is the programmatic one.
+- **`baseil__status`**: Check background tasks (ongoing onboarding, index rebuilds, etc.).
+- **`baseil__rules`**: Create, list, update rules.
+- **`baseil__ack`**: Acknowledge tool results, used for multi-step reasoning.
+- **`baseil__help`**: List every available tool with descriptions. Agents use this to discover capabilities.
 
 Every tool has a machine-readable description and typed parameters. Agents that speak MCP don't need any out-of-band knowledge to use them.
 
@@ -26,7 +26,7 @@ Every tool has a machine-readable description and typed parameters. Agents that 
 
 Sign in to Baseil, go to **Settings → API Keys**, and click **Create key**. Give it a name so you remember what it's for. The key is shown once. Copy it somewhere safe.
 
-Keys are scoped. You can create a key that only has access to specific connections, or to a subset of tools. For agent integrations, create a new key per agent or per use case so you can rotate them independently.
+Create a separate key per agent or integration so you can revoke them independently.
 
 ## Connect from Claude Desktop
 
@@ -100,12 +100,12 @@ The agent uses the same `baseil__query` tool. All the cross-database complexity 
 
 A few things worth knowing:
 
-- **API keys are scoped.** Create narrow keys per agent. Rotate via Settings → API Keys. Revoked keys stop working immediately.
-- **All queries are read-only by default.** Baseil enforces this at the SQL level. Write access is a separate, opt-in capability that most deployments don't enable.
+- **One key per agent.** Revoke any key from Settings → API Keys. A revoked key stops working immediately.
+- **All queries are read-only.** Baseil parses and validates every generated statement as read-only before it runs. There is no write capability, and a read-only database user is the second layer you control.
 - **SQL injection protection is at the connector level.** Every generated tool uses parameterized queries. User input never gets concatenated into SQL.
 - **Full audit log.** Every tool call, the parameters used, the query that ran, and the result metadata. Visible in the Activities panel and exportable.
 
-If you're running Baseil in production, put it behind your normal auth and network boundaries. The MCP endpoint is standard HTTPS; all the usual WAF and rate-limiting tools apply.
+If you're running Baseil in production, put it behind your normal auth and network boundaries. The MCP endpoint is plain HTTP on localhost. If you expose it beyond your machine, terminate TLS at your own proxy, where the usual WAF and rate-limiting tools apply.
 
 ## Next
 

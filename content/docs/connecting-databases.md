@@ -1,19 +1,18 @@
 ---
 title: "Connecting Databases"
-description: "Add PostgreSQL, MySQL, SQLite, and Elasticsearch connections. Understand what happens during onboarding."
+description: "Add PostgreSQL connections, plus MySQL, SQLite, and Elasticsearch in beta. Understand what happens during onboarding."
 order: 2
 category: "getting-started"
 ---
 
-Baseil supports several database types. Onboarding looks basically the same for all of them: point Baseil at a connection, wait a few seconds, start asking questions. This page walks through the supported types and what the onboarding pipeline actually does with your data.
+Baseil supports several database types. Onboarding looks basically the same for all of them: point Baseil at a connection, wait under a minute, start asking questions. This page walks through the supported types and what the onboarding pipeline actually does with your data.
 
 ## Supported databases
 
 - PostgreSQL 12+
-- MySQL 5.7 and 8.0
-- SQLite (file-based or in-memory)
-- Elasticsearch 8.0+
-- REST API endpoints, exposed as virtual tables
+- MySQL 5.7 and 8.0 (beta)
+- SQLite, file-based or in-memory (beta)
+- Elasticsearch 8.0+ (beta)
 
 More connectors are on the roadmap. If you have a request, drop it on the waitlist form.
 
@@ -30,22 +29,9 @@ From the left sidebar, click **Connections**, then **Add Connection**. The form 
 
 Before you click **Onboard**, there's a **Test Connection** button. Use it. It catches typos, bad credentials, firewall issues, and SSL mismatches in a few seconds.
 
-## Add a connection (CLI)
+## Adding connections from the CLI
 
-The same flow works from the terminal:
-
-```bash
-baseil connections add \
-  --name production-db \
-  --type postgresql \
-  --host db.internal \
-  --port 5432 \
-  --database app \
-  --username readonly_user
-# Baseil prompts for the password, never takes it as an arg
-```
-
-Run `baseil connections list` to see what's configured. `baseil connections remove <name>` takes one out.
+Connections are managed in the web UI. There is no CLI command for adding connections yet.
 
 ## Connection string examples
 
@@ -124,7 +110,7 @@ Schemas change. New tables, dropped columns, renamed fields, changed types. When
 - **Re-run onboarding** on the affected connection. This is a one-click operation from the Connections page. Baseil diffs the new schema against what it knows, and only regenerates tools for changed parts.
 - **Update rules.** If the change is semantic rather than structural (e.g. you split `status` into `status` and `substatus`), a rule often handles it more cleanly than a full re-onboard.
 
-Schema drift detection is also a standalone feature. You can schedule Baseil to check for drift periodically and notify you when something changes.
+Drift is computed when you re-onboard a connection. There is no scheduled drift check yet.
 
 ## Next
 

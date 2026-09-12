@@ -1,4 +1,4 @@
- ---
+---
 title: "Using Baseil's MCP Tools with AI Agents"
 description: "How to connect your AI agents to any database through Baseil's automatically generated MCP tools."
 date: "2026-02-14"
@@ -8,7 +8,7 @@ tags: ["mcp", "agents", "integration", "workflow"]
 
 ## Why MCP?
 
-The Model Context Protocol (MCP) is becoming the standard way AI agents interact with tools and data sources. Baseil automatically exposes every connected database as MCP tools — no custom integration code needed.
+The Model Context Protocol (MCP) is becoming the standard way AI agents interact with tools and data sources. Baseil automatically exposes every connected database as MCP tools, with no custom integration code needed.
 
 ## How It Works
 
@@ -17,33 +17,24 @@ When you connect a database to Baseil, it automatically generates MCP tool defin
 ```json
 {
   "tools": [
-    {
-      "name": "query_customers_db",
-      "description": "Query the customers database using natural language",
-      "parameters": {
-        "query": "Natural language question about customer data"
-      }
-    },
-    {
-      "name": "query_analytics_db",
-      "description": "Query the analytics database using natural language",
-      "parameters": {
-        "query": "Natural language question about analytics data"
-      }
-    }
+    { "name": "baseil__query", "description": "Ask a natural-language question across your connected databases" },
+    { "name": "baseil__describe", "description": "List connections, schemas, tables, and columns" },
+    { "name": "baseil__execute", "description": "Run a specific generated tool with explicit arguments" }
   ]
 }
 ```
 
-Your AI agents can now query any database just by calling these tools.
+Your agents query any connected database through these tools; the full list of eight is in the [MCP setup guide](/docs/mcp-setup).
 
 ## Setting Up Agent Access
 
-### 1. Start Baseil with MCP Server
+### 1. Start Baseil
 
 ```bash
-baseil serve --mcp --port 3100
+baseil start
 ```
+
+The MCP endpoint is served by the same process at `http://localhost:8451/api/v1/mcp/sse` and needs an API key (Settings, then API Keys).
 
 ### 2. Point Your Agent to Baseil
 
@@ -51,12 +42,12 @@ Configure your AI agent's MCP client to connect:
 
 ```json
 {
-  "mcp_servers": [
-    {
-      "name": "baseil",
-      "url": "http://localhost:3100/mcp"
+  "mcpServers": {
+    "baseil": {
+      "url": "http://localhost:8451/api/v1/mcp/sse",
+      "headers": { "Authorization": "Bearer YOUR_API_KEY" }
     }
-  ]
+  }
 }
 ```
 
@@ -65,8 +56,8 @@ Configure your AI agent's MCP client to connect:
 Your agent can now make calls like:
 
 ```
-Tool: query_customers_db
-Input: { "query": "How many new signups this week?" }
+Tool: baseil__query
+Input: { "question": "How many new signups this week?" }
 ```
 
 And get structured results back instantly.
@@ -76,8 +67,8 @@ And get structured results back instantly.
 The real power comes when agents need data from multiple sources. Instead of building custom connectors for each database, your agent just asks:
 
 ```
-Tool: query_all
-Input: { "query": "Compare customer growth in our PostgreSQL CRM with event data in our analytics DB" }
+Tool: baseil__query
+Input: { "question": "Compare customer growth in our PostgreSQL CRM with event data in our analytics DB" }
 ```
 
 Baseil handles the cross-database join automatically.
@@ -87,15 +78,15 @@ Baseil handles the cross-database join automatically.
 Here's a practical workflow for a customer support AI agent:
 
 1. Customer asks: *"Why was I charged twice?"*
-2. Agent calls Baseil: `query_billing_db` → "Show recent charges for customer ID 12345"
-3. Agent calls Baseil: `query_payments_db` → "Show payment processor logs for customer 12345 in the last 7 days"
+2. Agent calls Baseil: `baseil__query` → "Show recent charges for customer ID 12345"
+3. Agent calls Baseil: `baseil__query` → "Show payment processor logs for customer 12345 in the last 7 days"
 4. Agent synthesizes both results and responds to the customer
 
 No custom code. No database drivers. Just natural language through MCP tools.
 
 ## Best Practices
 
-- **Scope your tools** — expose only the databases each agent needs
-- **Use rules** — pre-define business terms so agents get consistent results
-- **Monitor usage** — Baseil logs every query for audit trails
-- **Cache hot queries** — pin frequently-asked agent queries for instant responses
+- **One API key per agent** so you can revoke access independently
+- **Use rules**: pre-define business terms so agents get consistent results
+- **Monitor usage**: Baseil logs every query for audit trails
+- **Cache hot queries**: pin frequently-asked agent queries for instant responses
