@@ -7,7 +7,8 @@
     "build": "next build",
     "postbuild": "next-sitemap",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check:copy": "node scripts/check-copy.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.38.1",
