@@ -12,7 +12,7 @@ export const PIPELINE_STEPS = [
   { label: 'Discovering databases', subtitle: 'Found 24 tables, 156 columns across 5 databases' },
   { label: 'Building context', subtitle: 'Mapping relationships & business logic' },
   { label: 'Optimizing queries', subtitle: 'Tuning for Store, Projects, HR, Marketing, Analytics' },
-  { label: 'Testing & security', subtitle: 'Row-level access policies verified' },
+  { label: 'Testing & security', subtitle: 'Tools run against live data, read-only enforced' },
 ]
 
 // Scene 3 — Query

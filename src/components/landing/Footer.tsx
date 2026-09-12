@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { BaseilLogo } from './BaseilLogo'
-import { Github, ArrowRight, Loader2, Check } from 'lucide-react'
+import { ArrowRight, Loader2, Check } from 'lucide-react'
 import { trackEvent } from '@/lib/analytics'
 
 const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScqoeTjEfGcVF-kYKVDfm5OgN-9n5eK2CgfbZQ75uWbr005aA/formResponse'
@@ -121,8 +121,25 @@ export function Footer() {
       <div className="relative z-10 max-w-[700px] mx-auto px-6">
         <div className="text-center mb-20">
           <h2 className="font-[var(--font-newsreader)] text-[clamp(1.8rem,3.5vw,2.8rem)] text-[#C8D8C4] leading-tight mb-3">
-            Join the Waitlist
+            Install Baseil in one command.
           </h2>
+          <p className="font-[var(--font-outfit)] text-[0.9rem] text-[#5A7A58] mb-6">
+            Free during beta. macOS Apple Silicon and Linux x64.
+          </p>
+          <div className="mb-14">
+            <a
+              href="/#quick-start"
+              onClick={() => trackEvent('cta_click', { button_label: 'install', section: 'footer' })}
+              className="baseil-cta-primary px-6 py-2.5 text-[0.85rem] inline-flex items-center gap-2"
+            >
+              Install
+              <ArrowRight size={14} />
+            </a>
+          </div>
+
+          <h3 className="font-[var(--font-newsreader)] text-[clamp(1.3rem,2.2vw,1.7rem)] text-[#C8D8C4] leading-tight mb-3">
+            Join the waitlist
+          </h3>
           <p className="font-[var(--font-outfit)] text-[0.9rem] text-[#5A7A58] mb-8">
             Get early access to Teams, Enterprise, and Cloud. We&apos;ll reach out when your spot is ready.
           </p>
@@ -258,27 +275,14 @@ export function Footer() {
 
             <div className="flex items-center gap-6">
               {[
-                { label: 'Docs', href: '/docs', external: false },
-                { label: 'Contact', href: '/contact', external: false },
-                { label: 'GitHub', href: '#', icon: Github, external: true },
+                { label: 'Docs', href: '/docs' },
+                { label: 'Contact', href: '/contact' },
               ].map((link, i) => (
                 <a
                   key={i}
                   href={link.href}
                   className="flex items-center gap-1.5 text-[0.75rem] font-[var(--font-outfit)] text-[#3D5A3A] hover:text-[#52B788] transition-all duration-300 hover:scale-105"
-                  {...(link.external
-                    ? {
-                        target: '_blank',
-                        rel: 'noopener noreferrer',
-                        onClick: () =>
-                          trackEvent('outbound_click', {
-                            url: link.href,
-                            link_text: link.label.toLowerCase(),
-                          }),
-                      }
-                    : {})}
                 >
-                  {link.icon && <link.icon size={13} />}
                   {link.label}
                 </a>
               ))}
