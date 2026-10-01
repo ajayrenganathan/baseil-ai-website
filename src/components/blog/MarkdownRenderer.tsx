@@ -1,9 +1,14 @@
 'use client'
 
+import { createContext, useContext, type ReactNode } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeSanitize from 'rehype-sanitize'
 import { MermaidDiagram } from './MermaidDiagram'
+
+// react-markdown 10 no longer tells `li` whether its parent list is ordered,
+// so the list components publish that here and `li` reads it back.
+const OrderedListContext = createContext(false)
 
 export function MarkdownRenderer({ content }: { content: string }) {
   return (
@@ -48,17 +53,16 @@ export function MarkdownRenderer({ content }: { content: string }) {
           <em className="text-[#8FAF8A] italic">{children}</em>
         ),
         ul: ({ children }) => (
-          <ul className="space-y-2 mb-5 pl-1">{children}</ul>
+          <OrderedListContext.Provider value={false}>
+            <ul className="space-y-2 mb-5 pl-1">{children}</ul>
+          </OrderedListContext.Provider>
         ),
         ol: ({ children }) => (
-          <ol className="space-y-2 mb-5 pl-1 list-decimal list-inside marker:text-[#52B788]/50">{children}</ol>
+          <OrderedListContext.Provider value={true}>
+            <ol className="space-y-2 mb-5 pl-6 list-decimal marker:text-[#52B788]/60">{children}</ol>
+          </OrderedListContext.Provider>
         ),
-        li: ({ children }) => (
-          <li className="font-[var(--font-outfit)] text-[0.92rem] text-[#8FAF8A] leading-[1.8] flex gap-2">
-            <span className="text-[#52B788]/60 mt-[2px] shrink-0">&#8227;</span>
-            <span>{children}</span>
-          </li>
-        ),
+        li: ({ children }) => <ListItem>{children}</ListItem>,
         blockquote: ({ children }) => (
           <blockquote className="border-l-2 border-[#52B788]/30 pl-5 my-6 py-1">
             {children}
@@ -135,5 +139,23 @@ export function MarkdownRenderer({ content }: { content: string }) {
     >
       {content}
     </ReactMarkdown>
+  )
+}
+
+function ListItem({ children }: { children?: ReactNode }) {
+  const ordered = useContext(OrderedListContext)
+  const base = 'font-[var(--font-outfit)] text-[0.92rem] text-[#8FAF8A] leading-[1.8]'
+
+  // Ordered items keep the native decimal marker, which hangs in the `pl-6`
+  // gutter so wrapped lines stay aligned. Unordered items draw their own bullet.
+  if (ordered) {
+    return <li className={base}>{children}</li>
+  }
+
+  return (
+    <li className={`${base} flex gap-2`}>
+      <span className="text-[#52B788]/60 mt-[2px] shrink-0">&#8227;</span>
+      <span>{children}</span>
+    </li>
   )
 }

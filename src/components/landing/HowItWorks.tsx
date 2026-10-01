@@ -9,9 +9,14 @@ import { ServeIcon } from './icons/ServeIcon'
 
 function MicroConnect() {
   return (
-    <div className="mt-4 p-2 rounded-md bg-[#0D1410] border border-[#52B788]/10 font-mono text-[0.68rem] text-[#8FAF8A] overflow-hidden">
-      <span className="text-[#52B788]">$</span> baseil connect postgres://<span className="text-[#6FCF97]">app-db</span>
-      <span className="inline-block w-2 h-3 ml-1 bg-[#52B788] align-middle animate-pulse" />
+    <div className="mt-4 p-2 rounded-md bg-[#0D1410] border border-[#52B788]/10 text-[0.68rem] overflow-hidden">
+      <div className="text-[#5A7A58] font-[var(--font-outfit)]">Connections › Add connection</div>
+      <div className="mt-1.5 flex items-center justify-between gap-2">
+        <span className="font-mono text-[#8FAF8A] truncate">postgres://app-db</span>
+        <span className="shrink-0 px-2 py-0.5 rounded-full bg-[#52B788]/10 border border-[#52B788]/20 text-[#6FCF97] font-[var(--font-outfit)] animate-pulse">
+          Onboard
+        </span>
+      </div>
     </div>
   )
 }
@@ -46,8 +51,8 @@ const STEPS = [
     Icon: ConnectIcon,
     Micro: MicroConnect,
     title: 'Connect',
-    description: 'Point Baseil at your database and watch it shake hands.',
-    note: 'Currently supports PostgreSQL — more coming soon.',
+    description: 'Add a connection in the web UI and Baseil onboards it.',
+    note: 'PostgreSQL today. MySQL, SQLite, and Elasticsearch in beta.',
     number: '01',
     color: '#52B788',
   },

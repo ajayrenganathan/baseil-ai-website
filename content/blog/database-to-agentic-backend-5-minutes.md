@@ -15,11 +15,10 @@ This post is the actual 5-minute walkthrough. Not a slide deck, not a high-level
 ### Minute 1: Install
 
 ```bash
-curl -sSL https://releases.baseil.ai/install.sh | bash
-baseil setup
+curl -fsSL https://releases.baseil.ai/install.sh | sh
 ```
 
-The install script drops the `baseil` binary into your path. `baseil setup` runs a wizard that provisions the local Postgres metadata store, admin credentials, Clerk auth, LLM keys, and embedding model. It takes a few minutes the first time and about 30 seconds if you use defaults.
+The installer downloads the binary and runs the setup wizard: a Postgres for Baseil's own metadata, an admin account, an LLM key, and a local embedding model. Budget a few minutes the first time.
 
 Start the server:
 
@@ -31,17 +30,7 @@ You're now running at `http://localhost:8451`.
 
 ### Minute 2: Connect your database
 
-Two ways. In the web UI, go to Connections → Add Connection and fill in the form. From the CLI:
-
-```bash
-baseil connections add \
-  --name prod \
-  --type postgresql \
-  --host db.example.com \
-  --port 5432 \
-  --database app \
-  --username readonly_user
-```
+In the web UI, go to Connections, then Add Connection, and fill in the form. Use a read-only database user.
 
 The read-only user is the important part. Baseil enforces read-only at the SQL level too, but you want defense in depth.
 

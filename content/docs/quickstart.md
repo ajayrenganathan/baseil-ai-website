@@ -1,32 +1,36 @@
 ---
 title: "Quickstart"
-description: "Install Baseil, connect your first database, and run your first natural-language query in under 5 minutes."
+description: "Install Baseil, connect your first database, and run your first natural-language query in about ten minutes."
 order: 1
 category: "getting-started"
 ---
 
-This is the fastest path from zero to a working Baseil instance with one database connected and chat responding to your questions. Budget around five minutes if you already have a database handy, a bit longer if you need to spin one up.
+This is the fastest path from zero to a working Baseil instance with one database connected and chat responding to your questions. Budget about ten minutes the first time. The download is about 300 MB, and the setup wizard pulls down a small embedding model on top of that. The wizard itself is about two minutes of prompts; the rest is download time.
 
 ## Prerequisites
 
 You'll want these in place before you start:
 
-- Python 3.12 or newer
-- Node.js 18+ (only needed if you plan to build the web UI from source)
-- Docker, optional, makes spinning up a local Postgres trivial. You can skip it if you already have a database to point Baseil at
-- An [Anthropic API key](https://console.anthropic.com/) for Claude, which is the default LLM
+- macOS on Apple Silicon, or Linux on x64. There is no Windows build yet.
+- An Anthropic or OpenAI API key.
+- A PostgreSQL instance for Baseil's own metadata (connections, rules, golden cache, audit logs). The wizard can find a local one, start one in Docker, or install it with apt on Debian and Ubuntu. A connection URL to an existing Postgres works too.
+- A database you want to ask questions about.
 
-Auth for local development runs through Clerk, and the setup wizard provisions everything you need. You don't have to create a Clerk account first.
+You do not need Python or Node. The CLI is a single frozen binary.
+
+Sign-in uses baseil.ai accounts and the wizard creates yours, so there is no separate account setup.
 
 ## Install the CLI
 
-The simplest install is the published shell script:
+The install is one command:
 
 ```bash
-curl -sSL https://releases.baseil.ai/install.sh | bash
+curl -fsSL https://releases.baseil.ai/install.sh | sh
 ```
 
-This drops the `baseil` binary into your path and nothing else. No database changes, no system services. Uninstalling is just removing the binary.
+This downloads about 300 MB into `~/.baseil`, adds `~/.baseil/bin` to your PATH, and registers a service without starting it: launchd on macOS, a systemd user service on Linux. The service step is skipped on Linux hosts without systemd. Then, if a terminal is attached, the installer runs `baseil setup` for you.
+
+Set `BASEIL_SKIP_SETUP=1` to install without the wizard. To uninstall, remove `~/.baseil` and the service file.
 
 ## Run setup
 
@@ -34,29 +38,22 @@ This drops the `baseil` binary into your path and nothing else. No database chan
 baseil setup
 ```
 
-The setup wizard walks through six prompts. Each has a sensible default if you just hit enter:
+The installer already started this for you. Run it again yourself whenever you want to redo the configuration.
 
-1. **Postgres detection.** Baseil needs a Postgres instance for its own metadata (connections, rules, golden cache, audit logs). It looks for a local one first, then offers to start one via Docker if you have it. BYO connection string also works.
-2. **Database schema creation.** Baseil creates its schema in the database you pointed it at. Tables are namespaced so this is safe to run on a shared database.
-3. **Admin account.** Email and password for the first admin user. This is separate from the Clerk session and is what you'll use to sign into the web UI.
-4. **Clerk keys.** For local dev the wizard can auto-provision a Clerk development instance. If you already have Clerk credentials, paste them in. See [Clerk's docs](https://clerk.com/docs) if you want to manage this manually.
-5. **LLM provider.** Anthropic (default) or OpenAI. Paste your API key here. This key never leaves your machine in local dev.
-6. **Embedding model.** Used for the golden cache. Default is `text-embedding-3-small` on OpenAI, with a local fallback available.
+The wizard walks through twelve steps:
 
-A successful run looks like this:
-
-```
-> baseil setup
-
-[1/6] Detected Postgres at localhost:5432 - OK
-[2/6] Creating baseil schema... done
-[3/6] Admin account: admin@example.com created
-[4/6] Clerk dev instance provisioned
-[5/6] Anthropic key validated
-[6/6] Embeddings: text-embedding-3-small
-
-Setup complete. Run `baseil start` to launch the server.
-```
+1. **PostgreSQL.** Use a local instance, start one in Docker, install it with apt (Debian and Ubuntu), or paste a connection URL.
+2. **Start PostgreSQL.** Only if you chose the Docker path.
+3. **Metadata database.** Creates the database and the extensions Baseil needs.
+4. **Migrations.** Brings the metadata database up to the current schema.
+5. **Admin account.** Email and password for the web UI.
+6. **Auth.** Configured automatically against baseil.ai, no prompt.
+7. **LLM provider.** Anthropic (default) or OpenAI, plus the API key. The key is validated before it is saved, and a rejected key is refused.
+8. **Embedding model.** Downloads a small local sentence-transformers model used for the golden cache.
+9. **Server access.** On Linux, whether to bind to all interfaces or to localhost only.
+10. **Root password.** Used by the `baseil admin` commands.
+11. **Recovery keys.** Shown once, so store them somewhere safe.
+12. **Ready.** Prints the MCP config for your client and offers to start the server.
 
 ## Start the server
 
@@ -64,20 +61,16 @@ Setup complete. Run `baseil start` to launch the server.
 baseil start
 ```
 
-This launches the backend API on port 8451 and serves the web UI from the same process. When it's up, you'll see:
+The server runs at `http://localhost:8451` and serves the web UI from the same process. `baseil status` shows whether it is running, and `baseil logs` tails the log.
 
-```
-Baseil is running at http://localhost:8451
-```
-
-Open that URL in a browser and sign in with the admin account you just created.
+Open that URL in a browser and sign in with the admin account you created in step 5.
 
 ## Your first query
 
 You're one connection away from asking questions.
 
 1. Click **Connections** in the sidebar.
-2. Hit **Add Connection** and walk through the form. Any Postgres, MySQL, SQLite, or Elasticsearch will do. (If you need more detail, see [Connecting Databases](/docs/connecting-databases).)
+2. Hit **Add Connection** and walk through the form. PostgreSQL is fully supported; MySQL, SQLite, and Elasticsearch are in beta. (If you need more detail, see [Connecting Databases](/docs/connecting-databases).)
 3. Wait for onboarding to finish. Usually 30-60 seconds. The progress panel shows each stage of the pipeline.
 4. Open **Chat** and ask something.
 

@@ -141,7 +141,7 @@ export function Hero() {
 
         {/* Description */}
         <p className={`font-[var(--font-outfit)] text-[0.9rem] leading-relaxed text-[#8FAF8A] max-w-[520px] mx-auto mb-5 transition-all duration-700 delay-[800ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-          Baseil is an <span className="text-[#6FCF97]" style={{ textShadow: '0 0 12px rgba(82,183,136,0.15)' }}>AI Data Harness</span> that crawls into your databases, maps every schema, and serves up grounded answers. No config, no connectors, no hallucinations.
+          Baseil is an <span className="text-[#6FCF97]" style={{ textShadow: '0 0 12px rgba(82,183,136,0.15)' }}>AI Data Harness</span> that crawls into your databases, maps every schema, and serves up grounded answers. Runs on your machine, read-only by default, and shows the SQL behind every answer.
           <br className="hidden sm:block" />
           <span className="text-[#6FCF97]" style={{ textShadow: '0 0 12px rgba(82,183,136,0.15)' }}>One intelligent layer</span> where humans and AI agents ask in plain English and get answers from your data.
         </p>
@@ -224,11 +224,10 @@ export function Hero() {
         {/* Trust line */}
         <div className={`flex items-center justify-center flex-wrap gap-x-5 gap-y-2 mt-6 pb-10 text-[0.75rem] font-[var(--font-outfit)] text-[#8FAF8A] transition-all duration-700 delay-[1500ms] ${loaded ? 'opacity-100' : 'opacity-0'}`}>
           {[
-            { text: 'Use locally', note: null },
+            { text: 'Self-hosted', note: null },
             { text: 'Agent Native', note: null },
             { text: 'Cloud', note: 'soon' },
             { text: 'Team Collaboration', note: 'soon' },
-            { text: 'Self Host', note: 'soon' },
             { text: 'Swarm', note: 'soon' },
           ].map((item, i) => (
             <span key={item.text} className="flex items-center gap-5">

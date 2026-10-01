@@ -1,6 +1,6 @@
 ---
 title: "Getting Started with Baseil"
-description: "A step-by-step guide to connecting your first database and running your first natural language query with Baseil."
+description: "A step-by-step guide to installing Baseil, connecting your first database, and running your first natural language query."
 date: "2026-02-10"
 author: "Baseil Team"
 tags: ["getting-started", "tutorial", "setup"]
@@ -8,77 +8,82 @@ tags: ["getting-started", "tutorial", "setup"]
 
 ## What is Baseil?
 
-Baseil is a data retrieval AI that crawls into your databases, maps every schema, and serves up answers — no config, no connectors, no drama. Whether you're a human asking questions in plain English or an AI agent calling through MCP tools, Baseil figures out where your data lives and gets it for you.
+Baseil connects to your databases, maps the schema, and generates tested read-only query tools from what it finds. Those tools answer questions from humans in chat and from agents over MCP or the API, so the same tested path serves both. It runs on your machine.
 
-## Step 1: Install Baseil
-
-Getting started is dead simple. Pull the latest version and run it locally:
+## Step 1: Install
 
 ```bash
-# Clone the repository
-git clone https://github.com/baseil-ai/baseil.git
-cd baseil
-
-# Install dependencies
-npm install
-
-# Start Baseil
-npm run start
+curl -fsSL https://releases.baseil.ai/install.sh | sh
 ```
 
-## Step 2: Connect Your Database
+The installer downloads about 300 MB into `~/.baseil`, registers a background service, and runs the setup wizard. The wizard asks for:
 
-Point Baseil at your database. Currently, PostgreSQL is fully supported — more databases are coming soon.
+- A Postgres for Baseil's own metadata. It can use a local Postgres, start one in Docker, or install one with apt.
+- An admin email and password. This is the account you sign in with.
+- An Anthropic or OpenAI key, validated before it is saved.
+- A couple of server settings.
+
+macOS Apple Silicon and Linux x64 only for now.
+
+## Step 2: Start the server
 
 ```bash
-# Add your connection string
-baseil connect "postgresql://user:password@localhost:5432/mydb"
+baseil start
 ```
 
-That's it. Baseil shakes hands with your database and starts crawling.
+Open `http://localhost:8451` and sign in with the admin account you just created.
 
-## Step 3: Auto-Discovery
+Two commands worth remembering: `baseil status` tells you whether the server is running, and `baseil logs` shows you what it is doing.
 
-Once connected, Baseil automatically:
+## Step 3: Connect a database
 
-- **Maps every table** in your database
-- **Discovers columns** and their types
-- **Identifies relationships** between tables (foreign keys, join paths)
-- **Builds a semantic index** so it understands what your data *means*, not just its structure
+Connections are added in the web UI. Go to Connections, then Add Connection, and fill in the form for your database type.
 
-You don't have to configure anything. Just wait a few seconds and Baseil has a complete map of your data.
+Use a read-only database user. Baseil validates its own SQL as read-only, but a read-only user is the layer you control.
 
-## Step 4: Ask Questions
+PostgreSQL is fully supported. MySQL, SQLite, and Elasticsearch are in beta.
 
-Now the fun part. Just ask:
+Click Test Connection to confirm the credentials work, then Onboard.
+
+## Step 4: Onboarding
+
+Onboarding is a five-stage pipeline over the connection you just added:
+
+- **Discovery** reads the schema, the relationships between tables, and a sample of rows.
+- **Tool generation** writes parameterized query templates against what Discovery found.
+- **Security review** statically checks each template for injection and for anything that is not read-only.
+- **Testing** runs every tool against your real data with parameters drawn from the sampled rows.
+- **Deploy** registers the tools that pass for chat, the API, and MCP.
+
+For a typical schema this takes about a minute.
+
+## Step 5: Ask a question
+
+Open the chat and ask something concrete:
 
 ```
-> What were our top 10 customers by revenue last quarter?
+How many orders shipped last month?
 ```
 
-Baseil will:
-1. Parse your natural language query
-2. Figure out which tables contain the relevant data
-3. Write the SQL query
-4. Execute it and return clean, structured results
+The answer comes back with the tool that ran, the SQL it executed, and the row count:
 
-```json
-{
-  "results": [
-    { "customer": "Acme Corp", "revenue": 145200 },
-    { "customer": "TechStart Inc", "revenue": 98400 },
-    ...
-  ],
-  "query_time": "0.34s",
-  "tables_used": ["customers", "orders", "order_items"]
-}
+| Tool | Rows | Answer |
+|---|---|---|
+| `orders_by_status_and_month` | 1 | 4,182 orders shipped in January |
+
+```sql
+SELECT COUNT(*) FROM orders
+WHERE status = 'shipped'
+  AND shipped_at >= $1 AND shipped_at < $2
 ```
 
-## What's Next?
+You can read the query and check the number against it. Every answer shows its SQL, so nothing has to be taken on trust.
+
+## What's next?
 
 - **Add rules** to customize how Baseil interprets your data
 - **Pin golden queries** to cache for instant results
-- **Connect more databases** and query across them seamlessly
-- **Expose MCP tools** for your AI agents
+- **Connect more databases** and query across them
+- **Expose MCP tools** to your agents with the [MCP setup guide](/docs/mcp-setup)
 
-Welcome to the future of data retrieval.
+The [quickstart](/docs/quickstart) covers the same ground in condensed form.
