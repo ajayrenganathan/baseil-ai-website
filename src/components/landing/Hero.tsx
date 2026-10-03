@@ -1,243 +1,168 @@
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
-import { User, Bot, ArrowRight, Plug, Network } from 'lucide-react'
-import { ComingSoonBadge } from './ComingSoonBadge'
-import { HeroShowcase } from './showcase/HeroShowcase'
-import { BaseilMascot } from './BaseilMascot'
+import { useEffect, useRef, useState } from 'react'
+import { Check, Copy } from 'lucide-react'
+import { INSTALL_COMMAND } from '@/lib/install'
 import { trackEvent } from '@/lib/analytics'
+import { INSIGHTS } from '@/lib/sample-db'
+import { HeroShowcase } from './showcase/HeroShowcase'
+import { growLeaf } from './growLeaf'
 
-const FLOATING_SHAPES = [
-  { size: 6, x: '12%', y: '20%', animation: 'shape-float-1', duration: '18s', delay: '0s', type: 'diamond' },
-  { size: 4, x: '85%', y: '15%', animation: 'shape-float-2', duration: '22s', delay: '2s', type: 'circle' },
-  { size: 5, x: '8%', y: '70%', animation: 'shape-float-3', duration: '20s', delay: '4s', type: 'diamond' },
-  { size: 3, x: '92%', y: '55%', animation: 'shape-float-1', duration: '25s', delay: '1s', type: 'circle' },
-  { size: 7, x: '75%', y: '80%', animation: 'shape-float-2', duration: '19s', delay: '3s', type: 'diamond' },
-  { size: 4, x: '30%', y: '85%', animation: 'shape-float-3', duration: '23s', delay: '5s', type: 'circle' },
-  { size: 5, x: '60%', y: '10%', animation: 'shape-float-1', duration: '21s', delay: '2.5s', type: 'diamond' },
+// Each claim here is one the site already makes, worded to match the docs.
+const FACTS = [
+  ['Runs on your machine', 'macOS on Apple Silicon or Linux x64, from one install command.'],
+  ['Read-only by default', 'Baseil enforces read-only at the SQL level. Pair it with a read-only database user.'],
+  ['Shows its work', 'Every answer comes with the SQL that ran, so you can copy it and check.'],
+  ['For people and agents', 'Ask in chat, or let your agents call it as MCP tools.'],
 ]
 
+// A short rule drawn as a row of the leaf's dots.
+const DOT_RULE = 'h-[5px] w-10 bg-[radial-gradient(circle,#7DA158_1.2px,transparent_1.7px)] bg-[length:6px_5px]'
+
+/** A key figure and its label, shown inside the bubble. */
+function Glimpse({ index }: { index: number }) {
+  const { figure, label } = INSIGHTS[index]
+  return (
+    <>
+      <p className="font-[family-name:var(--font-newsreader)] text-[1.35rem] leading-none text-[#E2EBDE]">{figure}</p>
+      <p className="mt-1.5 font-mono text-[0.5rem] uppercase leading-[1.35] tracking-[0.08em] text-[#8FAF8A]">{label}</p>
+    </>
+  )
+}
+
 export function Hero() {
-  const sectionRef = useRef<HTMLDivElement>(null)
-  const mouseRef = useRef({ x: 0, y: 0 })
-  const glowRef = useRef<HTMLDivElement>(null)
-  const rafRef = useRef<number>(0)
-  const [loaded, setLoaded] = useState(false)
+  return (
+    <>
+      <LeafStage />
 
-  useEffect(() => { setLoaded(true) }, [])
+      <section aria-label="What Baseil is" className="relative px-6 pb-20">
+        <dl className="mx-auto grid max-w-[1200px] grid-cols-1 border-t border-[#52B788]/15 sm:grid-cols-2 lg:grid-cols-4">
+          {FACTS.map(([title, detail]) => (
+            <div key={title} className="py-6 sm:pr-8 lg:border-l lg:border-[#52B788]/10 lg:pl-6 lg:first:border-l-0 lg:first:pl-0">
+              <dt className="font-[family-name:var(--font-newsreader)] text-[1.3rem] text-[#E2EBDE]">{title}</dt>
+              <dd className="mt-2 font-[family-name:var(--font-outfit)] text-[0.9rem] leading-relaxed text-[#8FAF8A]">{detail}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
 
-  // Mouse-tracking ambient light
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    mouseRef.current = { x: e.clientX, y: e.clientY }
-    if (!rafRef.current) {
-      rafRef.current = requestAnimationFrame(() => {
-        if (glowRef.current && sectionRef.current) {
-          const rect = sectionRef.current.getBoundingClientRect()
-          const x = mouseRef.current.x - rect.left
-          const y = mouseRef.current.y - rect.top
-          glowRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(82, 183, 136, 0.07), transparent 60%)`
-        }
-        rafRef.current = 0
-      })
-    }
+      <section className="px-6 pb-24">
+        <div className="mx-auto max-w-[900px]">
+          <p className="mb-4 font-[family-name:var(--font-outfit)] text-[0.72rem] uppercase tracking-[0.25em] text-[#52B788]">
+            // See it in action
+          </p>
+          <div className="overflow-hidden rounded-2xl border border-[#52B788]/15">
+            <HeroShowcase />
+          </div>
+        </div>
+      </section>
+    </>
+  )
+}
+
+/** The leaf, its bubble, and the headline. Hover state lives here, so it re-renders nothing below. */
+function LeafStage() {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const boxRef = useRef<HTMLDivElement>(null)
+  const lensRef = useRef<HTMLDivElement>(null)
+  const [shown, setShown] = useState(0)
+  const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    if (!canvasRef.current || !boxRef.current || !lensRef.current) return
+
+    return growLeaf({
+      canvas: canvasRef.current,
+      box: boxRef.current,
+      lens: lensRef.current,
+      src: '/robot/robot-leaf.webp',
+      reduce: matchMedia('(prefers-reduced-motion: reduce)').matches,
+      // The bubble keeps its last answer while it fades out.
+      onRegion: (next) => {
+        if (next !== null) setShown(next)
+      },
+    })
   }, [])
 
+  useEffect(() => {
+    if (!copied) return
+    const t = setTimeout(() => setCopied(false), 1600)
+    return () => clearTimeout(t)
+  }, [copied])
+
+  const copyCommand = async () => {
+    try {
+      await navigator.clipboard.writeText(INSTALL_COMMAND)
+      setCopied(true)
+      trackEvent('cta_click', { button_label: 'copy_install', section: 'hero' })
+    } catch {
+      // Clipboard can be blocked; the command stays selectable on the page.
+    }
+  }
+
   return (
-    <section
-      ref={sectionRef}
-      className="relative min-h-screen overflow-hidden"
-      onMouseMove={handleMouseMove}
-    >
-      {/* Aurora mesh background */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <div
-          className="absolute top-[10%] right-[10%] w-[700px] h-[700px] rounded-full blur-[120px] opacity-[0.07]"
-          style={{
-            background: 'radial-gradient(circle, #52B788 0%, transparent 70%)',
-            animation: 'aurora-drift-1 20s ease-in-out infinite',
-          }}
-        />
-        <div
-          className="absolute top-[30%] left-[5%] w-[500px] h-[500px] rounded-full blur-[100px] opacity-[0.05]"
-          style={{
-            background: 'radial-gradient(circle, #40916C 0%, transparent 70%)',
-            animation: 'aurora-drift-2 25s ease-in-out infinite',
-          }}
-        />
-        <div
-          className="absolute bottom-[10%] left-[40%] w-[600px] h-[400px] rounded-full blur-[100px] opacity-[0.06]"
-          style={{
-            background: 'radial-gradient(circle, #6FCF97 0%, transparent 70%)',
-            animation: 'aurora-drift-3 18s ease-in-out infinite',
-          }}
-        />
-        <div
-          className="absolute top-[-5%] left-[30%] w-[400px] h-[400px] rounded-full blur-[80px] opacity-[0.04]"
-          style={{
-            background: 'radial-gradient(circle, #52B788 0%, transparent 70%)',
-            animation: 'aurora-drift-4 30s ease-in-out infinite',
-          }}
-        />
-      </div>
+    <section className="relative min-h-[100svh] overflow-hidden flex flex-col items-center justify-center px-6 pt-[112px] pb-14">
+      <canvas ref={canvasRef} aria-hidden="true" className="absolute inset-0 w-full h-full pointer-events-none" />
 
-      {/* Mouse-following ambient glow */}
+      {/* The bubble: an answer that rides in the clearing the rows make for it. */}
       <div
-        ref={glowRef}
-        className="absolute inset-0 z-[1] pointer-events-none transition-opacity duration-1000"
-        style={{ opacity: loaded ? 1 : 0 }}
-      />
-
-      {/* Floating geometric shapes */}
-      <div className="absolute inset-0 z-[2] pointer-events-none">
-        {FLOATING_SHAPES.map((shape, i) => (
-          <div
-            key={i}
-            className="absolute"
-            style={{
-              left: shape.x,
-              top: shape.y,
-              width: shape.size,
-              height: shape.size,
-              animation: `${shape.animation} ${shape.duration} ease-in-out infinite`,
-              animationDelay: shape.delay,
-            }}
-          >
-            {shape.type === 'diamond' ? (
-              <div
-                className="w-full h-full rotate-45 border border-[#52B788]/20"
-                style={{ background: 'rgba(82, 183, 136, 0.05)' }}
-              />
-            ) : (
-              <div
-                className="w-full h-full rounded-full border border-[#52B788]/15"
-                style={{ background: 'rgba(82, 183, 136, 0.03)' }}
-              />
-            )}
-          </div>
-        ))}
+        ref={lensRef}
+        aria-hidden="true"
+        data-open="false"
+        className="peer pointer-events-none absolute left-0 top-0 z-20 w-[96px] scale-95 text-center opacity-0 transition-[opacity,scale] duration-200 ease-out data-[open=true]:scale-100 data-[open=true]:opacity-100"
+      >
+        <div key={shown} className="animate-in fade-in duration-200">
+          <Glimpse index={shown} />
+        </div>
       </div>
 
-      {/* Grain overlay */}
-      <div className="absolute inset-0 z-[3] pointer-events-none opacity-[0.02] baseil-grain" />
+      {/* The leaf's box: CSS decides where the sprout grows and how big it is. */}
+      <div ref={boxRef} aria-hidden="true" className="relative w-full max-w-[600px] h-[clamp(180px,36svh,400px)]" />
 
-      {/* Main content */}
-      <div className="relative z-10 max-w-[900px] mx-auto px-6 w-full text-center pt-20 md:pt-24">
-        {/* Mascot */}
-        <div className={`mb-2 transition-all duration-1000 delay-200 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <BaseilMascot className="mx-auto" />
-        </div>
+      {/* The sprout's own label, set just under its soil. With a mouse the bubble opens below the
+          pointer and can reach the label, so the label clears out of its way while it is open. */}
+      <p className="relative z-10 mt-3 flex items-center justify-center gap-4 font-mono text-[0.7rem] uppercase tracking-[0.32em] text-[#8DBEB7] transition-opacity duration-300 sm:mt-2 pointer-fine:peer-data-[open=true]:opacity-0">
+        <span aria-hidden="true" className={DOT_RULE} />
+        AI data harness
+        <span aria-hidden="true" className={DOT_RULE} />
+      </p>
 
-        {/* Product name — big and bold like OpenClaw */}
-        <h1
-          className={`font-[var(--font-newsreader)] text-[clamp(3rem,8vw,5rem)] font-medium leading-[1] tracking-tight mb-3 gradient-text-animated glow-text transition-all duration-1000 delay-400 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
-        >
-          Baseil
+      {/* w-full: a centred flex item sizes to its content, and the nowrap command would widen it. */}
+      <div className="relative z-10 mt-14 w-full max-w-[1000px] text-center sm:mt-16">
+        <h1 className="leaf-type font-[family-name:var(--font-newsreader)] text-[clamp(2.5rem,6.2vw,5.4rem)] font-normal leading-[1] tracking-[-0.025em] [text-wrap:balance]">
+          Get all your data talking<span className="leaf-dot">.</span>
         </h1>
-
-        {/* Tagline */}
-        <p className={`font-[var(--font-outfit)] text-[clamp(0.7rem,1.5vw,0.85rem)] uppercase tracking-[0.25em] text-[#52B788] mb-6 transition-all duration-700 delay-[600ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          Get all your data talking
+        {/* Onboarding takes up to about five minutes, depending on the database, so no hard number. */}
+        <p className="mx-auto mt-7 max-w-[600px] font-[family-name:var(--font-outfit)] text-[clamp(1rem,1.4vw,1.15rem)] leading-relaxed text-[#A3BB9E] [text-wrap:pretty]">
+          Onboard your data in a few minutes, then ask questions in plain English and see exactly how every answer was found.
         </p>
 
-        {/* Description */}
-        <p className={`font-[var(--font-outfit)] text-[0.9rem] leading-relaxed text-[#8FAF8A] max-w-[520px] mx-auto mb-5 transition-all duration-700 delay-[800ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-          Baseil is an <span className="text-[#6FCF97]" style={{ textShadow: '0 0 12px rgba(82,183,136,0.15)' }}>AI Data Harness</span> that crawls into your databases, maps every schema, and serves up grounded answers. Runs on your machine, read-only by default, and shows the SQL behind every answer.
-          <br className="hidden sm:block" />
-          <span className="text-[#6FCF97]" style={{ textShadow: '0 0 12px rgba(82,183,136,0.15)' }}>One intelligent layer</span> where humans and AI agents ask in plain English and get answers from your data.
-        </p>
-
-        {/* Positioning subtitle */}
-        <p className={`font-[var(--font-outfit)] text-[0.82rem] leading-relaxed text-[#8FAF8A]/80 max-w-[560px] mx-auto mb-5 italic transition-all duration-700 delay-[850ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-          The intelligent data harness that connects your databases, exposes them as <span className="text-[#6FCF97] not-italic">MCP tools</span>, and serves answers to humans and agents alike. No code required.
-        </p>
-
-        {/* Audience and capability chips */}
-        <div className={`flex items-center justify-center flex-wrap gap-2.5 mb-7 transition-all duration-700 delay-[950ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          {[
-            { icon: User, label: 'Humans', comingSoon: false },
-            { icon: Bot, label: 'Agents', comingSoon: false },
-            { icon: Plug, label: 'MCP Tools', comingSoon: false },
-            { icon: Network, label: 'A2A Agents', comingSoon: true },
-          ].map((chip, i) => (
-            <div
-              key={chip.label}
-              className="group inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[#52B788]/12 bg-[#52B788]/[0.04] hover:bg-[#52B788]/[0.08] hover:border-[#52B788]/20 transition-all duration-300 cursor-default"
-              style={{ transitionDelay: `${i * 100}ms` }}
+        <div className="mt-10 flex justify-center">
+          <div className="inline-flex max-w-full items-center rounded-full border border-[#52B788]/25 bg-[#0A0F0D]/70">
+            <span aria-hidden="true" className="select-none pl-5 pr-3 font-mono text-[0.74rem] text-[#52B788] sm:pl-6 sm:text-[0.82rem]">
+              $
+            </span>
+            <code className="min-w-0 overflow-x-auto whitespace-nowrap pr-1 font-mono text-[0.74rem] text-[#A3BB9E] [scrollbar-width:none] sm:text-[0.82rem]">
+              {INSTALL_COMMAND}
+            </code>
+            <button
+              type="button"
+              onClick={copyCommand}
+              aria-label="Copy install command"
+              className="grid h-12 w-12 shrink-0 place-items-center rounded-full text-[#C8D8C4] transition-colors duration-150 hover:text-[#52B788]"
             >
-              <chip.icon size={13} className="text-[#52B788]/50 group-hover:text-[#52B788]/80 transition-colors duration-300" />
-              <span className="text-[0.72rem] font-[var(--font-outfit)] text-[#8FAF8A] group-hover:text-[#C8D8C4] transition-colors duration-300">{chip.label}</span>
-              {chip.comingSoon && <ComingSoonBadge className="ml-1" />}
-            </div>
-          ))}
-        </div>
-
-        {/* CTA buttons */}
-        <div className={`flex items-center justify-center gap-3 mb-10 transition-all duration-700 delay-[1100ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <a
-            href="#quick-start"
-            onClick={(e) => { e.preventDefault(); trackEvent('cta_click', { button_label: 'install', section: 'hero' }); document.getElementById('quick-start')?.scrollIntoView({ behavior: 'smooth' }) }}
-            className="baseil-cta-primary text-[0.85rem] px-6 py-2.5 flex items-center gap-2"
-          >
-            Install
-            <ArrowRight size={15} />
-          </a>
-          <a
-            href="#sandbox"
-            onClick={(e) => { e.preventDefault(); trackEvent('cta_click', { button_label: 'try_demo', section: 'hero' }); document.getElementById('sandbox')?.scrollIntoView({ behavior: 'smooth' }) }}
-            className="baseil-cta-ghost text-[0.85rem] px-6 py-2.5"
-          >
-            Try the Demo
-          </a>
-        </div>
-
-        {/* Animated showcase */}
-        <div className={`-mx-6 px-0 text-left transition-all duration-1000 delay-[1300ms] ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="relative">
-            {/* Side label */}
-            <div className="absolute -left-3 top-14 -translate-x-full hidden lg:flex items-center gap-3 origin-right">
-              <span className="text-[0.72rem] font-[var(--font-outfit)] font-medium uppercase tracking-[0.2em] text-[#52B788] whitespace-nowrap px-4 py-1.5 rounded-full border border-[#52B788]/30 bg-[#52B788]/[0.06]" style={{ textShadow: '0 0 12px rgba(82,183,136,0.3)' }}>See it in action</span>
-              <span className="w-10 h-[2px] bg-gradient-to-r from-[#52B788]/60 to-[#52B788]/10 rounded-full" />
-            </div>
-            <div
-              className="absolute -inset-8 -z-10 rounded-3xl opacity-30"
-              style={{
-                background: 'radial-gradient(ellipse at 50% 50%, rgba(82,183,136,0.08) 0%, transparent 70%)',
-                animation: 'showcase-orb-1 12s ease-in-out infinite',
-              }}
-            />
-            {/* Rotating green border glow */}
-            <div className="relative rounded-2xl p-[1.5px] overflow-hidden">
-              <div
-                className="absolute inset-[-50%] z-0"
-                style={{
-                  background: 'conic-gradient(from 0deg, transparent 0%, transparent 30%, rgba(82,183,136,0.5) 50%, transparent 70%, transparent 100%)',
-                  animation: 'border-rotate 4s linear infinite',
-                }}
-              />
-              <div className="relative z-[1] rounded-2xl overflow-hidden">
-                <HeroShowcase />
-              </div>
-            </div>
+              {copied ? <Check size={15} aria-hidden="true" /> : <Copy size={15} aria-hidden="true" />}
+            </button>
           </div>
         </div>
 
-        {/* Trust line */}
-        <div className={`flex items-center justify-center flex-wrap gap-x-5 gap-y-2 mt-6 pb-10 text-[0.75rem] font-[var(--font-outfit)] text-[#8FAF8A] transition-all duration-700 delay-[1500ms] ${loaded ? 'opacity-100' : 'opacity-0'}`}>
-          {[
-            { text: 'Self-hosted', note: null },
-            { text: 'Agent Native', note: null },
-            { text: 'Cloud', note: 'soon' },
-            { text: 'Team Collaboration', note: 'soon' },
-            { text: 'Swarm', note: 'soon' },
-          ].map((item, i) => (
-            <span key={item.text} className="flex items-center gap-5">
-              {i > 0 && <span className="w-px h-3 bg-[#52B788]/20" />}
-              <span className="hover:text-[#52B788] transition-colors duration-300 cursor-default">
-                {item.text}{item.note && <span className="text-[#52B788]/40 ml-1">({item.note})</span>}
-              </span>
-            </span>
-          ))}
-        </div>
+        {/* A plain link: /scroll ships its own global styles, so it gets a full page load. */}
+        <a
+          href="/scroll"
+          className="mt-8 inline-block font-mono text-[0.78rem] text-[#8FAF8A] underline decoration-[#52B788]/40 underline-offset-4 transition-colors duration-150 hover:text-[#C8D8C4]"
+        >
+          Take the deep dive
+        </a>
       </div>
     </section>
   )

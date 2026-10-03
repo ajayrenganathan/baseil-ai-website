@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 
 /* =============================================================
-   BASE RESET — BASEIL DARK BOTANICAL THEME
+   BASE RESET: BASEIL DARK BOTANICAL THEME
    ============================================================= */
 
 @layer base {
@@ -21,7 +21,7 @@
 }
 
 /* =============================================================
-   BASEIL DESIGN SYSTEM — DARK MODE
+   BASEIL DESIGN SYSTEM: DARK MODE
    ============================================================= */
 
 /* Subtle noise texture */
@@ -31,7 +31,7 @@
   background-size: 128px 128px;
 }
 
-/* Primary CTA — frosted green glass */
+/* Primary CTA: frosted green glass */
 .baseil-cta-primary {
   display: inline-flex;
   align-items: center;
@@ -64,7 +64,7 @@
   transition-duration: 0.1s;
 }
 
-/* Ghost CTA — subtle border */
+/* Ghost CTA: subtle border */
 .baseil-cta-ghost {
   display: inline-flex;
   align-items: center;
@@ -93,7 +93,7 @@
   transition-duration: 0.1s;
 }
 
-/* Shimmer text — green wave */
+/* Shimmer text: green wave */
 .baseil-text-shimmer {
   background: linear-gradient(
     110deg,
@@ -115,7 +115,7 @@
   50% { background-position: 0% center; }
 }
 
-/* Center glow — green pulse */
+/* Center glow: green pulse */
 .baseil-center-glow {
   box-shadow:
     0 0 30px rgba(82, 183, 136, 0.1),
@@ -212,7 +212,7 @@
   50% { opacity: 1; r: 7; }
 }
 
-/* Cloud drift — whole cloud floats gently */
+/* Cloud drift: whole cloud floats gently */
 @keyframes cloud-drift {
   0%, 100% { transform: translateX(0) translateY(0); }
   25% { transform: translateX(6px) translateY(-2px); }
@@ -234,8 +234,8 @@
   animation: cloud-glow-breathe 6s ease-in-out infinite;
 }
 
-/* Individual puff animations — center puffs move subtly, edges move more */
-/* Base layer — gentle sway */
+/* Individual puff animations: center puffs move subtly, edges move more */
+/* Base layer: gentle sway */
 @keyframes puff-move-1 {
   0%, 100% { transform: translateX(0) translateY(0) scale(1); }
   50% { transform: translateX(4px) translateY(2px) scale(1.03); }
@@ -246,7 +246,7 @@
   30% { transform: translateX(-8px) translateY(-4px) scale(1.07); }
   60% { transform: translateX(4px) translateY(2px) scale(0.96); }
 }
-/* Center-left — tallest, moderate move */
+/* Center-left: tallest, moderate move */
 @keyframes puff-move-3 {
   0%, 100% { transform: translateX(0) translateY(0) scale(1); }
   35% { transform: translateX(5px) translateY(-5px) scale(1.06); }
@@ -270,14 +270,14 @@
   40% { transform: translateX(-3px) translateY(-4px) scale(1.05); }
   70% { transform: translateX(2px) translateY(2px) scale(0.97); }
 }
-/* Far-left wisp — big movement */
+/* Far-left wisp: big movement */
 @keyframes puff-move-7 {
   0%, 100% { transform: translateX(0) translateY(0) scale(1); }
   25% { transform: translateX(-12px) translateY(-5px) scale(1.1); }
   50% { transform: translateX(-6px) translateY(3px) scale(0.92); }
   75% { transform: translateX(-14px) translateY(-2px) scale(1.06); }
 }
-/* Far-right wisp — big movement */
+/* Far-right wisp: big movement */
 @keyframes puff-move-8 {
   0%, 100% { transform: translateX(0) translateY(0) scale(1); }
   25% { transform: translateX(12px) translateY(-4px) scale(1.08); }
@@ -308,20 +308,8 @@
 .cloud-puff-9  { animation: puff-move-9  8s  ease-in-out infinite 1.5s; }
 .cloud-puff-10 { animation: puff-move-10 9s  ease-in-out infinite 1s; }
 
-/* Rotating border for showcase */
-@keyframes border-rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* Showcase ambient glow */
-@keyframes showcase-orb-1 {
-  0%, 100% { transform: scale(1); opacity: 0.3; }
-  50% { transform: scale(1.05); opacity: 0.45; }
-}
-
 /* =============================================================
-   INTERACTIVE EFFECTS — AURORA / TILT / GLOW
+   INTERACTIVE EFFECTS: AURORA / TILT / GLOW
    ============================================================= */
 
 /* Footer tagline zoom-in */
@@ -492,25 +480,6 @@
   width: 100%;
 }
 
-/* Floating geometric shapes */
-@keyframes shape-float-1 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.15; }
-  25% { transform: translate(30px, -50px) rotate(90deg); opacity: 0.25; }
-  50% { transform: translate(-20px, -80px) rotate(180deg); opacity: 0.1; }
-  75% { transform: translate(40px, -30px) rotate(270deg); opacity: 0.2; }
-}
-
-@keyframes shape-float-2 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.1; }
-  33% { transform: translate(-40px, 30px) rotate(-120deg); opacity: 0.2; }
-  66% { transform: translate(20px, -40px) rotate(-240deg); opacity: 0.08; }
-}
-
-@keyframes shape-float-3 {
-  0%, 100% { transform: translate(0, 0) rotate(45deg); opacity: 0.12; }
-  50% { transform: translate(50px, -60px) rotate(225deg); opacity: 0.22; }
-}
-
 /* Scroll progress bar */
 .scroll-progress-bar {
   position: fixed;
@@ -555,7 +524,7 @@
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* CTA glow pulse — subtle pulsing glow around primary buttons */
+/* CTA glow pulse: subtle pulsing glow around primary buttons */
 .cta-glow-pulse {
   animation: cta-glow-pulse 2.5s ease-in-out infinite;
 }
@@ -581,7 +550,7 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar — dark botanical */
+/* Custom scrollbar: dark botanical */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -656,5 +625,39 @@ html {
   .baseil-anim-serve-split,
   .baseil-anim-source-pulse {
     animation: none !important;
+  }
+}
+
+/* The home headline, filled with the leaf's own light: pale at the top,
+   settling into the leaf's olive at the baseline. */
+.leaf-type {
+  color: transparent;
+  background-image: linear-gradient(180deg, #EEF4E8 25%, #B9D49E 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Its period is one of the leaf's dots, breathing with the leaf. */
+.leaf-dot {
+  color: #9DD28A;
+  text-shadow: 0 0 14px rgba(125, 161, 88, 0.9), 0 0 4px rgba(157, 210, 138, 0.8);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .leaf-dot {
+    animation: leaf-dot-breathe 5.7s ease-in-out infinite;
+  }
+}
+
+@keyframes leaf-dot-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+/* High-contrast modes drop backgrounds, so the text has to carry itself. */
+@media (forced-colors: active) {
+  .leaf-type {
+    color: CanvasText;
+    background: none;
   }
 }

@@ -385,7 +385,7 @@ function SlideSolution() {
           <animate attributeName="opacity" values="1;0.3;1" dur="4s" repeatCount="indefinite" />
         </circle>
         <rect x="268" y="78" width="64" height="64" rx="16" fill="#0A0F0D" stroke="rgba(82,183,136,0.25)" strokeWidth="1.5" />
-        <image href="/robot/robot-leaf.png" x="280" y="88" width="40" height="44" />
+        <image href="/robot/robot-leaf.webp" x="280" y="88" width="40" height="44" />
         <text x="300" y="160" textAnchor="middle" fontSize="11" fill="#52B788" fontFamily="var(--font-outfit)" opacity="0.6">baseil</text>
       </g>
 
@@ -506,7 +506,7 @@ function SlideSwarm() {
           <animate attributeName="opacity" values="1;0.3;1" dur="4s" repeatCount="indefinite" />
         </circle>
         <rect x="168" y="83" width="54" height="54" rx="14" fill="#0A0F0D" stroke="rgba(82,183,136,0.25)" strokeWidth="1.5" />
-        <image href="/robot/robot-leaf.png" x="177" y="90" width="36" height="40" />
+        <image href="/robot/robot-leaf.webp" x="177" y="90" width="36" height="40" />
         <text x="195" y="152" textAnchor="middle" fontSize="10" fill="#52B788" fontFamily="var(--font-outfit)" opacity="0.6">baseil-1</text>
       </g>
 
@@ -523,7 +523,7 @@ function SlideSwarm() {
           <animate attributeName="opacity" values="1;0.3;1" dur="4s" repeatCount="indefinite" />
         </circle>
         <rect x="378" y="83" width="54" height="54" rx="14" fill="#0A0F0D" stroke="rgba(111,207,151,0.25)" strokeWidth="1.5" />
-        <image href="/robot/robot-leaf.png" x="387" y="90" width="36" height="40" />
+        <image href="/robot/robot-leaf.webp" x="387" y="90" width="36" height="40" />
         <text x="405" y="152" textAnchor="middle" fontSize="10" fill="#6FCF97" fontFamily="var(--font-outfit)" opacity="0.6">baseil-2</text>
       </g>
     </svg>
