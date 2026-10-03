@@ -1,5 +1,3 @@
-'use client'
-
 import { Navigation } from '@/components/landing/Navigation'
 import { Hero } from '@/components/landing/Hero'
 import { Problem } from '@/components/landing/Problem'

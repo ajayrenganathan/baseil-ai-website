@@ -9,6 +9,7 @@ module.exports = {
     '/showcase',
     '/robot',
     '/problem',
+    '/scroll*',
     '/docs',
     '/icon*',
     '/apple-icon*',
@@ -29,7 +30,7 @@ module.exports = {
   },
 
   transform: async (config, path) => {
-    // Homepage — highest priority
+    // Homepage: highest priority
     if (path === '/') {
       return {
         loc: path,

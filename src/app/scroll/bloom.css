@@ -1,0 +1,380 @@
+/* /scroll: the data-bloom preview, on top of the scroll-craft engine.
+   The engine stylesheet is the mechanism; this file themes its tokens and
+   styles the page's own markup. The film itself is drawn in film.ts. */
+
+:root {
+  --sc-canvas: #050807;
+  --sc-surface: #0e1512;
+  --sc-ink: #e2ebde;
+  --sc-ink-soft: #a3bb9e;
+  --sc-accent: #52b788;
+  --sc-accent-ink: #04100a;
+  --sc-shadow-color: 150 35% 2%;
+}
+
+.bl {
+  /* Font variables live on <body>, so the faces are resolved here, not on :root. */
+  --sc-font-display: var(--font-newsreader), Georgia, serif;
+  --sc-font-text: var(--font-outfit), system-ui, sans-serif;
+  --sc-font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --bl-bar: 64px;
+  font-family: var(--sc-font-text);
+  color: var(--sc-ink);
+}
+
+/* ---------------------------------------------------------------- film -- */
+
+.bl-film,
+.bl-front {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+.bl-film {
+  z-index: 0;
+}
+.bl-film canvas,
+.bl-front {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* Rows nearer than the headline: the depth-of-field plane in front of the type. */
+.bl-front {
+  z-index: 2;
+  filter: blur(1.5px);
+}
+.bl-main {
+  position: relative;
+  z-index: 1;
+}
+
+/* ----------------------------------------------------------------- bar -- */
+
+.bl-bar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: var(--sc-z-chrome);
+  height: var(--bl-bar);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: var(--sc-gutter);
+  background: linear-gradient(to bottom, color-mix(in oklab, var(--sc-canvas) 88%, transparent), transparent);
+}
+.bl-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sc-2);
+  font-family: var(--sc-font-display);
+  font-size: 1.3rem;
+  color: var(--sc-ink);
+  text-decoration: none;
+}
+.bl-bar__cta,
+.bl-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sc-r-pill);
+  background: var(--sc-accent);
+  color: var(--sc-accent-ink);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 160ms var(--sc-ease-out);
+}
+.bl-bar__cta {
+  min-height: 38px;
+  padding: 0 var(--sc-5);
+  font-size: 0.9rem;
+}
+.bl-bar__cta:hover,
+.bl-cta:hover {
+  background: #66c497;
+}
+.bl-bar__cta:active {
+  transform: scale(0.97);
+}
+
+/* ---------------------------------------------------------------- type -- */
+
+.bl-h1 {
+  margin: 0;
+  font-family: var(--sc-font-display);
+  font-weight: 400;
+  font-size: clamp(2.5rem, 1.2rem + 4.8vw, 6rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  max-width: 11em;
+}
+.bl-lede {
+  margin: var(--sc-5) 0 0;
+  max-width: 34rem;
+  font-size: clamp(1rem, 0.94rem + 0.3vw, 1.2rem);
+  line-height: 1.55;
+  color: var(--sc-ink-soft);
+  text-wrap: pretty;
+}
+.bl-h2 {
+  margin: 0;
+  font-family: var(--sc-font-display);
+  font-weight: 400;
+  font-size: clamp(1.9rem, 1.3rem + 2.2vw, 3.3rem);
+  line-height: 1.02;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+.bl-h2--lg {
+  font-size: clamp(2.2rem, 1.3rem + 3.2vw, 4.4rem);
+}
+.bl-body {
+  margin: var(--sc-4) 0 0;
+  max-width: 36rem;
+  font-size: clamp(0.98rem, 0.94rem + 0.2vw, 1.1rem);
+  line-height: 1.6;
+  color: var(--sc-ink-soft);
+  text-wrap: pretty;
+}
+.bl-num {
+  font-family: var(--sc-font-display);
+  font-size: 1.35em;
+  color: var(--sc-accent);
+}
+.bl-stats,
+.bl-path {
+  margin: var(--sc-4) 0 0;
+  font-family: var(--sc-font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: var(--sc-ink);
+}
+.bl-stats span {
+  color: var(--sc-accent);
+  font-variant-numeric: tabular-nums;
+}
+.bl-path {
+  display: none;
+  color: var(--sc-ink-soft);
+}
+.bl-block {
+  max-width: min(36rem, 76vw);
+}
+.bl-caption {
+  position: absolute;
+  right: var(--sc-gutter);
+  bottom: clamp(3rem, 12vh, 9rem);
+  z-index: var(--sc-z-copy);
+  max-width: 18rem;
+  margin: 0;
+  font-family: var(--sc-font-mono);
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: var(--sc-ink-soft);
+  text-align: right;
+}
+
+/* ---------------------------------------------------------------- ask -- */
+
+.bl-ask {
+  width: min(56rem, 88vw);
+  max-width: none;
+}
+.bl-ask__lead {
+  margin: 0 0 var(--sc-4);
+  font-family: var(--sc-font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sc-ink-soft);
+}
+.bl-question {
+  margin: 0;
+  font-family: var(--sc-font-display);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 1.2rem + 4vw, 5.2rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------- answer -- */
+
+.bl-sql {
+  position: absolute;
+  right: var(--sc-gutter);
+  bottom: clamp(3rem, 12vh, 9rem);
+  z-index: var(--sc-z-copy);
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px solid color-mix(in oklab, var(--sc-ink) 12%, transparent);
+  border-radius: var(--sc-r-md);
+  background: color-mix(in oklab, var(--sc-canvas) 82%, transparent);
+  box-shadow: var(--sc-edge), var(--sc-e2);
+}
+.bl-sql figcaption {
+  margin-bottom: var(--sc-2);
+  font-family: var(--sc-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sc-ink-soft);
+}
+.bl-sql pre {
+  margin: 0;
+  font-family: var(--sc-font-mono);
+  font-size: 0.74rem;
+  line-height: 1.6;
+  color: var(--sc-ink);
+}
+.bl-sql__line {
+  display: block;
+}
+.bl-sql .kw {
+  color: var(--sc-accent);
+}
+
+/* -------------------------------------------------------------- close -- */
+
+.bl-close {
+  display: grid;
+  /* minmax(0, ...) so the nowrap install command scrolls instead of widening the page. */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 1fr auto;
+  padding: 0 var(--sc-gutter);
+}
+.bl-close__inner {
+  align-self: end;
+  justify-self: center;
+  display: grid;
+  /* Stretch, not center: centred grid items size to their content and overflow. */
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: stretch;
+  width: min(44rem, 100%);
+  padding-bottom: clamp(1.5rem, 5vh, 3.5rem);
+  text-align: center;
+}
+.bl-close__inner .bl-body {
+  max-width: 30rem;
+  margin-inline: auto;
+}
+.bl-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sc-4);
+  margin-top: var(--sc-6);
+}
+.bl-cta {
+  min-height: 48px;
+  padding: 0 var(--sc-7);
+  font-size: 1rem;
+}
+.bl-cmd {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+  border: 1px solid color-mix(in oklab, var(--sc-ink) 14%, transparent);
+  border-radius: var(--sc-r-pill);
+  background: color-mix(in oklab, var(--sc-canvas) 80%, transparent);
+}
+.bl-cmd code {
+  min-width: 0;
+  overflow-x: auto;
+  padding: 0 4px 0 18px;
+  font-family: var(--sc-font-mono);
+  font-size: 0.78rem;
+  color: var(--sc-ink-soft);
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+.bl-cmd button {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--sc-ink);
+  cursor: pointer;
+  transition: color 160ms var(--sc-ease-out);
+}
+.bl-cmd button:hover {
+  color: var(--sc-accent);
+}
+.bl-cmd button:active {
+  transform: scale(0.94);
+}
+.bl-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--sc-2) var(--sc-6);
+  padding-block: var(--sc-4);
+  border-top: 1px solid color-mix(in oklab, var(--sc-ink) 10%, transparent);
+  font-size: 0.78rem;
+  color: var(--sc-ink-soft);
+}
+.bl-foot nav {
+  display: flex;
+  gap: var(--sc-5);
+}
+.bl-foot a {
+  color: var(--sc-ink-soft);
+  text-decoration: none;
+}
+.bl-foot a:hover {
+  color: var(--sc-ink);
+}
+
+/* ------------------------------------------------------------- phones -- */
+
+@media (max-width: 860px) {
+  .bl {
+    --bl-bar: 56px;
+  }
+  .bl-front {
+    filter: none;
+  }
+  .bl-h1 {
+    font-size: clamp(2.3rem, 1.6rem + 3.4vw, 3rem);
+  }
+  .bl-caption {
+    top: calc(var(--bl-bar) + var(--sc-3));
+    bottom: auto;
+    left: var(--sc-gutter);
+    max-width: none;
+    text-align: left;
+  }
+  .bl-block {
+    max-width: none;
+  }
+  /* The engine's phone rule sets inset-inline on every .sc-copy, which resets the
+     centred copy's left: 50% and pushes it half off screen. Restore it. */
+  .bl-ask.sc-copy--center {
+    inset-inline: auto;
+    left: 50%;
+    width: calc(100vw - 2 * var(--sc-gutter));
+  }
+  .bl-sql {
+    display: none;
+  }
+  .bl-path {
+    display: block;
+  }
+  .bl-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .bl-cmd {
+    width: 100%;
+  }
+  .bl-foot {
+    justify-content: center;
+    text-align: center;
+  }
+}
