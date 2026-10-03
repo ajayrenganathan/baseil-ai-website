@@ -4,6 +4,14 @@ import matter from 'gray-matter'
 
 const DOCS_DIR = path.join(process.cwd(), 'content/docs')
 
+/** Display names for the frontmatter `category` values, shared by /docs and /llms.txt. */
+export const DOC_CATEGORY_LABELS: Record<string, string> = {
+  'getting-started': 'Getting Started',
+  'guides': 'Guides',
+  'reference': 'Reference',
+  'general': 'General',
+}
+
 export interface DocPage {
   slug: string
   title: string

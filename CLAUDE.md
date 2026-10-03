@@ -30,6 +30,8 @@ npx tsc --noEmit   # Type-check without emitting
 | `/pricing` | Pricing page (Pro free during beta, Teams and Enterprise on the waitlist) |
 | `/platform` | Platform page, "Coming Soon" with cloud mascot |
 | `/contact` | Contact page with copy-to-clipboard support email |
+| `/llms.txt` | Plain-text index for language models (the llmstxt.org convention): summary, key facts, and a link to every doc and published post. Built from `content/` at deploy by `src/lib/llms.ts` |
+| `/llms-full.txt` | Every doc in one plain-text file, for tools that want the whole manual in one fetch |
 | `/auth/cli` | Clerk sign-in handoff for the CLI (redirects a short-lived token to the local callback URL) |
 | `/auth/desktop` | Clerk sign-in handoff for the desktop app |
 
@@ -43,6 +45,7 @@ Internal preview pages, excluded from the sitemap: `/problem` (animated data-mes
 - `src/components/docs/`: DocsSidebar
 - `src/lib/install.ts`: The single source of truth for the install snippet (`INSTALL_COMMAND`) and the desktop DMG URL (`DESKTOP_VERSION`, `DESKTOP_DMG_URL`)
 - `src/lib/docs.ts`: Docs reader (gray-matter + fs, sorts by frontmatter `order`)
+- `src/lib/llms.ts`: Builds `/llms.txt` and `/llms-full.txt` from the docs and blog readers. State only facts the docs already state there
 - `src/lib/blog.ts`: Blog post reader (gray-matter + fs, sorts by date desc)
 - `src/lib/analytics.ts`: `trackEvent` wrapper. GA is wired in `layout.tsx`: a tiny inline `gtag` queue runs after hydration, so early events are kept, and the library loads with `lazyOnload`, off the path to first paint
 - `src/lib/sample-db.ts`: The seeded sample store database behind the hero's leaf and the `/scroll` film; `src/lib/leaf.ts` samples the leaf image into points for both

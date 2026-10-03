@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { getAllDocs } from '@/lib/docs'
+import { DOC_CATEGORY_LABELS, getAllDocs } from '@/lib/docs'
 import { Navigation } from '@/components/landing/Navigation'
 import { Footer } from '@/components/landing/Footer'
 import { ArrowRight, Book } from 'lucide-react'
@@ -9,13 +9,6 @@ export const metadata: Metadata = {
   title: 'Documentation',
   description: 'Baseil docs — install, connect databases, and get your first query running in minutes.',
   alternates: { canonical: '/docs' },
-}
-
-const categoryLabels: Record<string, string> = {
-  'getting-started': 'Getting Started',
-  'guides': 'Guides',
-  'reference': 'Reference',
-  'general': 'General',
 }
 
 export default function DocsListingPage() {
@@ -66,7 +59,7 @@ export default function DocsListingPage() {
               {Object.entries(grouped).map(([category, items]) => (
                 <section key={category}>
                   <h2 className="font-[var(--font-outfit)] text-[0.78rem] uppercase tracking-[0.2em] text-[#52B788]/70 mb-4">
-                    {categoryLabels[category] || category}
+                    {DOC_CATEGORY_LABELS[category] || category}
                   </h2>
                   <div className="grid gap-3">
                     {items.map(doc => (
