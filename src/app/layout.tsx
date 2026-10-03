@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { Newsreader, Outfit } from 'next/font/google'
-import { GoogleAnalytics } from '@next/third-parties/google'
+import Script from 'next/script'
 import './globals.css'
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID
 
 const newsreader = Newsreader({
   subsets: ['latin'],
@@ -71,7 +73,7 @@ export const metadata: Metadata = {
       'Baseil is the intelligent data harness. Connect your databases, expose them as MCP tools, and give agents (and humans) natural-language access with no code. One layer for every interface.',
   },
   icons: {
-    icon: '/robot/robot-leaf.png',
+    icon: '/robot/robot-leaf-icon.png',
     apple: '/robot/robot-leaf.png',
   },
   alternates: {
@@ -170,11 +172,19 @@ export default function RootLayout({
           }}
         />
       </head>
-      {process.env.NEXT_PUBLIC_GA_ID && (
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
-      )}
       <body className={`${newsreader.variable} ${outfit.variable} antialiased`}>
         {children}
+        {GA_ID && (
+          <>
+            {/* The gtag queue is a few bytes inline, so events from the first
+                seconds are kept; the library itself (about 150 KiB) loads once
+                the page is idle, off the path to first paint. */}
+            <Script id="ga-init" strategy="afterInteractive">
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${GA_ID}');`}
+            </Script>
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="lazyOnload" />
+          </>
+        )}
       </body>
     </html>
   )
