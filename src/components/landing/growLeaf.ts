@@ -5,8 +5,8 @@ import { LEAF_SHADES, sampleLeaf } from '@/lib/leaf'
 // and grows into the Baseil sprout, soil and stem first, then the leaves. Then
 // it breathes. Pointing at the leaf opens a small bubble: the rows under it
 // part, with a soft falloff so no rim piles up, around an answer, and each part
-// of the leaf holds a different one. Without a fine pointer, the bubble wanders
-// the leaf on its own.
+// of the leaf holds a different one. On a touch screen the bubble rests on the
+// leaf once it has grown, and from then on moves only with the finger.
 // The leaf's size and place come from a box in the page's layout, so CSS stays
 // in charge of composition. Work pauses whenever the hero is off screen.
 
@@ -16,6 +16,7 @@ const GROW_MS = 2600
 const GRID = 16 // px per cell of the leaf's occupancy map
 const REGION_COLS = 3
 const REGION_ROWS = 2
+const MAX_LENS_STEP = 16 // px per frame
 
 const clamp01 = (x: number) => (x < 0 ? 0 : x > 1 ? 1 : x)
 const ease = (x: number) => 1 - Math.pow(1 - x, 3)
@@ -78,6 +79,8 @@ export function growLeaf({ canvas, box, lens, src, reduce, onRegion, onGrown }: 
   // The lens: where it is aiming, where it is drawn, and whether it is open.
   const aim = { x: 0, y: 0, open: false }
   const at = { x: 0, y: 0, open: false }
+  // The share of the way to its aim the lens covers each frame.
+  let glide = 0.25
   let region: number | null = null
   // The lens's size, cached so frames never force a layout to read it.
   let lensW = lens.offsetWidth
@@ -145,14 +148,18 @@ export function growLeaf({ canvas, box, lens, src, reduce, onRegion, onGrown }: 
   }
 
   function frame(now: number) {
-    raf = 0
-    if (!img || !palette.length) return
+    // raf keeps this frame's id until the frame ends, so a kick() from inside a
+    // frame (rest() makes one) cannot start a second loop alongside this one.
+    if (!img || !palette.length) {
+      raf = 0
+      return
+    }
     if (!started) started = now
     const grow = reduce ? 1 : clamp01((now - started) / GROW_MS)
     if (grow >= 1 && !grown) {
       grown = true
       onGrown?.()
-      if (!fine && !reduce) wander()
+      if (!fine && !reduce && !touched) rest()
     }
     const time = now / 1000
     const breath = reduce ? 0 : clamp01((now - started - GROW_MS) / 800)
@@ -164,8 +171,13 @@ export function growLeaf({ canvas, box, lens, src, reduce, onRegion, onGrown }: 
       at.y = aim.y
     }
     at.open = aim.open
-    at.x += (aim.x - at.x) * 0.25
-    at.y += (aim.y - at.y) * 0.25
+    // Capped in speed, so a long catch-up (a finger landing far from the
+    // resting lens) reads as a glide rather than a jump.
+    const stepX = (aim.x - at.x) * glide
+    const stepY = (aim.y - at.y) * glide
+    const cap = Math.min(1, MAX_LENS_STEP / (Math.hypot(stepX, stepY) || 1))
+    at.x += stepX * cap
+    at.y += stepY * cap
     lens.style.transform = `translate3d(${(at.x - lensW / 2).toFixed(1)}px,${(at.y - lensH / 2).toFixed(1)}px,0)`
     if (lens.dataset.open !== String(at.open)) lens.dataset.open = String(at.open)
     const next = at.open ? regionAt(at.x, at.y) : null
@@ -177,7 +189,9 @@ export function growLeaf({ canvas, box, lens, src, reduce, onRegion, onGrown }: 
     // under about 1.6 times its spread means rows never fold over each other,
     // so the edge stays soft instead of piling into a bright rim; 1.18 keeps
     // the bubble small while staying well clear of that limit.
-    const hole = at.open ? Math.hypot(lensW, lensH) / 2 + 4 : 0
+    // The falloff clears out to about 1.3 times the hole, so a hole a little
+    // under the lens's half-diagonal still keeps every row off the text.
+    const hole = at.open ? Math.hypot(lensW, lensH) * 0.46 : 0
     const spread = 2 * (hole * 0.85) ** 2
 
     let settling = false
@@ -243,7 +257,7 @@ export function growLeaf({ canvas, box, lens, src, reduce, onRegion, onGrown }: 
     ctx.globalAlpha = 1
 
     const alive = !reduce && (grow < 1 || breath > 0 || settling || at.open)
-    if (alive && visible && !document.hidden) raf = requestAnimationFrame(frame)
+    raf = alive && visible && !document.hidden ? requestAnimationFrame(frame) : 0
   }
 
   const kick = () => {
@@ -261,6 +275,7 @@ export function growLeaf({ canvas, box, lens, src, reduce, onRegion, onGrown }: 
     aim.open = onLeaf(x, y)
     aim.x = x
     aim.y = y + 18 + lensH / 2
+    glide = 0.25
     kick()
   }
   const onPointer = (e: PointerEvent) => {
@@ -277,36 +292,59 @@ export function growLeaf({ canvas, box, lens, src, reduce, onRegion, onGrown }: 
     kick()
   }
 
-  // Touch: the leaf answers on its own, drifting to a new spot every few seconds.
-  let wanderTimer = 0
-  function wander() {
-    let step = 0
-    const hop = () => {
-      if (step % 2 === 0) {
-        // Only rows where the whole lens fits over the leaf and on screen.
-        const fits = (i: number) => {
-          const x = cx + tx[i]
-          const y = cy + ty[i]
-          return (
-            x - lensW / 2 >= Math.max(bounds.left, 8) &&
-            x + lensW / 2 <= Math.min(bounds.right, W - 8) &&
-            y - lensH / 2 >= bounds.top &&
-            y + lensH / 2 <= bounds.bottom
-          )
-        }
-        let i = Math.floor(((step * 0.618) % 1) * N)
-        for (let tries = 0; tries < N && !fits(i); tries++) i = (i + 97) % N
-        aim.x = cx + tx[i]
-        aim.y = cy + ty[i]
-        aim.open = true
-      } else {
-        aim.open = false
-      }
-      step++
-      kick()
-      wanderTimer = window.setTimeout(hop, step % 2 ? 3200 : 900)
+  // Touch: the lens rises just above the finger, so the finger never covers the
+  // answer, and glides after it. A touch that starts on the leaf opens it, and it
+  // stays open after the finger lifts so the answer can be read; a touch
+  // anywhere else closes it. Listeners are passive, so a swipe on the leaf still
+  // scrolls the page, and the leaf, and the lens with it, move under the finger.
+  let touched = false
+  function aimAtTouch(t: Touch | undefined, start: boolean) {
+    if (!t || !grown) return
+    const c = canvas.getBoundingClientRect()
+    const x = t.clientX - c.left
+    const y = t.clientY - c.top
+    if (start) aim.open = onLeaf(x, y)
+    else if (!aim.open) aim.open = onLeaf(x, y)
+    if (aim.open) {
+      aim.x = Math.min(Math.max(x, lensW / 2 + 8), W - lensW / 2 - 8)
+      aim.y = Math.max(y - 32 - lensH / 2, lensH / 2 + 4)
+      glide = 0.3
     }
-    wanderTimer = window.setTimeout(hop, 600)
+    kick()
+  }
+  const onTouchStart = (e: TouchEvent) => {
+    touched = true
+    aimAtTouch(e.touches[0], true)
+  }
+  const onTouchMove = (e: TouchEvent) => aimAtTouch(e.touches[0], false)
+
+  // Until then, the lens rests in one place on the right leaf, so a phone shows
+  // that the leaf holds answers. It never moves on its own.
+  function rest() {
+    // The row nearest that spot where the whole lens fits over the leaf.
+    const goalX = bounds.left + (bounds.right - bounds.left) * 0.72
+    const goalY = bounds.top + (bounds.bottom - bounds.top) * 0.3
+    let pick = -1
+    let best = Infinity
+    for (let i = 0; i < N; i++) {
+      const x = cx + tx[i]
+      const y = cy + ty[i]
+      const fits =
+        x - lensW / 2 >= Math.max(bounds.left, 8) &&
+        x + lensW / 2 <= Math.min(bounds.right, W - 8) &&
+        y - lensH / 2 >= bounds.top &&
+        y + lensH / 2 <= bounds.bottom
+      const d = Math.hypot(x - goalX, y - goalY)
+      if (fits && d < best) {
+        best = d
+        pick = i
+      }
+    }
+    if (pick < 0) return
+    aim.x = cx + tx[pick]
+    aim.y = cy + ty[pick]
+    aim.open = true
+    kick()
   }
 
   const resizer = new ResizeObserver(() => {
@@ -332,6 +370,10 @@ export function growLeaf({ canvas, box, lens, src, reduce, onRegion, onGrown }: 
     addEventListener('scroll', onScroll, { passive: true })
     document.addEventListener('mouseout', onLeaveWindow)
   }
+  if (!reduce) {
+    addEventListener('touchstart', onTouchStart, { passive: true })
+    addEventListener('touchmove', onTouchMove, { passive: true })
+  }
 
   const image = new Image()
   image.onload = () => {
@@ -343,7 +385,6 @@ export function growLeaf({ canvas, box, lens, src, reduce, onRegion, onGrown }: 
 
   return () => {
     cancelAnimationFrame(raf)
-    clearTimeout(wanderTimer)
     image.onload = null
     resizer.disconnect()
     lensSizer.disconnect()
@@ -352,5 +393,7 @@ export function growLeaf({ canvas, box, lens, src, reduce, onRegion, onGrown }: 
     removeEventListener('pointermove', onPointer)
     removeEventListener('scroll', onScroll)
     document.removeEventListener('mouseout', onLeaveWindow)
+    removeEventListener('touchstart', onTouchStart)
+    removeEventListener('touchmove', onTouchMove)
   }
 }
