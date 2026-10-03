@@ -24,8 +24,8 @@ function Glimpse({ index }: { index: number }) {
   const { figure, label } = INSIGHTS[index]
   return (
     <>
-      <p className="font-[family-name:var(--font-newsreader)] text-[1.35rem] leading-none text-[#E2EBDE]">{figure}</p>
-      <p className="mt-1.5 font-mono text-[0.5rem] uppercase leading-[1.35] tracking-[0.08em] text-[#8FAF8A]">{label}</p>
+      <p className="font-[family-name:var(--font-newsreader)] text-[1.05rem] leading-none text-[#E2EBDE]">{figure}</p>
+      <p className="mt-1 font-mono text-[0.46rem] uppercase leading-[1.3] tracking-[0.06em] text-[#8FAF8A]">{label}</p>
     </>
   )
 }
@@ -109,7 +109,7 @@ function LeafStage() {
         ref={lensRef}
         aria-hidden="true"
         data-open="false"
-        className="peer pointer-events-none absolute left-0 top-0 z-20 w-[96px] scale-95 text-center opacity-0 transition-[opacity,scale] duration-200 ease-out data-[open=true]:scale-100 data-[open=true]:opacity-100"
+        className="peer pointer-events-none absolute left-0 top-0 z-20 w-[72px] scale-95 text-center opacity-0 transition-[opacity,scale] duration-200 ease-out data-[open=true]:scale-100 data-[open=true]:opacity-100"
       >
         <div key={shown} className="animate-in fade-in duration-200">
           <Glimpse index={shown} />
