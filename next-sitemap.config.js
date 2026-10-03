@@ -13,6 +13,7 @@ module.exports = {
     '/icon*',
     '/apple-icon*',
     '/manifest*',
+    '/llms*', // plain-text files for language models, not pages
     '/*.svg',
     '/*.png',
   ],
