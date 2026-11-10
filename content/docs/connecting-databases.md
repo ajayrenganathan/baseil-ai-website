@@ -18,7 +18,7 @@ More connectors are on the roadmap. If you have a request, drop it on the waitli
 
 ## Add a connection (Web UI)
 
-From the left sidebar, click **Connections**, then **Add Connection**. The form asks for:
+From the left sidebar, click **Databases**, then **Add Connection**. The form asks for:
 
 - **Name.** Just for display. `production-db`, `analytics-warehouse`, whatever helps you tell them apart.
 - **Type.** Pick from the supported list.
@@ -107,7 +107,7 @@ Activities stick around after onboarding. You can scroll back to see what ran, w
 
 Schemas change. New tables, dropped columns, renamed fields, changed types. When that happens you have two options:
 
-- **Re-run onboarding** on the affected connection. This is a one-click operation from the Connections page. Baseil diffs the new schema against what it knows, and only regenerates tools for changed parts.
+- **Re-run onboarding** on the affected connection. This is a one-click operation from the Databases page. Baseil diffs the new schema against what it knows, and only regenerates tools for changed parts.
 - **Update rules.** If the change is semantic rather than structural (e.g. you split `status` into `status` and `substatus`), a rule often handles it more cleanly than a full re-onboard.
 
 Drift is computed when you re-onboard a connection. There is no scheduled drift check yet.

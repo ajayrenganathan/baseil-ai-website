@@ -18,7 +18,7 @@ Here's what the flow looks like end to end with Baseil.
 
 **1. Add a Postgres connection.**
 
-In the Connections tab, click Add Connection. Type the host, port, database name, and a read-only username. Hit Test Connection to verify, then Onboard.
+On the Databases page (in the sidebar), click Add Connection. Type the host, port, database name, and a read-only username. Hit Test Connection to verify, then Onboard.
 
 **2. Wait about 30 seconds.**
 

@@ -30,7 +30,7 @@ You're now running at `http://localhost:8451`.
 
 ### Step 2: Connect your database
 
-In the web UI, go to Connections, then Add Connection, and fill in the form. Use a read-only database user.
+In the web UI, go to Databases in the sidebar, then Add Connection, and fill in the form. Use a read-only database user.
 
 The read-only user is the important part. Baseil enforces read-only at the SQL level too, but you want defense in depth.
 

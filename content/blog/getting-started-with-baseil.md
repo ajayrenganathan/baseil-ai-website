@@ -37,7 +37,7 @@ Two commands worth remembering: `baseil status` tells you whether the server is 
 
 ## Step 3: Connect a database
 
-Connections are added in the web UI. Go to Connections, then Add Connection, and fill in the form for your database type.
+Connections are added in the web UI. Go to Databases in the sidebar, then Add Connection, and fill in the form for your database type.
 
 Use a read-only database user. Baseil validates its own SQL as read-only, but a read-only user is the layer you control.
 
