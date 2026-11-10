@@ -46,6 +46,7 @@ const FORBIDDEN = [
   'baseil__', // MCP tools are baseil_query, baseil_describe, ...
   'Anthropic (default)', // OpenRouter is the default provider
   'two-minute', // setup takes about 15 minutes
+  '900 MB', // 1.0.1 is about 90 MB to download and about 300 MB on disk
   // A provider list without OpenRouter. "OpenRouter, Anthropic or OpenAI" is fine.
   { label: 'Anthropic or OpenAI (without OpenRouter)', pattern: /(?<!OpenRouter[^.]*)Anthropic or OpenAI/ },
 ]

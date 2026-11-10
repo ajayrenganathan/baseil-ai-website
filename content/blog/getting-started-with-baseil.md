@@ -16,7 +16,7 @@ Baseil connects to your databases, maps the schema, and generates tested read-on
 curl -fsSL https://releases.baseil.ai/install.sh | sh
 ```
 
-The installer downloads about 300 MB (about 900 MB unpacked) into `~/.baseil`, registers a background service, and runs the setup wizard. The wizard asks for:
+The installer downloads about 90 MB into `~/.baseil` (about 300 MB on disk once it is running), registers a background service, and runs the setup wizard. The wizard asks for:
 
 - A Postgres for Baseil's own metadata. It can use a local Postgres, start one in Docker, or install one with apt.
 - An admin email and password. This is the account you sign in with.

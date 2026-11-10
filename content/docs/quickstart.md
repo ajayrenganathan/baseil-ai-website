@@ -5,7 +5,7 @@ order: 1
 category: "getting-started"
 ---
 
-This is the fastest path from zero to a working Baseil instance with one database connected and chat responding to your questions. Budget about 15 minutes the first time, more if Postgres has to be installed. The download is about 300 MB and takes about 900 MB on disk once unpacked. The wizard asks a handful of questions; onboarding a database then takes about a minute.
+This is the fastest path from zero to a working Baseil instance with one database connected and chat responding to your questions. Budget about 15 minutes the first time, more if Postgres has to be installed. The download is about 90 MB, and Baseil takes about 300 MB on disk once it is running. The wizard asks a handful of questions; onboarding a database then takes about a minute.
 
 ## Prerequisites
 
@@ -28,7 +28,9 @@ The install is one command:
 curl -fsSL https://releases.baseil.ai/install.sh | sh
 ```
 
-This downloads about 300 MB (about 900 MB unpacked) into `~/.baseil`, adds `~/.baseil/bin` to your PATH, and registers a service without starting it: launchd on macOS, a systemd user service on Linux. The service step is skipped on Linux hosts without systemd. Then, if a terminal is attached, the installer runs `baseil setup` for you.
+This downloads about 90 MB into `~/.baseil` (about 300 MB on disk once it is running), adds `~/.baseil/bin` to your PATH, and registers a service without starting it: launchd on macOS, a systemd user service on Linux. The service step is skipped on Linux hosts without systemd. Then, if a terminal is attached, the installer runs `baseil setup` for you.
+
+Running the command on a machine that already has Baseil updates it in place: your settings are kept, setup does not run again, and a running server is stopped, so start it again with `baseil start`.
 
 Set `BASEIL_SKIP_SETUP=1` to install without the wizard. To uninstall, remove `~/.baseil` and the service file.
 
@@ -86,6 +88,22 @@ Each response comes back with the natural-language answer up top, the tool that 
 When you added a connection, Baseil ran a five-agent pipeline: Discovery mapped your schema, ToolBuilder generated parameterized query templates, Reviewer checked them for injection risks and read-only enforcement, Tester ran them against your real data with safe parameters, and Deploy registered everything as tools the chat can use. The whole thing takes less than a minute for a typical schema.
 
 For a deeper look, read [Inside Baseil's 5-Agent Pipeline](/blog/inside-baseil-5-agent-pipeline).
+
+## Updating
+
+```bash
+baseil upgrade
+```
+
+This downloads and installs the latest release and restarts the server.
+
+On 1.0.0, `baseil upgrade` can stop at "Download failed" on newer Linux systems (Debian 13, Ubuntu 24.10 and later). Run the install command again instead; it updates Baseil in place and keeps your settings and data:
+
+```bash
+curl -fsSL https://releases.baseil.ai/install.sh | sh
+```
+
+From 1.0.1 on, `baseil upgrade` works on those systems too.
 
 ## Next
 

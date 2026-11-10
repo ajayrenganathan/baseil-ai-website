@@ -18,7 +18,7 @@ const TAB_CONTENT: Record<InstallTab, TabContent> = {
   'one-liner': {
     comment: '# Downloads the binary, then runs baseil setup.',
     command: INSTALL_COMMAND,
-    caption: 'macOS Apple Silicon, Linux x64 and Linux arm64. The download is about 300 MB (about 900 MB once unpacked). The setup wizard then asks for a Postgres database (it can install one), an admin login, and an AI key.',
+    caption: 'macOS Apple Silicon, Linux x64 and Linux arm64. The download is about 90 MB, and Baseil takes about 300 MB on disk once it is running. The setup wizard then asks for a Postgres database (it can install one), an admin login, and an AI key.',
   },
   'desktop': {
     comment: '# Install Baseil first, then download the Mac app.',
