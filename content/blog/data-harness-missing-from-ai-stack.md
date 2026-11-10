@@ -73,7 +73,7 @@ Baseil is our take on the pattern. You connect a Postgres, wait around 30 second
 
 The pitch sounds small. The implications aren't. Every new agent on your team can now query your data through a protocol they already speak, with safety and observability baked in.
 
-If you want to see this for yourself, the [quickstart](/docs/quickstart) is about five minutes of real work.
+If you want to see this for yourself, the [quickstart](/docs/quickstart) is about 15 minutes of real work, most of it the install and setup.
 
 ## The stack is consolidating
 

@@ -1,18 +1,18 @@
 ---
 title: "Quickstart"
-description: "Install Baseil, connect your first database, and run your first natural-language query in about ten minutes."
+description: "Install Baseil, connect your first database, and run your first natural-language query in about 15 minutes."
 order: 1
 category: "getting-started"
 ---
 
-This is the fastest path from zero to a working Baseil instance with one database connected and chat responding to your questions. Budget about ten minutes the first time. The download is about 300 MB, and the setup wizard pulls down a small embedding model on top of that. The wizard itself is about two minutes of prompts; the rest is download time.
+This is the fastest path from zero to a working Baseil instance with one database connected and chat responding to your questions. Budget about 15 minutes the first time, more if Postgres has to be installed. The download is about 300 MB and takes about 900 MB on disk once unpacked. The wizard asks a handful of questions; onboarding a database then takes about a minute.
 
 ## Prerequisites
 
 You'll want these in place before you start:
 
-- macOS on Apple Silicon, or Linux on x64. There is no Windows build yet.
-- An Anthropic or OpenAI API key.
+- macOS on Apple Silicon, or Linux on x64 or arm64. There is no Windows build yet.
+- An API key from OpenRouter (recommended), Anthropic or OpenAI.
 - A PostgreSQL instance for Baseil's own metadata (connections, rules, golden cache, audit logs). The wizard can find a local one, start one in Docker, or install it with apt on Debian and Ubuntu. A connection URL to an existing Postgres works too.
 - A database you want to ask questions about.
 
@@ -28,7 +28,7 @@ The install is one command:
 curl -fsSL https://releases.baseil.ai/install.sh | sh
 ```
 
-This downloads about 300 MB into `~/.baseil`, adds `~/.baseil/bin` to your PATH, and registers a service without starting it: launchd on macOS, a systemd user service on Linux. The service step is skipped on Linux hosts without systemd. Then, if a terminal is attached, the installer runs `baseil setup` for you.
+This downloads about 300 MB (about 900 MB unpacked) into `~/.baseil`, adds `~/.baseil/bin` to your PATH, and registers a service without starting it: launchd on macOS, a systemd user service on Linux. The service step is skipped on Linux hosts without systemd. Then, if a terminal is attached, the installer runs `baseil setup` for you.
 
 Set `BASEIL_SKIP_SETUP=1` to install without the wizard. To uninstall, remove `~/.baseil` and the service file.
 

@@ -1,6 +1,6 @@
 ---
-title: "Expose Your Database as MCP Tools — No Code Required"
-description: "The Model Context Protocol is how AI agents discover and use tools. Writing MCP servers by hand is tedious. Here's how to skip that and turn any database into a live MCP server in a few minutes."
+title: "Expose Your Database as MCP Tools, No Code Required"
+description: "The Model Context Protocol is how AI agents discover and use tools. Writing MCP servers by hand is tedious. Here's how to skip that and turn any database into a live MCP server in one sitting."
 date: "2026-04-16"
 author: "Baseil Team"
 tags: ["mcp", "no-code", "agents", "integration"]
@@ -51,7 +51,7 @@ Restart Claude. The Baseil tools show up in the available tools list automatical
 
 You'll see the tool calls in Claude's UI (depending on settings), so you can confirm this isn't a hallucination. The tool call is real. The SQL is real. The number came from your database.
 
-Total elapsed time: about 5 minutes, most of which is waiting for Claude to restart.
+Once Baseil is installed and set up (about 15 minutes the first time), these steps take a few minutes, most of it waiting for Claude to restart.
 
 ## What Baseil generates automatically
 
@@ -94,7 +94,7 @@ This isn't a universal trade-off. If you have exactly one database, a small sche
 
 ## Try it
 
-If you want to see your own database talking to Claude in 5 minutes, the [quickstart](/docs/quickstart) is the shortest path. The [MCP setup doc](/docs/mcp-setup) has more detail on the protocol-specific pieces.
+If you want to see your own database talking to Claude in about 15 minutes, the [quickstart](/docs/quickstart) is the shortest path. The [MCP setup doc](/docs/mcp-setup) has more detail on the protocol-specific pieces.
 
 Related reading:
 

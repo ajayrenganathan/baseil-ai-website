@@ -10,7 +10,7 @@ import { growLeaf } from './growLeaf'
 
 // Each claim here is one the site already makes, worded to match the docs.
 const FACTS = [
-  ['Runs on your machine', 'macOS on Apple Silicon or Linux x64, from one install command.'],
+  ['Runs on your machine', 'macOS on Apple Silicon or Linux (x64 and arm64), from one install command.'],
   ['Read-only by default', 'Baseil enforces read-only at the SQL level. Pair it with a read-only database user.'],
   ['Shows its work', 'Every answer comes with the SQL that ran, so you can copy it and check.'],
   ['For people and agents', 'Ask in chat, or let your agents call it as MCP tools.'],
@@ -155,6 +155,9 @@ function LeafStage() {
             </button>
           </div>
         </div>
+        <p className="mx-auto mt-4 max-w-[600px] font-[family-name:var(--font-outfit)] text-[0.82rem] leading-relaxed text-[#8FAF8A] [text-wrap:pretty]">
+          You&apos;ll need an AI key (OpenRouter, Anthropic or OpenAI) and a Postgres database. Setup can install Postgres for you.
+        </p>
 
         {/* A plain link: /scroll ships its own global styles, so it gets a full page load. */}
         <a

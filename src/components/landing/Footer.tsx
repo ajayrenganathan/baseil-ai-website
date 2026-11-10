@@ -124,7 +124,7 @@ export function Footer() {
             Install Baseil in one command.
           </h2>
           <p className="font-[var(--font-outfit)] text-[0.9rem] text-[#5A7A58] mb-6">
-            Free during beta. macOS Apple Silicon and Linux x64.
+            Free during beta. macOS Apple Silicon, Linux x64 and Linux arm64. Needs an AI key and Postgres.
           </p>
           <div className="mb-14">
             <a

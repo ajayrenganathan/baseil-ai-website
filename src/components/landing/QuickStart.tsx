@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Check, Copy, ChevronRight } from 'lucide-react'
+import { Check, Copy, ChevronRight, Download } from 'lucide-react'
 import { INSTALL_COMMAND, DESKTOP_DMG_URL } from '@/lib/install'
+import { trackEvent } from '@/lib/analytics'
 
 type InstallTab = 'one-liner' | 'desktop'
 
@@ -10,20 +11,20 @@ interface TabContent {
   comment: string
   command: string
   caption: string
-  secondary?: string
+  download?: { label: string; href: string }
 }
 
 const TAB_CONTENT: Record<InstallTab, TabContent> = {
   'one-liner': {
     comment: '# Downloads the binary, then runs baseil setup.',
     command: INSTALL_COMMAND,
-    caption: 'macOS Apple Silicon and Linux x64. The installer downloads about 300 MB, then the setup wizard asks for your account, an AI key, and a database.',
+    caption: 'macOS Apple Silicon, Linux x64 and Linux arm64. The download is about 300 MB (about 900 MB once unpacked). The setup wizard then asks for a Postgres database (it can install one), an admin login, and an AI key.',
   },
   'desktop': {
-    comment: '# Install the server, then download the desktop app.',
+    comment: '# Install Baseil first, then download the Mac app.',
     command: INSTALL_COMMAND,
-    secondary: `open ${DESKTOP_DMG_URL}`,
-    caption: 'macOS arm64 DMG. The desktop app connects to your local or remote baseil server.',
+    download: { label: 'Download for Mac (Apple Silicon)', href: DESKTOP_DMG_URL },
+    caption: 'The Mac app is a window onto Baseil. Install Baseil with the command above first, then open the app. It is not notarized yet: the first time, right-click the app and choose Open.',
   },
 }
 
@@ -50,11 +51,8 @@ export function QuickStart() {
   const current = TAB_CONTENT[activeTab]
 
   const handleCopy = async () => {
-    const text = current.secondary
-      ? `${current.command}\n${current.secondary}`
-      : current.command
     try {
-      await navigator.clipboard.writeText(text)
+      await navigator.clipboard.writeText(current.command)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
@@ -85,7 +83,7 @@ export function QuickStart() {
 
         {/* Heading */}
         <p className={`font-[var(--font-newsreader)] text-[clamp(1.5rem,3vw,2.2rem)] text-[#C8D8C4] leading-tight mb-4 max-w-[620px] transition-all duration-700 delay-100 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          Install, then a two-minute setup wizard.
+          Install, then a guided setup. Plan on about 15 minutes to your first answer.
         </p>
 
         {/* Trust pills */}
@@ -160,15 +158,20 @@ export function QuickStart() {
               <span className="text-[#C8D8C4] break-all">{current.command}</span>
             </div>
 
-            {/* Optional secondary command (desktop tab) */}
-            {current.secondary && (
-              <div className="flex items-start gap-2 mt-2">
-                <span className="text-[#52B788] shrink-0">$</span>
-                <span className="text-[#C8D8C4] break-all">{current.secondary}</span>
-              </div>
-            )}
           </div>
         </div>
+
+        {/* Desktop tab: the Mac app is a plain download, not a terminal line */}
+        {current.download && (
+          <a
+            href={current.download.href}
+            onClick={() => trackEvent('cta_click', { button_label: 'download_mac_app', section: 'quick_start' })}
+            className="baseil-cta-ghost mt-6 px-5 py-2.5 rounded-full text-[0.85rem]"
+          >
+            <Download size={15} />
+            {current.download.label}
+          </a>
+        )}
 
         {/* Caption */}
         <p className={`font-[var(--font-outfit)] text-[0.85rem] text-[#8FAF8A] leading-relaxed mt-6 max-w-[600px] transition-all duration-700 delay-300 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
@@ -176,9 +179,10 @@ export function QuickStart() {
         </p>
 
         {/* Platform support note */}
-        <div className={`flex items-center gap-6 mt-4 text-[0.75rem] text-[#5A7A58] font-[var(--font-outfit)] transition-all duration-700 delay-400 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div className={`flex flex-wrap items-center gap-x-6 gap-y-2 mt-4 text-[0.75rem] text-[#5A7A58] font-[var(--font-outfit)] transition-all duration-700 delay-400 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <span>✓ macOS arm64 (Apple Silicon)</span>
-          <span>✓ Linux x64 (Ubuntu, Debian, CentOS)</span>
+          <span>✓ Linux x64</span>
+          <span>✓ Linux arm64</span>
           <span className="text-[#3D5A3A]">○ Windows (coming soon)</span>
         </div>
       </div>

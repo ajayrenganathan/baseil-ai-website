@@ -1,6 +1,6 @@
 ---
-title: "From Database to Agentic Backend in 5 Minutes"
-description: "You have a database. You want an agentic backend — something agents can query, reason over, and extend. Here's the actual 5-minute path, not a marketing deck."
+title: "From Database to Agentic Backend in One Sitting"
+description: "You have a database. You want an agentic backend: something agents can query, reason over, and extend. Here's the actual path, not a marketing deck."
 date: "2026-04-19"
 author: "Baseil Team"
 tags: ["agentic-backends", "agentic-data-ide", "mcp", "a2a"]
@@ -8,17 +8,17 @@ tags: ["agentic-backends", "agentic-data-ide", "mcp", "a2a"]
 
 An **agentic backend** is a data layer designed to be consumed by agents. The protocols are already in place ([MCP](https://modelcontextprotocol.io/) for tool use, A2A for agent-to-agent), the tools are discoverable, the safety rails are built in. You don't wrap a REST API in duct tape and call it a day. You stand up something agents can reason against and extend.
 
-This post is the actual 5-minute walkthrough. Not a slide deck, not a high-level architecture diagram. Commands, expected outputs, and what you end up with.
+This post is the actual walkthrough. Not a slide deck, not a high-level architecture diagram. Commands, expected outputs, and what you end up with.
 
-## The 5 minutes
+## The five steps
 
-### Minute 1: Install
+### Step 1: Install
 
 ```bash
 curl -fsSL https://releases.baseil.ai/install.sh | sh
 ```
 
-The installer downloads the binary and runs the setup wizard: a Postgres for Baseil's own metadata, an admin account, an LLM key, and a local embedding model. Budget a few minutes the first time.
+The installer downloads the binary and runs the setup wizard: a Postgres for Baseil's own metadata, an admin account, an LLM key, and a local embedding model. Budget about 15 minutes the first time, more if Postgres has to be installed.
 
 Start the server:
 
@@ -28,19 +28,19 @@ baseil start
 
 You're now running at `http://localhost:8451`.
 
-### Minute 2: Connect your database
+### Step 2: Connect your database
 
 In the web UI, go to Connections, then Add Connection, and fill in the form. Use a read-only database user.
 
 The read-only user is the important part. Baseil enforces read-only at the SQL level too, but you want defense in depth.
 
-### Minute 3: Watch onboarding
+### Step 3: Watch onboarding
 
 Click Onboard. The 5-agent pipeline runs: Discovery reads your schema and relationships, ToolBuilder generates parameterized query templates, Reviewer does a security audit, Tester runs the tools against your real database with safe params, Deploy registers everything. For a typical schema, this takes 30-60 seconds.
 
 If you want the deep dive on what each agent does, [Inside Baseil's 5-Agent Pipeline](/blog/inside-baseil-5-agent-pipeline) breaks it down.
 
-### Minute 4: Generate an API key, drop it into Claude Desktop
+### Step 4: Generate an API key, drop it into Claude Desktop
 
 Settings → API Keys → Create key. Copy the key.
 
@@ -59,11 +59,11 @@ Into Claude Desktop's MCP config:
 
 Restart Claude. The Baseil tools appear in the tool list automatically. Full details in the [MCP setup guide](/docs/mcp-setup).
 
-### Minute 5: Ask Claude a question about your data
+### Step 5: Ask Claude a question about your data
 
 Start a new conversation and ask something concrete. "How many users signed up in the last 30 days?" Claude calls `baseil__query`, Baseil routes to the right tool, runs the SQL against your Postgres, returns structured results. Claude summarizes. You see the tool call in the UI, so you can verify the number is real.
 
-That's it. Five minutes, more or less.
+That's it. One sitting, most of it the install and setup.
 
 ## What you have now
 
@@ -98,7 +98,7 @@ If your system runs SQL when asked and stops there, it's not an agentic backend.
 
 ## Try it
 
-[Quickstart is here](/docs/quickstart). Five minutes of your time.
+[Quickstart is here](/docs/quickstart). Plan on about 15 minutes.
 
 Related:
 
