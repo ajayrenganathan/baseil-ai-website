@@ -69,7 +69,7 @@ const STEPS = [
     Icon: ServeIcon,
     Micro: MicroServe,
     title: 'Serve',
-    description: 'Natural language, APIs, MCPs — humans, agents, and apps all get answers instantly.',
+    description: 'Ask in chat, or connect AI assistants and apps. Everyone gets the same answers.',
     note: null,
     number: '03',
     color: '#8FAF8A',

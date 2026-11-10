@@ -44,7 +44,7 @@ Every response has four parts:
 
 - **The natural-language answer.** A human-readable summary at the top.
 - **The tool that ran.** The name of the query template Baseil picked (e.g. `list_orders_with_filters`). Useful for understanding why you got the answer you did.
-- **The query.** The actual SQL (or Elasticsearch DSL, or API call) that was executed. You can copy it and run it yourself.
+- **The query.** The actual SQL (or Elasticsearch DSL, or API call) that was executed, one per database when an answer spans several. Click **SQL** on the tool row to open it. You can copy it and run it yourself.
 - **Metadata.** Row count, execution time, timestamp.
 
 The transparency matters. You don't have to trust that Baseil got it right, you can verify. If the number looks wrong, check the SQL. Nine times out of ten the issue is clear from reading the query.
@@ -60,7 +60,7 @@ Feedback doesn't replace rules for systematic behavior changes, but it's a fast 
 
 ## Pinning queries to the golden cache
 
-Some questions get asked over and over. Weekly revenue, daily active users, monthly churn. When you get an answer you want to reuse, pin it to the **golden cache**.
+Some questions get asked over and over. Weekly revenue, daily active users, monthly churn. When you get an answer you want to reuse, pin it to the **golden cache**, Baseil's store of saved answers you trust.
 
 Pinned queries:
 

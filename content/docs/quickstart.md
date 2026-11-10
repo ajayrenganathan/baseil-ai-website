@@ -13,12 +13,12 @@ You'll want these in place before you start:
 
 - macOS on Apple Silicon, or Linux on x64 or arm64. There is no Windows build yet.
 - An API key from OpenRouter (recommended), Anthropic or OpenAI.
-- A PostgreSQL instance for Baseil's own metadata (connections, rules, golden cache, audit logs). The wizard can find a local one, start one in Docker, or install it with apt on Debian and Ubuntu. A connection URL to an existing Postgres works too.
+- A PostgreSQL instance for Baseil's own metadata (connections, rules, the golden cache of saved answers, audit logs). The wizard can find a local one, start one in Docker, or install it with apt on Debian and Ubuntu. A connection URL to an existing Postgres works too.
 - A database you want to ask questions about.
 
 You do not need Python or Node. The CLI is a single frozen binary.
 
-Sign-in uses baseil.ai accounts and the wizard creates yours, so there is no separate account setup.
+You sign in to the web UI with the admin email and password you choose in the wizard. That account lives on your server. A free baseil.ai account is optional: link it from the status card in the web UI sidebar to add more than one connection, use MySQL, SQLite or Elasticsearch, and turn on MCP and the API. Without it, Baseil allows one PostgreSQL connection.
 
 ## Install the CLI
 
@@ -40,22 +40,21 @@ baseil setup
 
 The installer already started this for you. Run it again yourself whenever you want to redo the configuration.
 
-The wizard walks through twelve steps:
+The wizard asks only what it needs. These are its steps; the Docker step runs only if you choose Docker, and the step numbers on screen count only the steps that run:
 
-1. **PostgreSQL.** Use a local instance, start one in Docker, install it with apt (Debian and Ubuntu), or paste a connection URL.
+1. **PostgreSQL.** Use a local instance, start one in Docker, install it with apt (Debian and Ubuntu), or paste a connection URL. A hosted PostgreSQL such as Neon or Supabase works too.
 2. **Start PostgreSQL.** Only if you chose the Docker path.
 3. **Metadata database.** Creates the database and the extensions Baseil needs.
 4. **Migrations.** Brings the metadata database up to the current schema.
-5. **Admin account.** Email and password for the web UI.
-6. **Auth.** Configured automatically against baseil.ai, no prompt.
-7. **LLM provider.** Anthropic (default) or OpenAI, plus the API key. The key is validated before it is saved, and a rejected key is refused.
-8. **Embedding model.** Downloads a small local sentence-transformers model used for the golden cache.
-9. **Server access.** On Linux, whether to bind to all interfaces or to localhost only.
-10. **Root password.** Used by the `baseil admin` commands.
-11. **Recovery keys.** Shown once, so store them somewhere safe.
-12. **Ready.** Prints the MCP config for your client and offers to start the server.
+5. **Admin account.** The email and password you sign in to the web UI with. This is a local account on your server, not a baseil.ai account.
+6. **Sign-in settings.** Configured automatically, no prompt.
+7. **LLM provider.** OpenRouter (default), Anthropic, or OpenAI, then the API key. The key is not shown as you type. If it looks like a key for a different provider (say, an Anthropic key after you picked OpenRouter), the wizard says so and offers to switch. The key is checked before it is saved; a rejected key is refused, and you can paste another or press Enter to skip.
+8. **Server access.** On Linux, whether to bind to all interfaces or to localhost only.
+9. **Ready.** Offers to start the server, then opens the web UI if this machine has a display, or prints its URL if not. The summary says where the admin API key is saved (`~/.baseil/api_key`) and that the MCP config for AI clients is in the web UI under **Settings → MCP Config**. Without a linked baseil.ai account it also says that the install runs in limited mode: one PostgreSQL connection, and no MCP server or API endpoints.
 
 ## Start the server
+
+If you said yes at the end of setup, the server is already running: skip to "Your first query" below. Otherwise:
 
 ```bash
 baseil start
@@ -63,14 +62,14 @@ baseil start
 
 The server runs at `http://localhost:8451` and serves the web UI from the same process. `baseil status` shows whether it is running, and `baseil logs` tails the log.
 
-Open that URL in a browser and sign in with the admin account you created in step 5.
+Open that URL in a browser and sign in with the admin email and password you chose in step 5.
 
 ## Your first query
 
 You're one connection away from asking questions.
 
 1. Click **Connections** in the sidebar.
-2. Hit **Add Connection** and walk through the form. PostgreSQL is fully supported; MySQL, SQLite, and Elasticsearch are in beta. (If you need more detail, see [Connecting Databases](/docs/connecting-databases).)
+2. Hit **Add Connection** and walk through the form. PostgreSQL is fully supported; MySQL, SQLite, and Elasticsearch are in beta. (If you need more detail, see [Connecting Databases](/docs/connecting-databases).) Without a linked baseil.ai account, Baseil allows one PostgreSQL connection.
 3. Wait for onboarding to finish. Usually 30-60 seconds. The progress panel shows each stage of the pipeline.
 4. Open **Chat** and ask something.
 

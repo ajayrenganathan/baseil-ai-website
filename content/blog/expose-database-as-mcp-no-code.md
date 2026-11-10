@@ -26,18 +26,24 @@ The onboarding pipeline runs: Baseil reads your schema, generates parameterized 
 
 **3. Generate an API key.**
 
-Settings → API Keys → Create key. Copy it.
+MCP needs a free baseil.ai account linked to your install: link it from the status card in the web UI sidebar. Then go to Settings → API Keys → Create key. Copy it.
 
 **4. Wire it into Claude Desktop.**
 
-Drop this into Claude Desktop's MCP config:
+Copy the config from Settings → MCP Config in the web UI into Claude Desktop's config file, and replace `<your-api-key>` with your key:
 
 ```json
 {
   "mcpServers": {
     "baseil": {
-      "url": "http://localhost:8451/api/v1/mcp/sse",
-      "headers": { "Authorization": "Bearer YOUR_API_KEY" }
+      "command": "npx",
+      "args": [
+        "mcp-remote@latest",
+        "http://localhost:8451/api/v1/mcp/sse",
+        "--allow-http",
+        "--header",
+        "Authorization: Bearer <your-api-key>"
+      ]
     }
   }
 }
@@ -47,7 +53,7 @@ Restart Claude. The Baseil tools show up in the available tools list automatical
 
 **5. Ask Claude about your data.**
 
-"What's in this database?" is a good first probe. Claude calls `baseil__describe`, gets back the schema, and summarizes it. Try something more specific next: "how many orders were placed in the last 7 days?" Claude calls `baseil__query`, Baseil routes it to the right tool, runs the SQL, returns structured results.
+"What's in this database?" is a good first probe. Claude calls `baseil_describe`, gets back the schema, and summarizes it. Try something more specific next: "how many orders were placed in the last 7 days?" Claude calls `baseil_query`, Baseil routes it to the right tool, runs the SQL, returns structured results.
 
 You'll see the tool calls in Claude's UI (depending on settings), so you can confirm this isn't a hallucination. The tool call is real. The SQL is real. The number came from your database.
 
@@ -57,16 +63,16 @@ Once Baseil is installed and set up (about 15 minutes the first time), these ste
 
 After onboarding, your database is exposed via a fixed set of MCP tools. Each has a machine-readable description, typed parameters, and built-in safety rails. You don't author them.
 
-- `baseil__query` — Ask a natural-language question. Baseil picks the right template.
-- `baseil__describe` — Return schema info, for agents that want to look around first.
-- `baseil__execute` — Run a specific named tool with explicit arguments.
-- `baseil__setup` — Add a new connection (admin keys only).
-- `baseil__status` — Check background task status.
-- `baseil__rules` — Manage rules programmatically.
-- `baseil__ack` — Acknowledge results, for multi-step reasoning.
-- `baseil__help` — Discover available tools.
+- `baseil_query`: Ask a natural-language question. Baseil picks the right template.
+- `baseil_describe`: Return schema info, for agents that want to look around first.
+- `baseil_execute`: Run a specific named tool with explicit arguments.
+- `baseil_setup`: Add a new connection (admin keys only).
+- `baseil_status`: Check background task status.
+- `baseil_rules`: Manage rules programmatically.
+- `baseil_ack`: Acknowledge results, for multi-step reasoning.
+- `baseil_help`: Discover available tools.
 
-Behind `baseil__query` is a toolkit of templates that were generated from your schema: listings with filters, counts, aggregations, joins across related tables. The agent doesn't see those directly; it sees the higher-level query tool and lets Baseil pick among them.
+Behind `baseil_query` is a toolkit of templates that were generated from your schema: listings with filters, counts, aggregations, joins across related tables. The agent doesn't see those directly; it sees the higher-level query tool and lets Baseil pick among them.
 
 This means the tool surface stays constant no matter how many tables you have. Adding a database doesn't add MCP tools. It adds capabilities behind the existing tools.
 

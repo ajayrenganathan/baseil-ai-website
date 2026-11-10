@@ -42,7 +42,17 @@ const FORBIDDEN = [
   'install.sh | bash',
   'Row-level access policies',
   'BASEIL_VERSION=beta',
+  'Everything in Basic', // there is no Basic tier
+  'baseil__', // MCP tools are baseil_query, baseil_describe, ...
+  'Anthropic (default)', // OpenRouter is the default provider
+  'two-minute', // setup takes about 15 minutes
+  // A provider list without OpenRouter. "OpenRouter, Anthropic or OpenAI" is fine.
+  { label: 'Anthropic or OpenAI (without OpenRouter)', pattern: /(?<!OpenRouter[^.]*)Anthropic or OpenAI/ },
 ]
+
+const isForbidden = (line, term) =>
+  typeof term === 'string' ? line.includes(term) : term.pattern.test(line)
+const termLabel = term => (typeof term === 'string' ? term : term.label)
 
 const PLACEHOLDER_HREFS = ['href="#"', "href: '#'"]
 
@@ -132,8 +142,8 @@ for (const relPath of scanned) {
   const lines = read(relPath).split('\n')
   lines.forEach((line, index) => {
     for (const term of FORBIDDEN) {
-      if (line.includes(term)) {
-        forbiddenHits.push(`${relPath}:${index + 1}  forbidden: "${term}"`)
+      if (isForbidden(line, term)) {
+        forbiddenHits.push(`${relPath}:${index + 1}  forbidden: "${termLabel(term)}"`)
       }
     }
   })

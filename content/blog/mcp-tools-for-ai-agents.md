@@ -17,9 +17,9 @@ When you connect a database to Baseil, it automatically generates MCP tool defin
 ```json
 {
   "tools": [
-    { "name": "baseil__query", "description": "Ask a natural-language question across your connected databases" },
-    { "name": "baseil__describe", "description": "List connections, schemas, tables, and columns" },
-    { "name": "baseil__execute", "description": "Run a specific generated tool with explicit arguments" }
+    { "name": "baseil_query", "description": "Ask a natural-language question across your connected databases" },
+    { "name": "baseil_describe", "description": "List connections, schemas, tables, and columns" },
+    { "name": "baseil_execute", "description": "Run a specific generated tool with explicit arguments" }
   ]
 }
 ```
@@ -56,7 +56,7 @@ Configure your AI agent's MCP client to connect:
 Your agent can now make calls like:
 
 ```
-Tool: baseil__query
+Tool: baseil_query
 Input: { "question": "How many new signups this week?" }
 ```
 
@@ -67,7 +67,7 @@ And get structured results back instantly.
 The real power comes when agents need data from multiple sources. Instead of building custom connectors for each database, your agent just asks:
 
 ```
-Tool: baseil__query
+Tool: baseil_query
 Input: { "question": "Compare customer growth in our PostgreSQL CRM with event data in our analytics DB" }
 ```
 
@@ -78,8 +78,8 @@ Baseil handles the cross-database join automatically.
 Here's a practical workflow for a customer support AI agent:
 
 1. Customer asks: *"Why was I charged twice?"*
-2. Agent calls Baseil: `baseil__query` → "Show recent charges for customer ID 12345"
-3. Agent calls Baseil: `baseil__query` → "Show payment processor logs for customer 12345 in the last 7 days"
+2. Agent calls Baseil: `baseil_query` → "Show recent charges for customer ID 12345"
+3. Agent calls Baseil: `baseil_query` → "Show payment processor logs for customer 12345 in the last 7 days"
 4. Agent synthesizes both results and responds to the customer
 
 No custom code. No database drivers. Just natural language through MCP tools.

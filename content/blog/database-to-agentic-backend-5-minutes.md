@@ -42,16 +42,22 @@ If you want the deep dive on what each agent does, [Inside Baseil's 5-Agent Pipe
 
 ### Step 4: Generate an API key, drop it into Claude Desktop
 
-Settings → API Keys → Create key. Copy the key.
+MCP needs a free baseil.ai account linked to your install: link it from the status card in the web UI sidebar. Then go to Settings → API Keys → Create key. Copy the key.
 
-Into Claude Desktop's MCP config:
+Copy the config from Settings → MCP Config in the web UI into Claude Desktop's config file, and replace `<your-api-key>` with your key:
 
 ```json
 {
   "mcpServers": {
     "baseil": {
-      "url": "http://localhost:8451/api/v1/mcp/sse",
-      "headers": { "Authorization": "Bearer YOUR_API_KEY" }
+      "command": "npx",
+      "args": [
+        "mcp-remote@latest",
+        "http://localhost:8451/api/v1/mcp/sse",
+        "--allow-http",
+        "--header",
+        "Authorization: Bearer <your-api-key>"
+      ]
     }
   }
 }
@@ -61,7 +67,7 @@ Restart Claude. The Baseil tools appear in the tool list automatically. Full det
 
 ### Step 5: Ask Claude a question about your data
 
-Start a new conversation and ask something concrete. "How many users signed up in the last 30 days?" Claude calls `baseil__query`, Baseil routes to the right tool, runs the SQL against your Postgres, returns structured results. Claude summarizes. You see the tool call in the UI, so you can verify the number is real.
+Start a new conversation and ask something concrete. "How many users signed up in the last 30 days?" Claude calls `baseil_query`, Baseil routes to the right tool, runs the SQL against your Postgres, returns structured results. Claude summarizes. You see the tool call in the UI, so you can verify the number is real.
 
 That's it. One sitting, most of it the install and setup.
 
