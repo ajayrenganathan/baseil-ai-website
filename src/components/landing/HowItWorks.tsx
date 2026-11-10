@@ -89,35 +89,9 @@ function StepCard({
   const [tilt, setTilt] = useState({ x: 0, y: 0 })
   const [glowPos, setGlowPos] = useState({ x: 50, y: 50 })
   const [isHovering, setIsHovering] = useState(false)
-  const [displayNum, setDisplayNum] = useState('00')
   const [scrollProgress, setScrollProgress] = useState(0)
-  const hasAnimated = useRef(false)
 
-  // Step number counter animation
-  useEffect(() => {
-    if (visible && !hasAnimated.current) {
-      hasAnimated.current = true
-      const target = index + 1
-      const duration = 600
-      const steps = 8
-      const interval = duration / steps
-      let count = 0
-      const timer = setInterval(() => {
-        count++
-        if (count >= steps) {
-          setDisplayNum(String(target).padStart(2, '0'))
-          clearInterval(timer)
-        } else {
-          // Show random digits before settling
-          const rand = Math.floor(Math.random() * 10)
-          setDisplayNum(String(rand).padStart(2, '0'))
-        }
-      }, interval)
-      return () => clearInterval(timer)
-    }
-  }, [visible, index])
-
-  // Scroll-linked progress ring — tracks card visibility ratio
+  // Scroll-linked progress ring: tracks card visibility ratio
   useEffect(() => {
     const card = cardRef.current
     if (!card) return
@@ -207,7 +181,7 @@ function StepCard({
             textShadow: visible ? '0 0 8px rgba(82, 183, 136, 0.3)' : 'none',
           }}
         >
-          {displayNum}
+          {step.number}
         </span>
       </div>
 

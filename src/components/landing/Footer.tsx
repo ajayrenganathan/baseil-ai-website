@@ -128,7 +128,7 @@ export function Footer() {
           </p>
           <div className="mb-14">
             <a
-              href="/#quick-start"
+              href="/docs/quickstart"
               onClick={() => trackEvent('cta_click', { button_label: 'install', section: 'footer' })}
               className="baseil-cta-primary px-6 py-2.5 text-[0.85rem] inline-flex items-center gap-2"
             >
@@ -175,7 +175,7 @@ export function Footer() {
                 </button>
               </div>
 
-              {/* Additional fields — slide in after email is typed */}
+              {/* Additional fields: slide in after email is typed */}
               <div
                 className="overflow-hidden transition-all duration-500 ease-out"
                 style={{ maxHeight: showMore ? '600px' : '0', opacity: showMore ? 1 : 0 }}

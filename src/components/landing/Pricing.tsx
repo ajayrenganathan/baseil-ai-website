@@ -22,14 +22,16 @@ const TIERS = [
   {
     name: 'Pro',
     price: 'Free',
-    subtitle: 'Free during beta',
+    subtitle: 'Free during beta, with a free baseil.ai account',
     features: [
-      'Everything in Basic',
+      'Natural-language questions, with the SQL shown',
+      'Automatic schema discovery',
+      'Rules and feedback',
       'Unlimited connections',
       'API & MCP generation',
       'Priority support',
     ],
-    cta: { label: 'Install', icon: ArrowRight, href: '/#quick-start' },
+    cta: { label: 'Install', icon: ArrowRight, href: '/docs/quickstart' },
     highlight: true,
   },
   {
@@ -237,7 +239,7 @@ export function Pricing() {
             One agent. Three ways to run it.
           </h1>
           <p className="font-[var(--font-outfit)] text-[0.9rem] text-[#5A7A58]">
-            Self-host for free, or let us manage it for your team.
+            Self-host for free today. Managed options for teams are on the waitlist.
           </p>
         </div>
 

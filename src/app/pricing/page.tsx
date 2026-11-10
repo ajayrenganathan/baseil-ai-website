@@ -8,12 +8,12 @@ import { ArrowLeft } from 'lucide-react'
 export const metadata: Metadata = {
   title: 'Pricing',
   description:
-    'Baseil pricing — free data agent for data retrieval, database-to-MCP conversion, and data intelligence. Pro, Teams, and Enterprise plans for AI agents at scale.',
+    'Baseil pricing: a free data agent for data retrieval, database-to-MCP conversion, and data intelligence. Pro, Teams, and Enterprise plans for AI agents at scale.',
   alternates: { canonical: '/pricing' },
   openGraph: {
-    title: 'Pricing — Baseil',
+    title: 'Pricing | Baseil',
     description:
-      'Baseil pricing — free data agent for data retrieval, database-to-MCP conversion, and data intelligence. Pro, Teams, and Enterprise plans for AI agents at scale.',
+      'Baseil pricing: a free data agent for data retrieval, database-to-MCP conversion, and data intelligence. Pro, Teams, and Enterprise plans for AI agents at scale.',
   },
 }
 
