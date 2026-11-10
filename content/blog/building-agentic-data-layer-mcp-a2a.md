@@ -40,7 +40,7 @@ A data specialist that exposes itself via MCP and A2A becomes a universal depend
 flowchart TB
   Support[Support agent]
   Billing[Billing agent]
-  Data[Data agent — Baseil]
+  Data[Data agent: Baseil]
   Analytics[Analytics agent]
   DB1[(Customer DB)]
   DB2[(Orders DB)]
@@ -62,7 +62,7 @@ Three reasons the data layer is the right first specialist:
 
 **Safety.** Data is where damage happens. A dedicated agent enforces read-only, parameter validation, audit logging, rate limiting. Generalist agents handle these things poorly, because they're always playing tug-of-war with whatever other responsibility they're trying to serve. An agent with nothing to do but worry about data safety is better at it, every time.
 
-**Learning.** Data access improves with use. Schema knowledge, feedback, rules, golden cache entries — all of it compounds. A specialist accumulates this. Generalist agents lose it on every reset, because their context windows are packed with other concerns. The data agent you've been using for six months is meaningfully better than the one you installed; a generalist is roughly the same.
+**Learning.** Data access improves with use. Schema knowledge, feedback, rules, golden cache entries: all of it compounds. A specialist accumulates this. Generalist agents lose it on every reset, because their context windows are packed with other concerns. The data agent you've been using for six months is meaningfully better than the one you installed; a generalist is roughly the same.
 
 ## What an agentic data layer looks like in practice
 
@@ -95,9 +95,9 @@ This isn't a hard sell because both options are valid, but the break-even is ear
 
 ## Where Baseil fits
 
-We built Baseil to be this layer. MCP support is in production. A2A is in active development (we're saying "soon" for a reason — we want to ship something that actually works, not a marketing claim). The pattern matters whether you use us or not. If you use something else, make sure it checks the boxes: schema-aware, tool-selecting, self-learning, protocol-portable, secure by default.
+We built Baseil to be this layer. MCP support is in production. A2A is in active development (we're saying "soon" for a reason: we want to ship something that actually works, not a marketing claim). The pattern matters whether you use us or not. If you use something else, make sure it checks the boxes: schema-aware, tool-selecting, self-learning, protocol-portable, secure by default.
 
-If you want to see the pattern in operation, [try Baseil locally](/docs/quickstart). A connected database, a chat that answers questions about it, and MCP tools a Claude Desktop client can pick up. It takes five minutes.
+If you want to see the pattern in operation, [try Baseil locally](/docs/quickstart). A connected database, a chat that answers questions about it, and MCP tools a Claude Desktop client can pick up. Plan on about 15 minutes.
 
 ## Try it
 

@@ -16,14 +16,14 @@ Baseil connects to your databases, maps the schema, and generates tested read-on
 curl -fsSL https://releases.baseil.ai/install.sh | sh
 ```
 
-The installer downloads about 300 MB into `~/.baseil`, registers a background service, and runs the setup wizard. The wizard asks for:
+The installer downloads about 90 MB into `~/.baseil` (about 300 MB on disk once it is running), registers a background service, and runs the setup wizard. The wizard asks for:
 
 - A Postgres for Baseil's own metadata. It can use a local Postgres, start one in Docker, or install one with apt.
 - An admin email and password. This is the account you sign in with.
-- An Anthropic or OpenAI key, validated before it is saved.
+- An API key from OpenRouter (the default), Anthropic or OpenAI, validated before it is saved.
 - A couple of server settings.
 
-macOS Apple Silicon and Linux x64 only for now.
+macOS Apple Silicon, Linux x64 and Linux arm64 for now. Plan on about 15 minutes from the install command to your first answer.
 
 ## Step 2: Start the server
 
@@ -37,7 +37,7 @@ Two commands worth remembering: `baseil status` tells you whether the server is 
 
 ## Step 3: Connect a database
 
-Connections are added in the web UI. Go to Connections, then Add Connection, and fill in the form for your database type.
+Connections are added in the web UI. Go to Databases in the sidebar, then Add Connection, and fill in the form for your database type.
 
 Use a read-only database user. Baseil validates its own SQL as read-only, but a read-only user is the layer you control.
 

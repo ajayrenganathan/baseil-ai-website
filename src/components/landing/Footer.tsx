@@ -124,11 +124,11 @@ export function Footer() {
             Install Baseil in one command.
           </h2>
           <p className="font-[var(--font-outfit)] text-[0.9rem] text-[#5A7A58] mb-6">
-            Free during beta. macOS Apple Silicon and Linux x64.
+            Free during beta. macOS Apple Silicon, Linux x64 and Linux arm64. Needs an AI key and Postgres.
           </p>
           <div className="mb-14">
             <a
-              href="/#quick-start"
+              href="/docs/quickstart"
               onClick={() => trackEvent('cta_click', { button_label: 'install', section: 'footer' })}
               className="baseil-cta-primary px-6 py-2.5 text-[0.85rem] inline-flex items-center gap-2"
             >
@@ -175,7 +175,7 @@ export function Footer() {
                 </button>
               </div>
 
-              {/* Additional fields — slide in after email is typed */}
+              {/* Additional fields: slide in after email is typed */}
               <div
                 className="overflow-hidden transition-all duration-500 ease-out"
                 style={{ maxHeight: showMore ? '600px' : '0', opacity: showMore ? 1 : 0 }}

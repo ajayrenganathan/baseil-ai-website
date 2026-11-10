@@ -48,7 +48,7 @@ flowchart LR
 
 Each arrow is a small, explicit step that can be tested, observed, and improved. None of them are magic.
 
-## Why "retrieval" isn't enough — you need an agent doing it
+## Why "retrieval" isn't enough: you need an agent doing it
 
 Plain retrieval is a function: question in, rows out. An agent doing retrieval is a bigger thing. It reasons about what the user actually meant. It picks tools. It handles errors. It learns from feedback. It remembers what worked before.
 
@@ -68,7 +68,7 @@ If you want the deep technical walkthrough, [Inside Baseil's 5-Agent Pipeline](/
 
 Intelligent data retrieval as a category is still being named. Our bet is that in a few years it's as common a component as "vector store" is today, and teams that built their AI stack around it early had an easier time than teams that kept writing bespoke glue.
 
-If you want to see the pattern working, [try Baseil locally](/docs/quickstart). Five minutes to a connected database and a chat that answers questions about it.
+If you want to see the pattern working, [try Baseil locally](/docs/quickstart). About 15 minutes to a connected database and a chat that answers questions about it.
 
 - Related: [The Data Harness Your AI Stack Is Missing](/blog/data-harness-missing-from-ai-stack)
 - Related: [What Is an Intelligent Data Agent?](/blog/what-is-intelligent-data-agent)

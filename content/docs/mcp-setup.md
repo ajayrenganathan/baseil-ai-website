@@ -7,18 +7,20 @@ category: "guides"
 
 The [Model Context Protocol](https://modelcontextprotocol.io/) is how AI agents discover and use tools. Baseil speaks MCP natively. Every database you connect becomes a set of MCP tools that any MCP-compatible client can call. This guide covers generating a key, wiring it into Claude Desktop and the Claude API, and verifying the connection works.
 
+**Before you start:** MCP and the API need a free baseil.ai account linked to this install. Link it from the status card in the web UI sidebar. Without it, the MCP endpoint answers 403 and asks you to link an account.
+
 ## What you get out of the box
 
 When Baseil is running with one or more connections, these tools are live on the MCP endpoint:
 
-- **`baseil__query`**: Ask a natural-language question. Baseil picks the right tool, runs the query, returns structured results.
-- **`baseil__describe`**: Enumerate schemas, tables, columns. Good for agents that want to look around before asking.
-- **`baseil__execute`**: Run a specific named tool with explicit arguments. Useful when the agent already knows what it wants.
-- **`baseil__setup`**: Add, list, or test database connections from an agent. The web UI is the usual path; this is the programmatic one.
-- **`baseil__status`**: Check background tasks (ongoing onboarding, index rebuilds, etc.).
-- **`baseil__rules`**: Create, list, update rules.
-- **`baseil__ack`**: Acknowledge tool results, used for multi-step reasoning.
-- **`baseil__help`**: List every available tool with descriptions. Agents use this to discover capabilities.
+- **`baseil_query`**: Ask a natural-language question. Baseil picks the right tool, runs the query, returns structured results.
+- **`baseil_describe`**: Enumerate schemas, tables, columns. Good for agents that want to look around before asking.
+- **`baseil_execute`**: Run a specific named tool with explicit arguments. Useful when the agent already knows what it wants.
+- **`baseil_setup`**: Add, list, or test database connections from an agent. The web UI is the usual path; this is the programmatic one.
+- **`baseil_status`**: Check background tasks (ongoing onboarding, index rebuilds, etc.).
+- **`baseil_rules`**: Create, list, update rules.
+- **`baseil_ack`**: Acknowledge tool results, used for multi-step reasoning.
+- **`baseil_help`**: List every available tool with descriptions. Agents use this to discover capabilities.
 
 Every tool has a machine-readable description and typed parameters. Agents that speak MCP don't need any out-of-band knowledge to use them.
 
@@ -30,22 +32,26 @@ Create a separate key per agent or integration so you can revoke them independen
 
 ## Connect from Claude Desktop
 
-[Claude Desktop](https://claude.ai/download) reads MCP servers from a config file. Open Claude Desktop's settings, find the MCP section, and add Baseil:
+[Claude Desktop](https://claude.ai/download) reads MCP servers from a config file. The web UI writes the entry for you: open **Settings → MCP Config** and copy the config it shows. It looks like this, and uses [`mcp-remote`](https://www.npmjs.com/package/mcp-remote) (run through `npx`, so Node.js must be installed) to reach Baseil's endpoint:
 
 ```json
 {
   "mcpServers": {
     "baseil": {
-      "url": "http://localhost:8451/api/v1/mcp/sse",
-      "headers": {
-        "Authorization": "Bearer YOUR_API_KEY"
-      }
+      "command": "npx",
+      "args": [
+        "mcp-remote@latest",
+        "http://localhost:8451/api/v1/mcp/sse",
+        "--allow-http",
+        "--header",
+        "Authorization: Bearer <your-api-key>"
+      ]
     }
   }
 }
 ```
 
-Replace `YOUR_API_KEY` with the key you just generated. If you're running Baseil on a server, swap `localhost:8451` for the public URL.
+Add it to Claude Desktop's config file (Settings, Developer, Edit Config). Replace `<your-api-key>` with the key you just generated. If you're running Baseil on a server, swap `localhost:8451` for the public URL.
 
 Save the config and restart Claude Desktop. In a new conversation, Claude should surface the Baseil tools automatically. You can verify by asking "what tools do you have?" and Claude will list them.
 
@@ -69,9 +75,9 @@ Once wired up, verify end-to-end:
 
 1. Start a new conversation with your agent.
 2. Ask: "what databases can I query?"
-3. Expected behavior: the agent calls `baseil__describe`, gets back the list of your connections and their schemas, and responds with a human-readable summary.
+3. Expected behavior: the agent calls `baseil_describe`, gets back the list of your connections and their schemas, and responds with a human-readable summary.
 
-If that works, try a real question: "how many users signed up last week in the production database?" The agent should call `baseil__query`, and Baseil picks the right tool, runs the query, and returns results.
+If that works, try a real question: "how many users signed up last week in the production database?" The agent should call `baseil_query`, and Baseil picks the right tool, runs the query, and returns results.
 
 ## Example agent workflow
 
@@ -82,9 +88,9 @@ A concrete scenario, a customer support agent handling a ticket:
 The agent's reasoning goes something like:
 
 1. Parse the user's intent: "look up recent orders for customer foo@example.com".
-2. Call `baseil__query` with `"orders for customer foo@example.com in the last 30 days"`.
+2. Call `baseil_query` with `"orders for customer foo@example.com in the last 30 days"`.
 3. Baseil routes to the appropriate tool, runs the query, returns a structured list of orders.
-4. The agent summarizes for the human, maybe fetches more detail with a follow-up `baseil__query` call.
+4. The agent summarizes for the human, maybe fetches more detail with a follow-up `baseil_query` call.
 
 The important part: the agent never needed schema details in advance. Baseil's MCP tools expose everything the agent needs at runtime.
 
@@ -94,7 +100,7 @@ If you've connected more than one database, Baseil can answer questions that spa
 
 Example: "Show me total revenue from customers who contacted support last week." Customer data might be in Postgres, support tickets in Elasticsearch. Baseil's query planner joins across them transparently.
 
-The agent uses the same `baseil__query` tool. All the cross-database complexity is absorbed on Baseil's side.
+The agent uses the same `baseil_query` tool. All the cross-database complexity is absorbed on Baseil's side.
 
 ## Security considerations
 
@@ -109,6 +115,6 @@ If you're running Baseil in production, put it behind your normal auth and netwo
 
 ## Next
 
-- Blog: [Expose Your Database as MCP Tools — No Code Required](/blog/expose-database-as-mcp-no-code)
+- Blog: [Expose Your Database as MCP Tools, No Code Required](/blog/expose-database-as-mcp-no-code)
 - Blog: [Building the Agentic Data Layer](/blog/building-agentic-data-layer-mcp-a2a)
 - Blog: [Why Agent Experience (AX) Is the New UX](/blog/agent-experience-new-user-experience)

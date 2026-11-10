@@ -30,13 +30,13 @@ const SLIDES = [
     duration: 5000,
     accent: '#6FCF97',
     description:
-      'Deploy as a swarm. Multiple Baseil agents form a mesh. Each owning its own databases, sharing knowledge across your infrastructure.',
+      'Coming soon: deploy as a swarm. Several Baseil agents, each owning its own databases, sharing what they know.',
   },
 ] as const
 
 const TRANSITION_MS = 700
 
-/* Static stagger variants — module-level to avoid hydration mismatch */
+/* Static stagger variants: module-level to avoid hydration mismatch */
 const PULSE_VARIANTS = [
   { dur: '2.3s', delay: '0.1s' },
   { dur: '3.1s', delay: '0.8s' },
@@ -67,7 +67,7 @@ function getTilt(e: MouseEvent, el: HTMLElement, maxDeg = 2) {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   TIMER HOOK — requestAnimationFrame-based auto-advance
+   TIMER HOOK: requestAnimationFrame-based auto-advance
    ───────────────────────────────────────────────────────────── */
 
 function useProblemTimer() {
@@ -122,7 +122,7 @@ function useProblemTimer() {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   SVG ICON HELPERS — pure parametric SVG
+   SVG ICON HELPERS: pure parametric SVG
    ───────────────────────────────────────────────────────────── */
 
 function IconAPI({ cx, cy, color }: { cx: number; cy: number; color: string }) {
@@ -185,7 +185,7 @@ function SourceIcon({ type, cx, cy, color }: { type: string; cx: number; cy: num
 }
 
 /* ─────────────────────────────────────────────────────────────
-   SLIDE 1 — THE PROBLEM (chaos)
+   SLIDE 1: THE PROBLEM (chaos)
    ───────────────────────────────────────────────────────────── */
 
 function SlideProblem() {
@@ -202,7 +202,7 @@ function SlideProblem() {
 
   return (
     <svg className="w-full" viewBox="0 0 600 220" fill="none">
-      {/* Tangled dashed lines — every source to center. Progressive draw-in. */}
+      {/* Tangled dashed lines: every source to center. Progressive draw-in. */}
       {sources.map((s, i) => (
         <path
           key={`line-${i}`}
@@ -218,7 +218,7 @@ function SlideProblem() {
           }}
         />
       ))}
-      {/* Extra cross-tangles for chaotic feel — draw-in slightly later */}
+      {/* Extra cross-tangles for chaotic feel: draw-in slightly later */}
       <path
         d="M 55 35 Q 200 180 460 188"
         fill="none"
@@ -275,7 +275,7 @@ function SlideProblem() {
         )
       })}
 
-      {/* Central overwhelmed bot — subtle wiggle */}
+      {/* Central overwhelmed bot: subtle wiggle */}
       <g
         className="baseil-anim-tangle-wiggle"
         style={{
@@ -299,7 +299,7 @@ function SlideProblem() {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   SLIDE 2 — THE SOLUTION (hub-and-spoke)
+   SLIDE 2: THE SOLUTION (hub-and-spoke)
    ───────────────────────────────────────────────────────────── */
 
 function SlideSolution() {
@@ -323,7 +323,7 @@ function SlideSolution() {
         </filter>
       </defs>
 
-      {/* Lines: Sources → Baseil — staggered particles for organic feel */}
+      {/* Lines: Sources → Baseil: staggered particles for organic feel */}
       {sourceYs.map((y, i) => (
         <g key={`left-${i}`}>
           <line x1="135" y1={y} x2="265" y2="110" stroke="rgba(82,183,136,0.06)" strokeWidth="4" filter="url(#sol-glow)" />
@@ -375,7 +375,7 @@ function SlideSolution() {
         )
       })}
 
-      {/* Baseil center — calm breathing glow */}
+      {/* Baseil center: calm breathing glow */}
       <g
         className="baseil-anim-breathing-glow"
         style={{ animation: 'breathing-glow 3.2s ease-in-out infinite' }}
@@ -392,7 +392,7 @@ function SlideSolution() {
       {/* Agent node (top-right) */}
       <g>
         <rect x="490" y="47" width="40" height="40" rx="10" fill="#0A0F0D" stroke="rgba(82,183,136,0.2)" strokeWidth="1" />
-        {/* Bot icon — square eyes + antenna */}
+        {/* Bot icon: square eyes + antenna */}
         <line x1="510" y1="50" x2="510" y2="55" stroke="#52B788" strokeWidth="1" opacity="0.5" />
         <circle cx="510" cy="49" r="2" fill="#52B788" opacity="0.5" />
         <rect x="502" y="60" width="5" height="4" rx="1" fill="#52B788" opacity="0.5" />
@@ -404,7 +404,7 @@ function SlideSolution() {
       {/* Human node (bottom-right) */}
       <g>
         <rect x="490" y="140" width="40" height="40" rx="10" fill="#0A0F0D" stroke="rgba(82,183,136,0.15)" strokeWidth="1" />
-        {/* Person icon — head + shoulders */}
+        {/* Person icon: head + shoulders */}
         <circle cx="510" cy="152" r="5" fill="none" stroke="#6FCF97" strokeWidth="1" opacity="0.6" />
         <path d="M500,170 Q500,162 510,162 Q520,162 520,170" fill="none" stroke="#6FCF97" strokeWidth="1" opacity="0.5" />
         <text x="510" y="194" textAnchor="middle" fontSize="10" fill="#5A7A58" fontFamily="var(--font-outfit)">Human</text>
@@ -414,7 +414,7 @@ function SlideSolution() {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   SLIDE 3 — THE SWARM (mesh topology)
+   SLIDE 3: THE SWARM (mesh topology)
    ───────────────────────────────────────────────────────────── */
 
 function SlideSwarm() {
@@ -464,7 +464,7 @@ function SlideSwarm() {
 
       {/* Mesh line: Baseil-1 ↔ Baseil-2 */}
       <line x1="220" y1="110" x2="380" y2="110" stroke="rgba(111,207,151,0.25)" strokeWidth="1.5" strokeDasharray="6 4" />
-      {/* Bidirectional particles — multiple staggered for richer flow */}
+      {/* Bidirectional particles: multiple staggered for richer flow */}
       <circle r="3" fill="#6FCF97" opacity="0.7">
         <animateMotion dur="3s" repeatCount="indefinite" path="M220,110 L380,110" />
       </circle>
@@ -496,7 +496,7 @@ function SlideSwarm() {
         </g>
       ))}
 
-      {/* Baseil-1 (left) — synchronized breathing */}
+      {/* Baseil-1 (left): synchronized breathing */}
       <g
         className="baseil-anim-breathing-glow"
         style={{ animation: 'breathing-glow 3.2s ease-in-out infinite' }}
@@ -510,7 +510,7 @@ function SlideSwarm() {
         <text x="195" y="152" textAnchor="middle" fontSize="10" fill="#52B788" fontFamily="var(--font-outfit)" opacity="0.6">baseil-1</text>
       </g>
 
-      {/* Baseil-2 (right) — fades in, then breathes in sync */}
+      {/* Baseil-2 (right): fades in, then breathes in sync */}
       <g
         className="baseil-anim-node-fade-in baseil-anim-breathing-glow"
         style={{
@@ -571,7 +571,7 @@ export function Problem() {
   // Reset to slide 0 on re-entry
   useEffect(() => {
     if (visible) jumpToSlide(0)
-    // only on mount-like re-visibility — intentionally not tracking jumpToSlide
+    // only on mount-like re-visibility: intentionally not tracking jumpToSlide
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -657,7 +657,7 @@ export function Problem() {
             <div className="absolute inset-0 baseil-grain opacity-[0.02]" />
 
             <div className="relative flex flex-col items-center gap-5 md:gap-8">
-              {/* Description text — crossfade using grid stacking for auto height */}
+              {/* Description text: crossfade using grid stacking for auto height */}
               <div className="grid w-full max-w-[500px]">
                 {SLIDES.map((s, i) => (
                   <p
@@ -679,7 +679,7 @@ export function Problem() {
                 ))}
               </div>
 
-              {/* SVG diagram — crossfade with subtle scale morph (foreground, full parallax) */}
+              {/* SVG diagram: crossfade with subtle scale morph (foreground, full parallax) */}
               <div
                 className="relative w-full max-w-none md:max-w-[600px] h-[200px] md:h-[220px]"
                 style={{

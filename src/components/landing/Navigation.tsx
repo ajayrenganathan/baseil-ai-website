@@ -8,7 +8,7 @@ import { trackEvent } from '@/lib/analytics'
 
 const SECTION_LINKS = [
   { label: 'Home', id: 'top' },
-  { label: 'Install', id: 'quick-start' },
+  { label: 'Quick start', id: 'quick-start' },
   { label: 'How it Works', id: 'how-it-works' },
 ]
 
@@ -110,7 +110,7 @@ export function Navigation() {
               Install
             </Link>
 
-            {/* Hamburger button — mobile only */}
+            {/* Hamburger button, mobile only */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="md:hidden flex flex-col justify-center items-center w-8 h-8 gap-[5px] group"

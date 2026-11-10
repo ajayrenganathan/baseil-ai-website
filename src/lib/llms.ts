@@ -13,7 +13,7 @@ const SUMMARY =
   'Baseil is an AI data harness. It onboards your databases, maps their schemas on its own, and answers questions in plain English, for people in a web chat and for agents as MCP tools. Every answer comes with the SQL that ran.'
 
 const DETAILS =
-  'Baseil runs on your machine, on macOS (Apple Silicon) or Linux (x64), and enforces read-only access at the SQL level. PostgreSQL is generally available; MySQL, SQLite, and Elasticsearch are in beta. Install it with one command:'
+  'Baseil runs on your machine, on macOS (Apple Silicon) or Linux (x64 and arm64), and enforces read-only access at the SQL level. PostgreSQL is generally available; MySQL, SQLite, and Elasticsearch are in beta. Install it with one command:'
 
 const link = (title: string, url: string, note: string) => `- [${title}](${url})${note ? `: ${note}` : ''}`
 

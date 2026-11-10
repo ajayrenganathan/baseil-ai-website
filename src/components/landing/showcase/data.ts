@@ -1,4 +1,4 @@
-// Scene 1 — Connections
+// Scene 1: Connections
 export const CONNECTIONS = [
   { name: 'Store', type: 'PostgreSQL', status: 'active' as const, existing: true },
   { name: 'Projects', type: 'PostgreSQL', status: 'active' as const, existing: true },
@@ -6,7 +6,7 @@ export const CONNECTIONS = [
   { name: 'Marketing', type: 'PostgreSQL', status: 'active' as const, existing: false },
 ]
 
-// Scene 2 — Onboarding pipeline
+// Scene 2: Onboarding pipeline
 export const PIPELINE_STEPS = [
   { label: 'Onboarding databases', subtitle: 'Store, Projects, HR, Marketing, Analytics' },
   { label: 'Discovering databases', subtitle: 'Found 24 tables, 156 columns across 5 databases' },
@@ -15,7 +15,7 @@ export const PIPELINE_STEPS = [
   { label: 'Testing & security', subtitle: 'Tools run against live data, read-only enforced' },
 ]
 
-// Scene 3 — Query
+// Scene 3: Query
 export const QUERY_DATA = {
   question: 'How many employees are in each department?',
   routing: { database: 'HR', confidence: 94 },
@@ -30,7 +30,7 @@ export const QUERY_DATA = {
   metrics: { duration: '280ms', rows: 5, source: 'HR (PostgreSQL)' },
 }
 
-// Scene 4 — Federated Query
+// Scene 4: Federated Query
 export const CROSS_QUERY_DATA = {
   question: 'Which engineers closed the most deals last quarter?',
   sources: [
@@ -47,7 +47,7 @@ export const CROSS_QUERY_DATA = {
   metrics: { duration: '620ms', rows: 4, sources: 'HR + Store' },
 }
 
-// Scene 5 — Chat
+// Scene 5: Chat
 export const CHAT_DATA = {
   agent: { name: 'baseil_root_7f3a2d', tools: 1 },
   userMessage: 'Show me total revenue by region',
@@ -57,15 +57,15 @@ export const CHAT_DATA = {
   },
   botResponse: `Here are the revenue totals by region:
 
-• North America — $460,520
-• Europe — $386,390
-• Asia Pacific — $198,740
+• North America: $460,520
+• Europe: $386,390
+• Asia Pacific: $198,740
 
 Total across all regions: $1,045,650`,
   metrics: { duration: '1.2s', via: 'baseil_root_7f3a2d' },
 }
 
-// Scene 6 — Integrate
+// Scene 6: Integrate
 export const INTEGRATE_DATA = {
   methods: [
     { name: 'Query Console', icon: 'terminal' as const, desc: 'Natural language SQL via browser', status: 'active' as const },
@@ -81,7 +81,7 @@ export const SCENES = [
   { id: 'connect', duration: 4000, label: 'Connect', title: 'Connect your databases' },
   { id: 'onboard', duration: 5000, label: 'Onboard', title: 'Automatic schema discovery' },
   { id: 'query', duration: 7000, label: 'Query', title: 'Query in natural language' },
-  { id: 'cross-query', duration: 8000, label: 'Federated Query', title: 'Federated cross-database query' },
+  { id: 'cross-query', duration: 8000, label: 'Across databases', title: 'One question, two databases' },
   { id: 'chat', duration: 7000, label: 'Chat', title: 'Agent-native conversation' },
   { id: 'integrate', duration: 5000, label: 'Integrate', title: 'Multiple ways to integrate' },
 ] as const

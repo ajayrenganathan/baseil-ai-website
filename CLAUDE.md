@@ -65,7 +65,7 @@ Internal preview pages, excluded from the sitemap: `/problem` (animated data-mes
 
 ### Navigation
 
-`Navigation.tsx` renders two kinds of links. Page links (Docs, Blog, Pricing, Platform) are `next/link` routes highlighted with `usePathname()`. Section links (Home, Install, How it Works) smooth-scroll to `#quick-start` and `#how-it-works` when the current pathname is `/`, and fall back to hash links to the home page elsewhere. The primary Install button in the nav bar is a separate link to `/docs/quickstart` and fires a `cta_click` analytics event.
+`Navigation.tsx` renders two kinds of links. Page links (Docs, Blog, Pricing, Platform) are `next/link` routes highlighted with `usePathname()`. Section links (Home, Quick start, How it Works) smooth-scroll to `#quick-start` and `#how-it-works` when the current pathname is `/`, and fall back to hash links to the home page elsewhere. The primary Install button in the nav bar is a separate link to `/docs/quickstart` and fires a `cta_click` analytics event. Every button labelled "Install" (nav, footer, Pricing, `/scroll`) goes to `/docs/quickstart`, and the nav bar has only one "Install".
 
 ## Copy rules
 

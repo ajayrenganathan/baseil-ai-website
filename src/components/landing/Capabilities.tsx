@@ -14,13 +14,13 @@ const FEATURES = [
   {
     icon: Compass,
     title: 'Auto-onboarding',
-    description: 'Just add your connection string. Baseil crawls your schemas, discovers relationships, and maps join paths — all on its own.',
+    description: 'Just add your connection string. Baseil crawls your schemas, discovers relationships, and maps join paths, all on its own.',
     accent: '#6FCF97',
   },
   {
     icon: GitMerge,
     title: 'Cross-database joins',
-    description: 'Data in Postgres and MySQL? Baseil joins across databases seamlessly. You ask, it figures out the path.',
+    description: 'With a free baseil.ai account, connect Postgres and MySQL and Baseil joins across them. You ask, it figures out the path.',
     accent: '#8FAF8A',
   },
   {
@@ -32,7 +32,7 @@ const FEATURES = [
   {
     icon: Sparkles,
     title: 'Rules & golden cache',
-    description: 'Add rules to shape how Baseil responds. Pin golden queries to cache for instant results. Your data, your way, at speed.',
+    description: 'Add rules to shape how Baseil responds. Pin answers you trust so the same question returns them instantly.',
     accent: '#6FCF97',
   },
 ]
